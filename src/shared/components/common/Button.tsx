@@ -35,7 +35,7 @@ export default function Button({
   };
 
   const colorStyles = {
-    orange: "bg-secondary text-white hover:bg-black-200 bg-transparent ",
+    orange: "bg-secondary text-white hover:bg-black-200 ",
     black: isBorder
       ? "border border-primary text-primary hover:text-white hover:border-transparent hover:bg-secondary"
       : "hover:bg-secondary bg-transparent text-primary hover:text-white hover:border-transparent",
