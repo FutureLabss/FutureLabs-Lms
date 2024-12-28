@@ -59,7 +59,7 @@ export default function Button({
       {loading ? (
         <div className="flex justify-center items-center ">
           <svg
-            className="w-5 h-5 animate-spin"
+            className="w-6 h-6 animate-spin"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
