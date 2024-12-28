@@ -58,12 +58,12 @@ export default function Navbar() {
 
         <div
           className={clsx(
-            "md:hidden top-12 inset-0 bg-white absolute z-10 transform",
+            "md:hidden top-12 inset-0 bg-white absolute z-10 transform  h-screen",
             "transition-transform duration-700 ease-out",
             isOpen ? "translate-x-0" : "-translate-x-full"
           )}
         >
-          <div className="flex flex-col items-start px-6 mt-4 h-full  gap-4 bg-white">
+          <div className="flex flex-col items-start px-6 mt-4 h-full bg-white gap-4">
             <NavLinks to="/">Home</NavLinks>
             <NavLinks to="/schools">Schools</NavLinks>
             <NavLinks to="/why-future-academy">Why Future Academy</NavLinks>
