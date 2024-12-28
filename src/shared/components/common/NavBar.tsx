@@ -31,7 +31,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="border-b shadow-md px-5 lg:px-12 py-4  w-full fixed top-0 z-50 bg-white">
+    <nav className="border-b shadow-md  bg-white ">
       <div className="flex items-center justify-between  gap-4 md:gap-0">
         {/* Logo */}
         <div className="text-orange-600 font-bold text-xl">

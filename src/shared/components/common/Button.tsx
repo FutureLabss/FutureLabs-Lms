@@ -23,7 +23,7 @@ export default function Button({
   color = "black",
   isBorder = false,
   disabled = false,
-  loading = false, // Default to false
+  loading = false, 
 }: ButtonProps) {
 
   const radiusStyles = {
@@ -46,7 +46,7 @@ export default function Button({
     <button
       type={type}
       onClick={onClick}
-      disabled={disabled || loading} // Disable the button when loading
+      disabled={disabled || loading} 
       className={clxs(
         radiusStyles[radius],
         colorStyles[color],
