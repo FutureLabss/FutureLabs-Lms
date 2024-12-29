@@ -1,4 +1,3 @@
-// import { AdminMenuLookup } from "@/core/const/menu.const";
 import { AdminMenuLookup } from "@/core/menu.const";
 import { usePathname } from "next/navigation";
 
