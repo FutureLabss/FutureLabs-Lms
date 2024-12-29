@@ -1,12 +1,10 @@
 import logo from "../../../assets/logo.png"
 import Link from "next/link";
 import { FaTimes } from "react-icons/fa";
-// import DropdownMenu from "../common/dropdown";
 import { useAuthContext } from "@/shared/context/auth";
 import { useState } from "react";
 import Image from "next/image";
 import Avatar from "../../../assets/Avatar.png"
-// import Solid from "../../../assets/Solid.png"
 import useActiveMenu from "@/shared/hooks/layout/activeMenu";
 import DropdownMenu from "../common/dropdown";
 import { AdminMenus } from "@/core/menu.const";
