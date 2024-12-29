@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { useManageErrorNotifications, useManageLoadingState } from "./misc";
-import { IPaginatedQueryArgs, IQueryArgs, IQueryOptions } from "@/core/types/query";
+import { IPaginatedQueryArgs, IQueryArgs, IQueryOptions } from "@/core/types/interface/query";
 
 export function useGetResourcesQuery<IReturn>({ callback, key }: IQueryArgs<IReturn>, options: IQueryOptions = {}) {
   const { loadingConfig = { displayLoader: true }, errorConfig = { displayError: false }, ...queryOptions } = options;

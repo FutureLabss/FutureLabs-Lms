@@ -3,9 +3,9 @@ import UserLandingPageLayout from "@/shared/layouts";
 
 export default function UserLandingPage() {
   return (
-    <div>
+      <UserLandingPageLayout>
       <HomePage />
-    </div>
+      </UserLandingPageLayout>
   );
 }
-UserLandingPage.Layout = UserLandingPageLayout
+// UserLandingPage.Layout = UserLandingPageLayout

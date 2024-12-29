@@ -33,7 +33,9 @@ export default {
         foreground: "var(--foreground)",
         primary: "#212C4A", // Default primary color if CSS variable is not found
         secondary: "#F57F20",
-        "blue-74": "#212C4A"
+        "blue-74": "#212C4A",
+        "gray-100":"#333333",
+        tertairy: "#3E63DD",
       },
      
     },

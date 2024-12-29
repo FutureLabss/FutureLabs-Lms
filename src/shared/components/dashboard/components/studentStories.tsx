@@ -8,7 +8,7 @@ import { Navigation, Pagination } from "swiper/modules";
 import { studentStories } from "@/core/const/landingpage/studentstories";
 
 export default function StudentStoriesCardComponent() {
-    return (
+    return (  
         <div className="bg-black text-white py-8 px-4 h-[904px]">
             <Swiper
                 spaceBetween={20}

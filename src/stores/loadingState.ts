@@ -1,4 +1,4 @@
-import { IPlaceholderContent } from "@/core/types/generic/placeholder";
+import { IPlaceholderContent } from "@/core/types/interface/generic/placeholder";
 import { create } from "zustand";
 
 interface LoadingState {

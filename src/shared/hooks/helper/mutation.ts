@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "react-query";
-import { IMutationArgs } from "@/core/types/query";
+import { IMutationArgs } from "@/core/types/interface/query";
 import { NotificationType } from "@/core/types/enum/notification";
 import useNotificationStore from "@/stores/notificationState";
 import useLoadingStore from "@/stores/loadingState";

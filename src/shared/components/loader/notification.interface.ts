@@ -1,5 +1,5 @@
 import { NotificationType } from "@/core/types/enum/notification";
-import { IPlaceholderContent } from "@/core/types/generic/placeholder";
+import { IPlaceholderContent } from "@/core/types/interface/generic/placeholder";
 
 
 export interface NotificationData {
