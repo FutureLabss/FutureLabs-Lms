@@ -18,7 +18,7 @@ export default function SignUpPage() {
               <p className="text-sm w-[100%] max-w-[290px]">Kick start your tech join with us and learn from the industry best</p>
             </div>
             <div className="md:pt-[8rem] p-[3rem]">
-              <p className=" mb-2 text-sm w-[100%] max-w-[290px] md:leading-5">My journey as a designer isn't complete without futurelabs. To anyone out there, take on the opportunity. Best wishes</p>
+              <p className=" mb-2 text-sm w-[100%] max-w-[290px] md:leading-5">My journey as a designer isn&apos;t complete without futurelabs. To anyone out there, take on the opportunity. Best wishes</p>
               <div className="flex items-center pt-3">
                 <Image src={loginprofile} alt="User Avatar" className="rounded-full w-10 h-10 mr-2" /> {/* Placeholder image */}
                 <div>
@@ -88,7 +88,7 @@ export default function SignUpPage() {
                 </div>
 
               </div>
-              <p className="text-center mt-5 text-gray-600 text-sm">Don't have an account? <a href="#" className="text-blue-500 hover:underline">Sign up now</a></p>
+              <p className="text-center mt-5 text-gray-600 text-sm">Don&apos;t have an account? <a href="#" className="text-blue-500 hover:underline">Sign up now</a></p>
             </form>
           </div>
           </div>

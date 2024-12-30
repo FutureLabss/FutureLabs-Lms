@@ -1,12 +1,12 @@
 import logo from "../../../assets/logo.png"
 import Link from "next/link";
 import { FaTimes } from "react-icons/fa";
-import { useAuthContext } from "@/shared/context/auth";
-import { useState } from "react";
+// import { useAuthContext } from "@/shared/context/auth";
+// import { useState } from "react";
 import Image from "next/image";
-import Avatar from "../../../assets/Avatar.png"
+// import Avatar from "../../../assets/Avatar.png"
 import useActiveMenu from "@/shared/hooks/layout/activeMenu";
-import DropdownMenu from "../common/dropdown";
+// import DropdownMenu from "../common/dropdown";
 import { AdminMenus } from "@/core/menu.const";
 import { CiSettings } from "react-icons/ci";
 import { SlSupport } from "react-icons/sl";
@@ -24,16 +24,16 @@ interface Props {
 export default function AppDrawer(props:Props) {
   const { display, onToggle }=props
   const currentMenuItem = useActiveMenu();
-  const [isOpen, setIsOpen] = useState(false);
-  // const toggleDropdown = () => setIsOpen(!isOpen);
-  const { auth } = useAuthContext();
+  // const [isOpen, setIsOpen] = useState(false);
+  // // const toggleDropdown = () => setIsOpen(!isOpen);
+  // const { auth } = useAuthContext();
 
-  const handleDropdownAction = (action: string) => {
-    if (action == "logout") {
-      if (props.onLogout) props.onLogout();
-    }
-    setIsOpen(false);
-  };
+  // const handleDropdownAction = (action: string) => {
+  //   if (action == "logout") {
+  //     if (props.onLogout) props.onLogout();
+  //   }
+  //   setIsOpen(false);
+  // };
 
   return (
     <>

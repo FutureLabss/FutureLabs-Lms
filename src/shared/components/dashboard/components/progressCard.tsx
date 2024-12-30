@@ -1,6 +1,6 @@
 import { cardData } from "@/core/const/landingpage/studentprogress.data";
 import Image from "next/image";
-import { IoPerson } from "react-icons/io5";
+// import { IoPerson } from "react-icons/io5";
 
 export default function StudentProgressCardComponent() {
     return (

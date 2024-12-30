@@ -1,5 +1,4 @@
 import { BsHouseDash } from "react-icons/bs";
-import { MdOutlineSubscriptions } from "react-icons/md";
 import { Menu } from "./types/interface/menu";
 import { AdminRoutes } from "./routes.const";
 import { SlGraduation } from "react-icons/sl";

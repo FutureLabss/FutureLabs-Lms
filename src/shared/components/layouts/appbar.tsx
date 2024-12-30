@@ -1,9 +1,9 @@
 import Image from "next/image";
 import Avatar from "../../../assets/Avatar.png"
-import DropdownMenu from "../common/dropdown";
-import useActiveMenu from "@/shared/hooks/layout/activeMenu";
-import { useAuthContext } from "@/shared/context/auth";
-import { useState } from "react";
+// import DropdownMenu from "../common/dropdown";
+// import useActiveMenu from "@/shared/hooks/layout/activeMenu";
+// import { useAuthContext } from "@/shared/context/auth";
+// import { useState } from "react";
 import { IoIosArrowForward } from "react-icons/io";
 
 
@@ -14,18 +14,18 @@ interface Props {
   }
 
 export default function PreAppBar(props:Props){
-    const { display, onToggle }=props
-  const currentMenuItem = useActiveMenu();
-  const [isOpen, setIsOpen] = useState(false);
-  // const toggleDropdown = () => setIsOpen(!isOpen);
-  const { auth } = useAuthContext();
+  //   const { display, onToggle }=props
+  // const currentMenuItem = useActiveMenu();
+  // const [isOpen, setIsOpen] = useState(false);
+  // // const toggleDropdown = () => setIsOpen(!isOpen);
+  // const { auth } = useAuthContext();
 
-  const handleDropdownAction = (action: string) => {
-    if (action == "logout") {
-      if (props.onLogout) props.onLogout();
-    }
-    setIsOpen(false);
-  };
+  // const handleDropdownAction = (action: string) => {
+  //   if (action == "logout") {
+  //     if (props.onLogout) props.onLogout();
+  //   }
+  //   setIsOpen(false);
+  // };
     return(
         <div>
              <div className="py-2 lg:hidden" onClick={props.onToggle}>
@@ -35,7 +35,7 @@ export default function PreAppBar(props:Props){
           </div>
         <div className="flex flex-row lg:mt-[1.75rem] px-5 justify-between" >
             <div>
-                <h3 className="text-[27px] font-bold pt-2">Welcome Sir manny 👋🏻</h3>
+                <h3 className="text-[27px] font-bold pt-2">Welcome manny 👋🏻</h3>
             </div>
             <div className="flex flex-col md:flex-row items-center gap-4 cursor-pointer
           2xl:max-w-[800px]">

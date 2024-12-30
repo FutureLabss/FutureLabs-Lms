@@ -14,10 +14,10 @@ export interface layoutInterface {
 }
 
 export default function UserLayout(props: layoutInterface) {
-  const { title, description } = props;
+  // const { title, description } = props;
   const [showDrawer, setShowDrawer] = useState(false);
-  const [logoutModal, setLogoutModal] = useState(false);
-  const { islLoggedIn, loaded, logout } = useAuthContext();
+  // const [logoutModal, setLogoutModal] = useState(false);
+  const { islLoggedIn, loaded } = useAuthContext();
   //   const router = useRouter();
 
   useEffect(() => {
@@ -32,12 +32,13 @@ export default function UserLayout(props: layoutInterface) {
   };
 
   const toggleLogOutModal = () => {
-    setLogoutModal((val) => !val);
+    // setLogoutModal((val) => !val);
+    console.log("heloo")
   };
 
-  const handleLogout = () => {
-    logout(toggleLogOutModal);
-  };
+  // const handleLogout = () => {
+  //   logout(toggleLogOutModal);
+  // };
 
   return (
     <>
