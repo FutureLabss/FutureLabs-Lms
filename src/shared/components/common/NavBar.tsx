@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { Icon } from "./icon";
 import Link from "next/link";
-import { useRouter } from "next/router";
+import {useRouter } from "next/router";
 import { useState } from "react";
 import Button from "./Button";
 
@@ -29,7 +29,7 @@ const NavLinks = ({ to, children }: NavLinksProps) => {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-
+  const router = useRouter()
   return (
     <nav className="border-b  bg-white px-5 lg:px-12 py-4 z-20 fixed w-full">
       <div className="flex items-center justify-between  gap-4 md:gap-0">
@@ -50,9 +50,16 @@ export default function Navbar() {
             <NavLinks to="/why-future-academy">Why Future Academy</NavLinks>
           </li>
         </ul>
-        <Button className="py-[10px] max-w-[189px] w-full hidden md:block" isBorder={true} color="black" radius="extraSmall" >
-          Apply now
-        </Button>
+      <Button
+        className="py-[10px] max-w-[189px] w-full hidden md:block"
+        isBorder={true}
+        color="black"
+        radius="extraSmall"
+      >
+        <Link href="https://futurelabs-two.vercel.app/services/learnskill" passHref>
+        Apply now
+    </Link>
+      </Button>
 
         {/* Mobile Menu */}
 
@@ -68,7 +75,9 @@ export default function Navbar() {
             <NavLinks to="/schools">Schools</NavLinks>
             <NavLinks to="/why-future-academy">Why Future Academy</NavLinks>
             <Button className="py-[10px] max-w-[189px] w-full" isBorder={true} color="orange" radius="extraSmall">
+            <Link href="https://futurelabs-two.vercel.app/services/learnskill" passHref>
               Apply now
+          </Link>
             </Button>
           </div>
         </div>
@@ -84,3 +93,5 @@ export default function Navbar() {
     </nav>
   );
 }
+
+
