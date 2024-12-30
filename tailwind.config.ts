@@ -9,25 +9,25 @@ export default {
   ],
   theme: {
     extend: {
-      // screens: {
-      //   xsm: "320px",
-      //   xxs: "375px",
-      //   xs: "425px",
-      //   sm: "640px",
-      //   md: "768px",
-      //   lg: "1024px",
-      //   xl: "1280px",
-      //   xxl: "1440px",
-      //   "2xl": "1536px",
-      // },
       screens: {
-        xs: "10px",
+        xsm: "320px",
+        xxs: "375px",
+        xs: "425px",
         sm: "640px",
         md: "768px",
         lg: "1024px",
         xl: "1280px",
+        xxl: "1440px",
         "2xl": "1536px",
       },
+      // screens: {
+      //   xs: "10px",
+      //   sm: "640px",
+      //   md: "768px",
+      //   lg: "1024px",
+      //   xl: "1280px",
+      //   "2xl": "1536px",
+      // },
       colors: {
         background: "#1D1B33",
         foreground: "var(--foreground)",

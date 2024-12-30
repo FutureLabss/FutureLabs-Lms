@@ -43,7 +43,7 @@ export default function StudentStoriesCardComponent() {
                                 </h2>
 
                             </div>
-                                <div className="pt-[25rem]">
+                                <div className="md:pt-[25rem] pt-[7rem]">
                                     <p className="font-semibold">{story.name}</p>
                                     <p className="text-orange-500">{story.role}</p>
                                 </div>

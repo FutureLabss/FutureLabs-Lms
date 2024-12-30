@@ -66,7 +66,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
             text: "Login Successful: Welcome back!",
           },
         });
-        router.push("/admin");
+        router.push("/user");
       })
       .catch((e) => {
         const message = e.response?.data?.message || "Network Error";

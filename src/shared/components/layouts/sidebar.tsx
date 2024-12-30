@@ -62,7 +62,7 @@ export default function AppDrawer(props:Props) {
             key={item.path}
             className={`flex items-center py-3 px-4 rounded-md gap-3
               ${item.disabled ? "cursor-not-allowed" : "cursor-pointer"} 
-              ${isActive ? "text-secondary font-semibold" : "text-gray-700 hover:text-secondary"}`}
+              ${isActive ? "text-secondary font-semibold" : "text-[#202020] hover:text-secondary"}`}
           >
             {item.icon && (
               <item.icon
@@ -79,10 +79,10 @@ export default function AppDrawer(props:Props) {
 
         <div className="">
           <div className="">
-            <h4 className="text-[#3F3F3F] text-[1rem] px-2">SETTINGS</h4>
+            <h4 className="text-[#202020] text-[1rem] px-2 ">SETTINGS</h4>
             <Link
               href="#settings"
-              className="flex items-center py-3 gap-3 text-gray-700 hover:text-secondary"
+              className="flex items-center py-3 gap-3 texttext-[#202020] hover:text-secondary"
             >
               <span>
                 <CiSettings />
@@ -91,12 +91,12 @@ export default function AppDrawer(props:Props) {
             </Link>
             <Link
               href="#support"
-              className="flex items-center py-3 gap-3 text-gray-700 hover:text-secondary"
+              className="flex items-center py-3 gap-3 text-[#202020] hover:text-secondary"
             >
               <span>
                < SlSupport />
               </span>
-              <span className="text-sm font-medium  2xl:text-base">Support</span>
+              <span className="text-sm font-medium  2xl:text-base text-[#202020]">Support</span>
             </Link>
             <div className="pb-[1.5rem]">
             <button

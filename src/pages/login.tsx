@@ -40,7 +40,7 @@ export default function LoginPage() {
       };
     return (
       <div className="bg-white grid grid-cols-1 md:grid-cols-2 ">
-          <div className="bg-background text-white md:px-[75px]  ">
+          <div className="bg-background text-white md:px-[75px] ">
             <div className="md:pt-[15.25rem] p-[3rem]">
               <h2 className="md:text-[3rem] text-[1.5rem] font-bold">Join Futurelabs and Start Your Tech Journey!</h2>
               <p className="text-sm w-[100%] max-w-[290px]">Kick start your tech join with us and learn from the industry best</p>
@@ -100,7 +100,7 @@ export default function LoginPage() {
                 </div>
                 <a href="#" className="text-sm text-blue-500 hover:underline">Forgot password?</a>
               </div>
-              <div className="mt-[54px]">
+              <div className="mt-[54px]">     
                 <div className="mb-10">
               <button
                 type="submit"
