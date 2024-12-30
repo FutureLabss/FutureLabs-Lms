@@ -29,7 +29,6 @@ const NavLinks = ({ to, children }: NavLinksProps) => {
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const router = useRouter()
   return (
     <nav className="border-b  bg-white px-5 lg:px-12 py-4 z-20 fixed w-full">
       <div className="flex items-center justify-between  gap-4 md:gap-0">
