@@ -57,7 +57,7 @@ export default function Footer() {
               <Link href={"/news"}> News <span className="ml-3">/</span></Link>
               <Link href={"/contacts"}> Contacts <span className="ml-3">/</span></Link>
             </ul>
-            <p className="text-white hidden sm:block">Privacy</p>
+            <p className="text-white/40 hidden sm:block">Privacy</p>
           </div>
         </div>
       </div>
