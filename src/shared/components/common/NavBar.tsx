@@ -31,7 +31,7 @@ export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <nav className="border-b shadow-md px-5 lg:px-12 py-4 relative w-full">
+    <nav className="border-b  bg-white px-5 lg:px-12 py-4 z-20 fixed w-full">
       <div className="flex items-center justify-between  gap-4 md:gap-0">
         {/* Logo */}
         <div className="text-orange-600 font-bold text-xl">
@@ -58,16 +58,16 @@ export default function Navbar() {
 
         <div
           className={clsx(
-            "md:hidden top-12 inset-0 bg-white absolute z-10 transform",
+            "md:hidden top-12 inset-0 bg-white absolute z-10 transform  h-screen",
             "transition-transform duration-700 ease-out",
             isOpen ? "translate-x-0" : "-translate-x-full"
           )}
         >
-          <div className="flex flex-col items-start px-6 mt-4 py-4 gap-4 bg-white">
+          <div className="flex flex-col items-start px-6 mt-4 h-full bg-white gap-4">
             <NavLinks to="/">Home</NavLinks>
             <NavLinks to="/schools">Schools</NavLinks>
             <NavLinks to="/why-future-academy">Why Future Academy</NavLinks>
-            <Button className="py-[10px] max-w-[189px] w-full" isBorder={true} color="black" radius="extraSmall">
+            <Button className="py-[10px] max-w-[189px] w-full" isBorder={true} color="orange" radius="extraSmall">
               Apply now
             </Button>
           </div>

@@ -7,7 +7,7 @@ interface ButtonProps {
   children: React.ReactNode;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
-  radius?: "small" | "medium" | "large" | "full" | "extraSmall"; // Add extraSmall
+  radius?: "small" | "medium" | "large" | "full" | "extraSmall" | "rounded16"; // Add extraSmall
   loading?: boolean;
   color?: "orange" | "black"
   isBorder?: boolean; // New prop for color
@@ -23,11 +23,12 @@ export default function Button({
   color = "black",
   isBorder = false,
   disabled = false,
-  loading = false, // Default to false
+  loading = false, 
 }: ButtonProps) {
 
   const radiusStyles = {
     extraSmall: "rounded-[10px]",
+    rounded16: "rounded-[16px]",
     small: "rounded-[20px]",
     medium: "rounded-lg",
     large: "rounded-xl",
@@ -35,7 +36,7 @@ export default function Button({
   };
 
   const colorStyles = {
-    orange: "bg-secondary text-white hover:bg-black-200 bg-transparent ",
+    orange: "bg-secondary text-white hover:bg-black-200 ",
     black: isBorder
       ? "border border-primary text-primary hover:text-white hover:border-transparent hover:bg-secondary"
       : "hover:bg-secondary bg-transparent text-primary hover:text-white hover:border-transparent",
@@ -46,7 +47,7 @@ export default function Button({
     <button
       type={type}
       onClick={onClick}
-      disabled={disabled || loading} // Disable the button when loading
+      disabled={disabled || loading} 
       className={clxs(
         radiusStyles[radius],
         colorStyles[color],
@@ -58,7 +59,7 @@ export default function Button({
       {loading ? (
         <div className="flex justify-center items-center ">
           <svg
-            className="w-5 h-5 animate-spin"
+            className="w-6 h-6 animate-spin"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"

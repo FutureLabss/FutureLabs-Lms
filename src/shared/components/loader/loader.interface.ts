@@ -1,4 +1,4 @@
-import { IPlaceholderContent } from "@/core/types/generic/placeholder";
+import { IPlaceholderContent } from "@/core/types/interface/generic/placeholder";
 
 export interface LoadingConfig extends IPlaceholderContent {
   displayLoader?: boolean;
