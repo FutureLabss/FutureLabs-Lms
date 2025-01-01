@@ -13,7 +13,7 @@ export const usePrevious = <T>(value: T): T | undefined => {
 };
 
 export const useManageLoadingState = (isLoading: boolean, loadingConfig: LoadingConfig) => {
-  const { setLoading, isLoading: stateLoader } = useLoadingStore((state: any) => state);
+  const { setLoading, isLoading: stateLoader } = useLoadingStore((state) => state);
   const prevLoading = usePrevious(isLoading);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ export const useManageLoadingState = (isLoading: boolean, loadingConfig: Loading
 };
 
 export const useManageErrorNotifications = (error: Error, errorConfig: ErrorConfig) => {
-  const setNotification = useNotificationStore((state: { setDisplay: any; }) => state.setDisplay);
+  const setNotification = useNotificationStore((state) => state.setDisplay);
 
   if (error && errorConfig.displayError) {
     setNotification(true, {

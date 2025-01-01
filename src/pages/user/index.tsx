@@ -10,7 +10,7 @@ export default function DashboardPage() {
   };
   return (
     <UserLayout title={""} description={""} >
-      <PreAppBar display={false} onToggle={toggleDrawer} />
+      <PreAppBar display={showDrawer} onToggle={toggleDrawer} />
           <EmptyState />
     </UserLayout>
   );

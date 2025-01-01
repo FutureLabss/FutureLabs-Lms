@@ -1,6 +1,6 @@
 import { cardData } from "@/core/const/landingpage/studentprogress.data";
 import Image from "next/image";
-import { IoPerson } from "react-icons/io5";
+// import { IoPerson } from "react-icons/io5";
 
 export default function StudentProgressCardComponent() {
     return (
@@ -13,7 +13,8 @@ export default function StudentProgressCardComponent() {
         // >
         <div
         key={index}
-        className={`text-white w-[100%] md:max-w-[390px] h-[55vh]  rounded-lg p-6 flex flex-col shadow-lg ${
+        className={`text-white w-[100%] md:max-w-[390px] h-[55vh]
+            rounded-lg p-6 flex flex-col justify-between shadow-lg ${
             card.bgColor === "orange"
                 ? "bg-orange-500"
                 : card.bgColor === "blue"
@@ -27,12 +28,12 @@ export default function StudentProgressCardComponent() {
                     <card.icon /> <span className='mt-[-3px] text-[30px]'>{card.title}</span></span>
                 </div>
             </div>
-            <div className="md:py-10 ">
+            <div className="md:py-5 ">
                 <Image src={card.img} alt={""} />
             </div>
-            <div className="items-end  flex flex-col ">
+            <div className="items-end flex flex-col ">
             <div className="text-3xl font-bold">{card.count}</div>
-            <div className="text-[20px] mt-2">{card.description}</div>
+            <div className="text-[20px] ">{card.description}</div>
             </div>
         </div>
             ))}

@@ -1,12 +1,12 @@
 import logo from "../../../assets/logo.png"
 import Link from "next/link";
 import { FaTimes } from "react-icons/fa";
-import { useAuthContext } from "@/shared/context/auth";
-import { useState } from "react";
+// import { useAuthContext } from "@/shared/context/auth";
+// import { useState } from "react";
 import Image from "next/image";
-import Avatar from "../../../assets/Avatar.png"
+// import Avatar from "../../../assets/Avatar.png"
 import useActiveMenu from "@/shared/hooks/layout/activeMenu";
-import DropdownMenu from "../common/dropdown";
+// import DropdownMenu from "../common/dropdown";
 import { AdminMenus } from "@/core/menu.const";
 import { CiSettings } from "react-icons/ci";
 import { SlSupport } from "react-icons/sl";
@@ -24,16 +24,16 @@ interface Props {
 export default function AppDrawer(props:Props) {
   const { display, onToggle }=props
   const currentMenuItem = useActiveMenu();
-  const [isOpen, setIsOpen] = useState(false);
-  // const toggleDropdown = () => setIsOpen(!isOpen);
-  const { auth } = useAuthContext();
+  // const [isOpen, setIsOpen] = useState(false);
+  // // const toggleDropdown = () => setIsOpen(!isOpen);
+  // const { auth } = useAuthContext();
 
-  const handleDropdownAction = (action: string) => {
-    if (action == "logout") {
-      if (props.onLogout) props.onLogout();
-    }
-    setIsOpen(false);
-  };
+  // const handleDropdownAction = (action: string) => {
+  //   if (action == "logout") {
+  //     if (props.onLogout) props.onLogout();
+  //   }
+  //   setIsOpen(false);
+  // };
 
   return (
     <>
@@ -62,7 +62,7 @@ export default function AppDrawer(props:Props) {
             key={item.path}
             className={`flex items-center py-3 px-4 rounded-md gap-3
               ${item.disabled ? "cursor-not-allowed" : "cursor-pointer"} 
-              ${isActive ? "text-secondary font-semibold" : "text-gray-700 hover:text-secondary"}`}
+              ${isActive ? "text-secondary font-semibold" : "text-[#202020] hover:text-secondary"}`}
           >
             {item.icon && (
               <item.icon
@@ -79,10 +79,10 @@ export default function AppDrawer(props:Props) {
 
         <div className="">
           <div className="">
-            <h4 className="text-[#3F3F3F] text-[1rem] px-2">SETTINGS</h4>
+            <h4 className="text-[#202020] text-[1rem] px-2 ">SETTINGS</h4>
             <Link
               href="#settings"
-              className="flex items-center py-3 gap-3 text-gray-700 hover:text-secondary"
+              className="flex items-center py-3 gap-3 texttext-[#202020] hover:text-secondary"
             >
               <span>
                 <CiSettings />
@@ -91,12 +91,12 @@ export default function AppDrawer(props:Props) {
             </Link>
             <Link
               href="#support"
-              className="flex items-center py-3 gap-3 text-gray-700 hover:text-secondary"
+              className="flex items-center py-3 gap-3 text-[#202020] hover:text-secondary"
             >
               <span>
                < SlSupport />
               </span>
-              <span className="text-sm font-medium  2xl:text-base">Support</span>
+              <span className="text-sm font-medium  2xl:text-base text-[#202020]">Support</span>
             </Link>
             <div className="pb-[1.5rem]">
             <button
