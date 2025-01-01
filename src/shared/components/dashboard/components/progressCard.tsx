@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function StudentProgressCardComponent() {
     return (
-        <div className="flex flex-col md:flex-row justify-around gap-[52px] p-6 md:py-[69px] md:px-[81px] bg-white">
+        <div className="flex flex-col md:flex-row justify-around gap-[20px] p-6 md:py-[69px] bg-white">
             {cardData.map((card, index) => (
         // <div
         //     key={index}
