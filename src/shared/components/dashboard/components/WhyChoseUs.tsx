@@ -4,8 +4,8 @@ export default function WhyChoseUs() {
   return (
     <div className="flex flex-col items-center justify-center gap-[64px] py-5 mt-4 px-4">
       <div className="text-center flex flex-col gap-4 -tracking-tight">
-        <h2 className="text-3xl font-semibold">Why Choose <span className="text-secondary">Us</span></h2>
-        <p className="text-[24px]">Dedicated to Shaping Tomorrow&apos;s Innovators, Today.</p>
+        <h2 className="text-2xl md:text-3xl font-semibold">Why Choose <span className="text-secondary">Us</span></h2>
+        <p className="text-[1rem] md:text-[24px]">Dedicated to Shaping Tomorrow&apos;s Innovators, Today.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-screen-xxl max-h-[20rem">
         {/* Left Large Image */}
