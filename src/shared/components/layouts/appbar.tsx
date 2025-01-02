@@ -27,13 +27,13 @@ export default function PreAppBar(props:Props){
   //   setIsOpen(false);
   // };
     return(
-        <div>
-             <div className="py-2 lg:hidden" onClick={props.onToggle}>
+        <div className="">
+             <div className="py-2 px-5 lg:hidden" onClick={props.onToggle}>
             <svg className="h-6 w-6 text-blue-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
             </svg>
           </div>
-        <div className="flex flex-row lg:mt-[1.75rem] px-5 justify-between" >
+        <div className="flex flex-row lg:mt-[1.75rem] lg:ml-[16rem] 2xl:ml-[30rem] px-5 justify-between" >
             <div>
                 <h3 className="text-[27px] font-bold pt-2">Welcome manny 👋🏻</h3>
             </div>

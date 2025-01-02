@@ -1,6 +1,6 @@
 import { setToken } from "@/core/config/api.config";
 import { NotificationType } from "@/core/types/enum/notification";
-import { AuthResponse, ILogin } from "@/core/types/interface/auth";
+import { AuthResponse, ICreatePassword, ILogin } from "@/core/types/interface/auth";
 import useNotificationStore from "@/stores/notificationState";
 import axios from "axios";
 import router from "next/router";
@@ -12,6 +12,7 @@ interface AuthContextType {
   logout: (callback?: () => void) => void;
   islLoggedIn: boolean;
   loaded: boolean;
+  CreatePassword:(data: ICreatePassword) => void;
 }
 
 const usersContext = createContext<AuthContextType>({
@@ -20,6 +21,7 @@ const usersContext = createContext<AuthContextType>({
   logout: () => {},
   islLoggedIn: false,
   loaded: false,
+  CreatePassword: ()=>{}
 });
 
 export default function AuthContext({ children }: { children: ReactNode }) {
@@ -50,6 +52,24 @@ export default function AuthContext({ children }: { children: ReactNode }) {
     }
     setLoaded(true);
   }, []);
+
+  
+  const CreatePassword = async (data: ICreatePassword) => {
+    try {
+      const response = await axios.post("/auth/register", data);
+      return response.data;
+    } catch (error: any) {
+      const message = error.response?.data?.message || "Network Error";
+      throw new Error(message);
+    }
+  };
+  
+
+  // const CreatePassword = async ()=>{
+  //   const Promise = await axios 
+  //   .post("/auth/register")
+  //   return Promise;
+  // }
 
   const login = async (data: ILogin) => {
     const Promise = await axios
@@ -85,7 +105,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
     if (callback) callback();
   };
 
-  const value = { auth, login, logout, loaded, islLoggedIn };
+  const value = { auth, login, logout, loaded, islLoggedIn, CreatePassword };
 
   return <>{loaded ? <usersContext.Provider value={value}>{children}</usersContext.Provider> : <> </>}</>;
 }

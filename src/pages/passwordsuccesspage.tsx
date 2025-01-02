@@ -21,8 +21,7 @@ export default function PasswordSuccessPage() {
           />
         </div>
       </div>
-
-
+      
       <div className=" md:px-[76px] pt-10">
         <div className="flex items-end flex-row justify-end w-full">
           <Image src={logo} alt="Futurelabs Logo" />
