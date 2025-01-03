@@ -2,68 +2,100 @@ import Image from "next/image";
 import logo from "../assets/logo.png";
 import auth from "../assets/auth.png";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { ICreatePassword } from "@/core/types/interface/auth";
 import { useAuthContext } from "@/shared/context/auth";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { useGetAllUsers } from "@/shared/hooks/query/users";
+
+
+const schema = z.object({
+  email: z.string().email("Invalid email address"),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .min(8, "Use at least 8 characters")
+    .regex(
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+      "Use at least 8 characters, including uppercase, lowercase, numbers, and special characters."
+    ),
+    confirm_password: z.string().min(1, "Confirm Password is required"),
+    remember_me: z.boolean().optional(),
+}).refine((data) => data.password === data.confirm_password, {
+  path: ["confirmPassword"],
+  message: "Passwords must match",
+});
+
+type FormData = z.infer<typeof schema>;
 
 export default function CreatePasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { CreatePassword } = useAuthContext();
+  const {data:users}=useGetAllUsers()
+  console.log(users, "users list")
+  const { query } = useRouter();
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    if (query.email) {
+      setEmail(query.email as string);
+    }
+  }, [query.email]);
   const [userData, useUserData]=useState<ICreatePassword>({
     email: "",
     password: "",
-    confirmPassword:""
+    confirm_password:"",
+    remember_me:false
   })
   const [hidePassword, setHidePassword] = useState(false);
-  const router = useRouter()
   const togglePasswordVisibility = () => {
     setHidePassword(!hidePassword);
   };
-  // const handleRedirectToSuccessPage =()=>{
-  //   console.log("createPassword")
-  //   router.push("/passwordsuccesspage")
-  // }
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { value, name } = event.target;
     useUserData({ ...userData, [name]: value });
   }
-  const handleSubmitForm = async (event: React.FormEvent) => {
-    event.preventDefault();
-    const { email, password, confirmPassword } = userData;
-    if (!email || !password || !confirmPassword) {
-      setError("All fields are required.");
-      return;
-    }
-    if (password !== confirmPassword) {
-      setError("Passwords do not match.");
-      return;
-    }
-    if (password.length < 8) {
-      setError("Password must be at least 8 characters long.");
-      return;
-    }
-    setError(null);
+  const onSubmit = async (data: FormData) => {
+    setLoading(true);
     try {
-      await CreatePassword(userData);
-      router.push("/passwordsuccesspage");
-    } catch (err: any) {
-      setError(err.message || "An error occurred.");
+      const payload:FormData = {
+        email,
+        password: data.password,
+        confirm_password: data.confirm_password, 
+        remember_me: data.remember_me,
+      };
+      await CreatePassword(payload);
+     
+    } catch (err) {
+      console.error("Error in API call:", err);
+      setError("Failed to create password.");
+    } finally {
+      setLoading(false);
+      reset();
     }
   };
+  
+  const {
+      register,
+      handleSubmit,
+      formState: { errors },
+      reset
+    } = useForm<FormData>({
+      resolver: zodResolver(schema),
+      defaultValues: {
+        password: "",
+        confirm_password: "",
+        remember_me: false,
+      },
+      mode: "onChange",
+    });
   return (
-    <div className="bg-white grid grid-cols-1 md:grid-cols-2 ">
-      <div className="bg-background text-white flex items-center justify-center">
-        <div className=" pt-10">
-          <Image
-            src={auth}
-            alt="User Avatar"
-            className="mx-auto w-[100%] md:w-[100%]"
-          />
-        </div>
-      </div>
-      {/* <div className="bg-background text-white md:px-[75px] ">
+    <div className="bg-white grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 h-full lg:min-h-[850px]">
+       <div className="bg-background text-white  hidden lg:flex items-center justify-center">
         <div className="md:pt-[2.55rem]">
           <Image
             src={auth}
@@ -71,8 +103,8 @@ export default function CreatePasswordPage() {
             className="mx-auto w-[100%] md:w-[100%]"
           />
         </div>
-      </div> */}
-      <div className="md:px-[76px]">
+      </div>
+      <div className="md:px-[76px] xsm:px-4 ">
         <div className="pt-[30px] pb-[10px] flex items-end flex-row justify-end">
           <Image src={logo} alt="Futurelabs Logo" />
         </div>
@@ -81,26 +113,29 @@ export default function CreatePasswordPage() {
           <h2 className="text-2xl font-semibold mb-6 text-black">
             Create password 
           </h2>
+          </div>
           <form
-          onSubmit={handleSubmitForm}
+          onSubmit={handleSubmit(onSubmit)}
           className="flex flex-col gap-[27px]"
           >
             <input
               type="email"
-              name="email"
-              value={userData.email}
-              placeholder="Johndoe@gmail.com"
-              onChange={handleChange}
+              value={email}
+              readOnly
+              {...register("email")}
+               placeholder="Johndoe@gmail.com"
               className="w-full rounded-md py-3 px-3 mb-4 bg-white outline-gray-400 border focus:outline-none focus:border-background"
             />
             <div className="relative mb-4">
               <input
-              onChange={handleChange}
-              name="password"
               value={userData.password}
+              {...register("password")}
+              aria-invalid={errors.password ? "true" : "false"}
+              onChange={handleChange}
                 type={hidePassword ? "text" : "password"}
                 placeholder="Enter password"
-                className="w-full rounded-md py-3 px-3 bg-white outline-gray-400 border focus:outline-none focus:border-background"
+                className="w-full rounded-md py-3 px-3 bg-white
+                 outline-gray-400 border focus:outline-none focus:border-background"
                 autoComplete="off"
               />
               <div
@@ -113,42 +148,48 @@ export default function CreatePasswordPage() {
                   <FaRegEyeSlash size={20} className="text-gray-600" />
                 )}
               </div>
-            <div className="pt-[20px]">
-              <p className="text-secondary text-[10px] font-semibold">
-              Use at least 8 characters, including uppercase, lowercase, numbers, and special characters.
-              </p>
-            </div>
+              {errors.password && (
+                <p className="text-secondary text-[10px]">{errors.password.message}</p>
+              )}
             </div>
             <div className="relative mb-4">
+              <div>  
               <input
-              name="confirmPassword"
-              value={userData.confirmPassword}
+              value={userData.confirm_password}
+              {...register("confirm_password")}
+                aria-invalid={errors.confirm_password ? "true" : "false"}
               onChange={handleChange}
                 type={hidePassword ? "text" : "password"}
                 placeholder="Confirm password"
                 className="w-full rounded-md py-3 px-3 bg-white outline-gray-400 border focus:outline-none focus:border-background"
                 autoComplete="off"
               />
-            <div className="flex items-center  pt-[20px]">
-              <input
-                type="checkbox"
-                id="rememberMe"
-                className="w-4 h-4 mr-2 text-background"
-              />
-              <label htmlFor="rememberMe" className="text-sm text-gray-600">
-                Remember me
+              {errors.confirm_password && (
+                <p className="text-secondary text-[10px]">{errors.confirm_password.message}</p>
+              )}
+              </div>
+              <div className="flex items-center pt-5">
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  {...register("remember_me")}
+                  className="sr-only peer"
+                />
+                <div className="w-10 h-5 bg-gray-300 rounded-full peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 peer-checked:bg-blue-600 transition-all peer-checked:after:translate-x-5 after:content-[''] after:absolute after:top-0.5 after:left-0.5 after:bg-white  after:border after:rounded-full after:h-4 after:w-4 after:transition-all"></div>
+                <span className="ml-3 text-sm font-medium text-gray-900">Remember me</span>
               </label>
             </div>
             </div>
+            <div className="pb-5">
             <button
                type="submit"
               className="w-full bg-background text-white py-3 rounded-md hover:bg-background-dark focus:outline-none focus:ring focus:ring-blue-300 text-[20px]"
             >
                {!loading ? `Set password` : "Loading..."}
             </button>
+            </div>
           </form>
         </div>
-      </div>
     </div>
   );
 }

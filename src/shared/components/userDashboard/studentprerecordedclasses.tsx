@@ -7,9 +7,7 @@ export default function UserDashboardPreRecordedClasses(){
           <button className="text-black text-sm font-bold">View All</button>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
-          {Array(6)
-            .fill(0)
-            .map((index) => (
+          {.map((index) => (
               <div key={index} className="bg-gray-100 p-3 rounded-lg shadow">
                 <img
                   src="/course-thumbnail.jpg"

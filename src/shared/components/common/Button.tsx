@@ -9,7 +9,7 @@ interface ButtonProps {
   disabled?: boolean;
   radius?: "small" | "medium" | "large" | "full" | "extraSmall" | "rounded16"; // Add extraSmall
   loading?: boolean;
-  color?: "orange" | "black"
+  color?: "orange" | "black" | "primary"
   isBorder?: boolean; // New prop for color
   // New prop to show the loading spinner
 }
@@ -23,7 +23,7 @@ export default function Button({
   color = "black",
   isBorder = false,
   disabled = false,
-  loading = false, 
+  loading = false,
 }: ButtonProps) {
 
   const radiusStyles = {
@@ -37,6 +37,7 @@ export default function Button({
 
   const colorStyles = {
     orange: "bg-secondary text-white hover:bg-black-200 ",
+    primary: "bg-primary text-white",
     black: isBorder
       ? "border border-primary text-primary hover:text-white hover:border-transparent hover:bg-secondary"
       : "hover:bg-secondary bg-transparent text-primary hover:text-white hover:border-transparent",
@@ -47,7 +48,7 @@ export default function Button({
     <button
       type={type}
       onClick={onClick}
-      disabled={disabled || loading} 
+      disabled={disabled || loading}
       className={clxs(
         radiusStyles[radius],
         colorStyles[color],

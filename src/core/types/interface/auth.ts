@@ -1,7 +1,8 @@
 export interface ICreatePassword {
     email: string;
     password: string;
-    confirmPassword:string;
+    confirm_password:string;
+    remember_me?:boolean
   }
 export interface ILogin {
     email: string;
