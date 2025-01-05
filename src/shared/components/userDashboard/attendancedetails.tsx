@@ -9,8 +9,8 @@ export default function UserDashboardAttendanceDetails() {
               key={index}
               className="bg-white rounded-lg shadow p-5 flex flex-row gap-3 items-center"
             >
-                <div className="bg-secondary p-3 rounded-full ">
-                    <item.icon className="text-white" />
+                <div className="bg-[#F57F2033] p-[18px] rounded-full ">
+                    <item.icon className="text-[#F57F20]" />
                 </div>
                 <div className="flex flex-col items-start">
               <span className="font-semibold lg:text-lg text-sm">{item.value}</span>
