@@ -25,7 +25,7 @@ export const AdminMenus: Menu[] = [
     title: "Courses",
     id: "2",
     icon: SlGraduation,
-    path: `${AdminRoutes.USERS}`,
+    path: `${AdminRoutes.COURSES}`,
   },
   {
     title: "Assignments",
@@ -35,21 +35,21 @@ export const AdminMenus: Menu[] = [
   },
   {
     title: "Live Classes",
-    id: "2",
+    id: "4",
     icon: RiLiveLine,
     path: `${AdminRoutes.AdminTeam}`,
     // disabled: true,
   },
   {
     title: "Leaderboard",
-    id: "2",
+    id: "5",
     icon: MdLeaderboard,
     // disabled: false,
     path: `${AdminRoutes.SUBSCRIPTION}`,
   },
   {
     title: "Notifications",
-    id: "2",
+    id: "6",
     icon: IoIosNotificationsOutline,
     // disabled: false,
     path: `${AdminRoutes.SUBSCRIPTION}`,

@@ -1,19 +1,12 @@
 import logo from "../../../assets/logo.png"
 import Link from "next/link";
 import { FaTimes } from "react-icons/fa";
-// import { useAuthContext } from "@/shared/context/auth";
-// import { useState } from "react";
 import Image from "next/image";
-// import Avatar from "../../../assets/Avatar.png"
 import useActiveMenu from "@/shared/hooks/layout/activeMenu";
-// import DropdownMenu from "../common/dropdown";
 import { AdminMenus } from "@/core/menu.const";
 import { CiSettings } from "react-icons/ci";
 import { SlSupport } from "react-icons/sl";
 import { CiLogout } from "react-icons/ci";
-
-
-
 
 interface Props {
   display: boolean;
@@ -24,16 +17,7 @@ interface Props {
 export default function AppDrawer(props:Props) {
   const { display, onToggle }=props
   const currentMenuItem = useActiveMenu();
-  // const [isOpen, setIsOpen] = useState(false);
-  // // const toggleDropdown = () => setIsOpen(!isOpen);
-  // const { auth } = useAuthContext();
-
-  // const handleDropdownAction = (action: string) => {
-  //   if (action == "logout") {
-  //     if (props.onLogout) props.onLogout();
-  //   }
-  //   setIsOpen(false);
-  // };
+  console.log("AppDrawer rendered");
 
   return (
     <>
@@ -43,16 +27,15 @@ export default function AppDrawer(props:Props) {
         ${display ? "flex" : "hidden"}
         ${display ? "top-0 " : ""} `}
       >
-        <div className="flex mb-8 lg:hidden justify-between border">
-          <h2 className="text-2xl lg:text-2xl font-semibold p-5">{currentMenuItem?.title || "Dashboard"}</h2>
-          <div className="flex justify-end cursor-pointer" onClick={onToggle}>
-            <FaTimes />
-          </div>
-        </div>
         <div>
+          <div className="flex flex-row justify-between">
         <div>
           <Image src={logo} alt={""} />
         </div>
+        <div className="lg:hidden flex justify-end cursor-pointer" onClick={onToggle}>
+          <FaTimes className="text-secondary" />
+        </div>
+          </div>
         <div className="md:pt-[56px]">
         {AdminMenus.filter((item) => !item.disabled).map((item) => {
           const isActive = currentMenuItem && currentMenuItem.path != "" && item.path == currentMenuItem.path;
@@ -67,7 +50,7 @@ export default function AppDrawer(props:Props) {
             {item.icon && (
               <item.icon
                 size={20}
-                className={`${isActive ? "text-secondary" : "text-gray-700"} `}
+                className={`${isActive ? "text-secondary" : "text-gray-700 "} `}
               />
             )}
             <span className="text-sm font-medium 2xl:text-base">{item.title}</span>
@@ -112,10 +95,12 @@ export default function AppDrawer(props:Props) {
           </div>
         </div>
       </div>
-      
-      {display ? (
-        <div onClick={onToggle} className="opacity-30 fixed inset-0 z-10 bg-black lg:hidden h-screen"></div>
-      ) : null}
+        {display && (
+        <div
+          className="fixed inset-0 z-[1] bg-black bg-opacity-30 lg:hidden"
+          onClick={onToggle}
+        ></div>
+      )}
     </>
   );
 }
