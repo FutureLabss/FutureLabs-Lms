@@ -44,10 +44,10 @@ export default function EmailVerificationSuccessful() {
           </p>
           <div className="text-left mt-4">
             <p>
-              <strong>Email:</strong> {email || "Loading..."}
+             {email}
             </p>
             <p>
-              <strong>Token:</strong> {token || "Loading..."}
+            {token}
             </p>
           </div>
           <div className="mt-16">
