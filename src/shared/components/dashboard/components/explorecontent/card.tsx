@@ -12,8 +12,8 @@ interface ICardProps {
 
 export default function CardComponent (props: ICardProps){
   return (
-    <div className='flex flex-col md:flex-row w-[100%] md:max-w-[606px] md:mx-auto '>
-        <div  className='w-[100%]  md:max-w-[2000] md:mx-[auto]: rounded-l-lg '>
+    <div className='flex flex-col xl:flex-row w-[100%] md:max-w-[606px] md:mx-auto '>
+        <div  className='w-[100%]  md:max-w-[2000] md:mx-[auto] rounded-l-lg '>
       <Image src={props.img} alt={'images'} className='rounded-l-lg w-full h-full object-cover' />
         </div>
         <div className="bg-white rounded-r-lg shadow-md p-4 text-left w-[100%] min-h-[300px]">

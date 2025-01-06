@@ -33,4 +33,20 @@ export  const studentStories:IStoriesCard[] = [
             "The hands-on approach at Future Labs Academy gave me the confidence to lead product development and succeed in the tech industry.",
         image: designer,
     },
+    {
+        id: 4,
+        name: "John Smith",
+        role: "Product Manager",
+        story:
+            "The hands-on approach at Future Labs Academy gave me the confidence to lead product development and succeed in the tech industry.",
+        image: designer,
+    },
+    {
+        id: 5,
+        name: "John Smith",
+        role: "Product Manager",
+        story:
+            "The hands-on approach at Future Labs Academy gave me the confidence to lead product development and succeed in the tech industry.",
+        image: designer,
+    },
 ];

@@ -19,6 +19,7 @@ export default {
         xl: "1280px",
         xxl: "1440px",
         "2xl": "1536px",
+        // "3xl": "60px"
       },
       // screens: {
       //   xs: "10px",

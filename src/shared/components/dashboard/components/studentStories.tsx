@@ -3,7 +3,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import Image from "next/image";
-import { Navigation, Pagination } from "swiper/modules";
+import { Autoplay, Navigation, Pagination } from "swiper/modules";
 import { studentStories } from "@/core/const/landingpage/studentstories";
 
 export default function StudentStoriesCardComponent() {
@@ -18,20 +18,22 @@ export default function StudentStoriesCardComponent() {
                 nextEl: '.swiper-button-next', 
                 prevEl: '.swiper-button-prev' 
             }}
-            modules={[Pagination, Navigation]}
-            className="w-full border "
+            autoplay={{
+                delay: 3000,
+                disableOnInteraction: false,
+              }}
+            modules={[Pagination, Navigation, Autoplay]}
+            className="w-full  "
         >
             {studentStories.map((story) => (
                 <SwiperSlide key={story.id} className="h-[]">
                     <div className="flex flex-col md:flex-row  gap-6">
-                        <div className="w-full md:w-1/2 h-full max-h-[450px]">
+                        <div className="w-full max-w-[550px] h-full max-h-[350px] mx-auto">
                             <Image
                                 src={story.image}
                                 alt={story.name}
                                 className="rounded-lg w-full h-full object-cover "
                                 layout="responsive"
-                                width={500}
-                                height={300}
                             />
                         </div>
                         <div className="w-full md:w-1/2 pt-[50px]">
