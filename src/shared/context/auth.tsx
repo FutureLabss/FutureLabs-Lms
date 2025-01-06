@@ -1,6 +1,6 @@
 import { setToken } from "@/core/config/api.config";
 import { NotificationType } from "@/core/types/enum/notification";
-import { AuthResponse, ILogin } from "@/core/types/interface/auth";
+import { AuthResponse, ICreatePassword, ILogin } from "@/core/types/interface/auth";
 import useNotificationStore from "@/stores/notificationState";
 import axios from "axios";
 import router from "next/router";
@@ -12,6 +12,7 @@ interface AuthContextType {
   logout: (callback?: () => void) => void;
   islLoggedIn: boolean;
   loaded: boolean;
+  CreatePassword:(data: ICreatePassword) => void;
 }
 
 const usersContext = createContext<AuthContextType>({
@@ -20,6 +21,7 @@ const usersContext = createContext<AuthContextType>({
   logout: () => {},
   islLoggedIn: false,
   loaded: false,
+  CreatePassword: ()=>{}
 });
 
 export default function AuthContext({ children }: { children: ReactNode }) {
@@ -51,9 +53,37 @@ export default function AuthContext({ children }: { children: ReactNode }) {
     setLoaded(true);
   }, []);
 
+  
+  const CreatePassword = async (data: ICreatePassword) => {
+      const response = await axios.post("/auth/register", data)
+      .then((res) => {
+        localStorage.setItem("token", JSON.stringify(res.data));
+        setToken(res.data?.token);
+        setAuth({ ...res.data });
+        setILoggedIn(true);
+        setNotification({
+          type: NotificationType.success,
+          content: {
+            title: "Create Password Successful",
+            // text: "Login Successful: Welcome back!",
+          },
+        });
+        router.push("/passwordsuccesspage");
+      })
+      .catch((e) => {
+        const message = e.response?.data?.message || "Network Error";
+        if (Array.isArray(message)) {
+          const error = message.join("\n");
+          throw new Error(error);
+        }
+        throw new Error(message);
+      });
+      return response;
+  };
+
   const login = async (data: ILogin) => {
     const Promise = await axios
-      .post<AuthResponse>("/auth/signIn", data)
+      .post<AuthResponse>("/auth/login", data)
       .then((res) => {
         localStorage.setItem("token", JSON.stringify(res.data));
         setToken(res.data?.token);
@@ -85,7 +115,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
     if (callback) callback();
   };
 
-  const value = { auth, login, logout, loaded, islLoggedIn };
+  const value = { auth, login, logout, loaded, islLoggedIn, CreatePassword };
 
   return <>{loaded ? <usersContext.Provider value={value}>{children}</usersContext.Provider> : <> </>}</>;
 }

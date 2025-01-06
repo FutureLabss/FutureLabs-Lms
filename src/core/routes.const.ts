@@ -1,11 +1,11 @@
 export const AdminRoutes = {
     DASHBOARD: "/user",
-    USERS:"/admin/users",
+    COURSES:"/user/courses",
     AdminTeam: "/admin/adminteam",
     SUBSCRIPTION: "/admin/subscriptions",
     SUBSCRIPTION_CREATE: "/admin/subscriptions/create",
     SUBSCRIPTION_EDIT: "/admin/subscriptions/edit",
-    PAYMENT: "/admin/payment",
+    PAYMENT: "/user/assignments",
     SIGNUP: "/signup",
     LOGIN: "/",
   };

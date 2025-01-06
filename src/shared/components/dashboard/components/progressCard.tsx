@@ -1,19 +1,14 @@
 import { cardData } from "@/core/const/landingpage/studentprogress.data";
 import Image from "next/image";
-// import { IoPerson } from "react-icons/io5";
 
 export default function StudentProgressCardComponent() {
     return (
-        <div className="flex flex-col md:flex-row justify-around gap-[52px] p-6 md:py-[69px] md:px-[81px] bg-white">
+        <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3
+         justify-around gap-[20px] p-6 md:py-[69px] bg-white">
             {cardData.map((card, index) => (
-        // <div
-        //     key={index}
-        //     className={`${card.bgColor} text-white rounded-lg p-6 
-        //     flex flex-col shadow-lg border border-red-600`}
-        // >
         <div
         key={index}
-        className={`text-white w-[100%] md:max-w-[390px] h-[55vh]
+        className={`text-white w-[100%] md:max-w-[700px] h-[55vh]
             rounded-lg p-6 flex flex-col justify-between shadow-lg ${
             card.bgColor === "orange"
                 ? "bg-orange-500"
