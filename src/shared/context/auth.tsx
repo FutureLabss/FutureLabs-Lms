@@ -55,14 +55,30 @@ export default function AuthContext({ children }: { children: ReactNode }) {
 
   
   const CreatePassword = async (data: ICreatePassword) => {
-    try {
-      const response = await axios.post("/auth/register", data);
-      router.push("/passwordsuccesspage");
-      return response.data;
-    } catch (error: any) {
-      const message = error.response?.data?.message || "Network Error";
-      throw new Error(message);
-    }
+      const response = await axios.post("/auth/register", data)
+      .then((res) => {
+        localStorage.setItem("token", JSON.stringify(res.data));
+        setToken(res.data?.token);
+        setAuth({ ...res.data });
+        setILoggedIn(true);
+        setNotification({
+          type: NotificationType.success,
+          content: {
+            title: "Create Password Successful",
+            // text: "Login Successful: Welcome back!",
+          },
+        });
+        router.push("/passwordsuccesspage");
+      })
+      .catch((e) => {
+        const message = e.response?.data?.message || "Network Error";
+        if (Array.isArray(message)) {
+          const error = message.join("\n");
+          throw new Error(error);
+        }
+        throw new Error(message);
+      });
+      return response;
   };
 
   const login = async (data: ILogin) => {

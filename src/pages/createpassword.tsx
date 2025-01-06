@@ -45,7 +45,7 @@ export default function CreatePasswordPage() {
       setEmail(query.email as string);
     }
   }, [query.email]);
-  const [userData, useUserData]=useState<ICreatePassword>({
+  const [userData, setUserData]=useState<ICreatePassword>({
     email: "",
     password: "",
     confirm_password:"",
@@ -57,7 +57,7 @@ export default function CreatePasswordPage() {
   };
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { value, name } = event.target;
-    useUserData({ ...userData, [name]: value });
+    setUserData({ ...userData, [name]: value });
   }
   const onSubmit = async (data: FormData) => {
     setLoading(true);
