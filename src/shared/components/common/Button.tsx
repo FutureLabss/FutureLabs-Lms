@@ -7,7 +7,7 @@ interface ButtonProps {
   children: React.ReactNode;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
-  radius?: "small" | "medium" | "large" | "full" | "extraSmall" | "rounded16"; // Add extraSmall
+  radius?: "small" | "medium" | "large" | "full" | "extraSmall" | "rounded16" | "rounded24"; // Add extraSmall
   loading?: boolean;
   color?: "orange" | "black" | "primary"
   isBorder?: boolean; // New prop for color
@@ -29,6 +29,7 @@ export default function Button({
   const radiusStyles = {
     extraSmall: "rounded-[10px]",
     rounded16: "rounded-[16px]",
+    rounded24: "rounded-[24px]",
     small: "rounded-[20px]",
     medium: "rounded-lg",
     large: "rounded-xl",
