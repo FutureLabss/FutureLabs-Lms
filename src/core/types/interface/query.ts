@@ -15,7 +15,7 @@ export interface IMutationArgs<IArg, IReturn, TError = Error> {
   options?: IQueryOptions;
 }
 
-export interface IQueryArgs<IReturn> {
+export interface IQueryArgs<IArg, IReturn> {
   key: [string, IAPIFilter?];
   callback: (arg?: unknown) => Promise<IReturn>;
 }
