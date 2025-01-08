@@ -1,6 +1,6 @@
 import { setToken } from "@/core/config/api.config";
 import { NotificationType } from "@/core/types/enum/notification";
-import { AuthResponse, ICreatePassword, ILogin } from "@/core/types/interface/auth";
+import { AuthResponse, ICreatePassword, ILogin, verifymail } from "@/core/types/interface/auth";
 import useNotificationStore from "@/stores/notificationState";
 import axios from "axios";
 import router from "next/router";
@@ -13,15 +13,17 @@ interface AuthContextType {
   islLoggedIn: boolean;
   loaded: boolean;
   CreatePassword:(data: ICreatePassword) => void;
+  VerifyEmail:(data: verifymail) => void;
 }
 
 const usersContext = createContext<AuthContextType>({
   auth: undefined,
-  login: async () => {},
-  logout: () => {},
+  login: async () => { },
+  logout: () => { },
   islLoggedIn: false,
   loaded: false,
-  CreatePassword: ()=>{}
+  CreatePassword: () => { },
+  VerifyEmail: ()=>{ },
 });
 
 export default function AuthContext({ children }: { children: ReactNode }) {
@@ -80,6 +82,31 @@ export default function AuthContext({ children }: { children: ReactNode }) {
       });
       return response;
   };
+  const VerifyEmail = async (data: verifymail) => {
+      const response = await axios.post("/verify/email", data)
+      .then((res) => {
+        localStorage.setItem("token", JSON.stringify(res.data));
+        setToken(res.data?.token);
+        setAuth({ ...res.data });
+        setILoggedIn(true);
+        setNotification({
+          type: NotificationType.success,
+          content: {
+            title: "Create Password Successful",
+          },
+        });
+        router.push("/passwordsuccesspage");
+      })
+      .catch((e) => {
+        const message = e.response?.data?.message || "Network Error";
+        if (Array.isArray(message)) {
+          const error = message.join("\n");
+          throw new Error(error);
+        }
+        throw new Error(message);
+      });
+      return response;
+  };
 
   const login = async (data: ILogin) => {
     const Promise = await axios
@@ -115,7 +142,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
     if (callback) callback();
   };
 
-  const value = { auth, login, logout, loaded, islLoggedIn, CreatePassword };
+  const value = { auth, login, logout, loaded, islLoggedIn, CreatePassword, VerifyEmail };
 
   return <>{loaded ? <usersContext.Provider value={value}>{children}</usersContext.Provider> : <> </>}</>;
 }
