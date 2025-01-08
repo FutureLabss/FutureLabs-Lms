@@ -29,14 +29,20 @@ type FormData = z.infer<typeof schema>;
 
 export default function CreatePasswordPage() {
   const router = useRouter();
+  const { query } = useRouter();
   const { CreatePassword } = useAuthContext();
   const [email, setEmail] = useState("");
-
+  
   useEffect(() => {
-    if (router.query.email) {
-      setEmail(router.query.email as string);
+    if (query.email) {
+      setEmail(query.email as string); 
     }
-  }, [router.query.email]);
+  }, [query.email]);
+  // useEffect(() => {
+  //   if (router.query.email) {
+  //     setEmail(router.query.email as string);
+  //   }
+  // }, [router.query.email]);
 
   const [hidePassword, setHidePassword] = useState(false);
   const togglePasswordVisibility = () => setHidePassword(!hidePassword);
