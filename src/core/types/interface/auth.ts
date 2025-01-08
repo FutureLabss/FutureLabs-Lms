@@ -9,6 +9,11 @@ export interface ILogin {
     password: string;
   }
   
+export interface verifymail {
+    email: string;
+    token: string;
+  }
+  
   export interface AuthResponse {
     id: string;
     email: string;
