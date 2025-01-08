@@ -78,7 +78,7 @@ export default function CreatePasswordPage() {
               type="email"
               value={email}
               readOnly
-              className="w-full rounded-md py-2 px-3 border bg-gray-100 text-gray-700 focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full rounded-md py-2 px-3 border  focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
           <div>
