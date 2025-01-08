@@ -67,10 +67,9 @@ export default function AuthContext({ children }: { children: ReactNode }) {
           type: NotificationType.success,
           content: {
             title: "Create Password Successful",
-            // text: "Login Successful: Welcome back!",
           },
         });
-        router.push("/passwordsuccesspage");
+        router.push("/user");
       })
       .catch((e) => {
         const message = e.response?.data?.message || "Network Error";
