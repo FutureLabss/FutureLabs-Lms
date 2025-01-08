@@ -53,9 +53,10 @@ export default function CreatePasswordPage() {
   const onSubmit = async (data: FormData) => {
     try {
       const payload = { email, password: data.password, confirm_password: data.confirm_password };
+      console.log(email, "usersmail")
       console.log("Payload to backend:", payload);
       await CreatePassword(payload);
-      router.push("/login"); // Redirect to login page after successful password creation
+      router.push("/login");
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -78,7 +79,7 @@ export default function CreatePasswordPage() {
               type="email"
               value={email}
               readOnly
-              className="w-full rounded-md py-2 px-3 border  focus:outline-none focus:ring focus:ring-blue-300"
+              className="w-full rounded-md py-2 px-3 border text-gray-400 focus:outline-none focus:ring focus:ring-blue-300"
             />
           </div>
           <div>
