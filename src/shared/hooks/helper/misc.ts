@@ -20,7 +20,7 @@ export const useManageLoadingState = (isLoading: boolean, loadingConfig: Loading
     if (isLoading != stateLoader && loadingConfig.displayLoader) {
       setLoading(isLoading, loadingConfig);
     }
-  }, [prevLoading]);
+  }, [prevLoading,isLoading, loadingConfig, setLoading, stateLoader]);
 };
 
 export const useManageErrorNotifications = (error: Error, errorConfig: ErrorConfig) => {

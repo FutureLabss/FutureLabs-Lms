@@ -1,11 +1,12 @@
 import Link from "next/link";
 import Button from "./Button";
 import { Icon } from "./icon";
+import Image from "next/image";
 
 
 export default function Footer() {
   return (
-    <footer className="px-4 py-4 md:py-[3rem] md:px-[3rem]  lg:[4rem] flex flex-col bg-primary">
+    <footer className="px-4 py-4 md:py-[3rem] md:px-[3rem]  lg:[4rem] flex flex-col bg-primary relative">
 
       <div className=" flex justify-between flex-col md:flex-row gap-3">
         <div className="flex flex-col text-white/80 w-[70%] gap-4">
@@ -81,12 +82,20 @@ export default function Footer() {
 
         </div>
       </div>
-      <div className="md:hidden">
+      <div className="md:hidden ">
         <ul className="pt-[3rem] text-white/40 flex  gap-8 hideen">
           <li>Copyright</li>
           <li>Privacy</li>
           <li>All rights reserved</li>
         </ul>
+      </div>
+      <div className="absolute hidden md:block bottom-0 left-0">
+        <Image
+          src="/icons/shape.svg"
+          alt="logo"
+          width={500}
+          height={500}
+        />
       </div>
       <div className="flex justify-center md:w-[50%] text-white/40 items-end md:ml-auto border-orange-600 mt-7">
         <span className="flex-1">© 2024 — Futurelabs.ng</span>
