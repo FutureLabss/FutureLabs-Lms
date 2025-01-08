@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import Button from '../../common/Button'
 
 function HeroSection() {
@@ -8,7 +9,12 @@ function HeroSection() {
         <h1 className='font-semibold xsm:text-[18px] xxs:text-[24px] xs:text-[1.875rem] xs:pt-10 sm:text-[40px] md:text-[2.8125rem] leading-[1.3] lg:text-[3.125rem] xl:text-[3.5rem] max-w-[40.6875rem] w-full text-white'>Where Your Journey to <span className='text-secondary'>Infinite Possibilities</span> Begins.</h1>
         <p className='font-medium text-white text-[10px] xxs:text-[.75rem] sm:text-[20px] lg:text-[1.625rem]'>Learn, Create, and Thrive with Future-Ready Tech Skills</p>
         <div className=''>
-          <Button type='button' className='max-w-[400px] text-[18px] md:w-full py-1 sm:py-2 md:py-5 ' radius='large' color='orange'>Apply Now</Button>
+          <Button type='button' className='max-w-[400px] text-[18px] md:w-full py-1 sm:py-2 md:py-5 '
+           radius='large' color='orange'>
+           <Link href="https://futurelabs-two.vercel.app/services/learnskill" passHref>
+              Apply now
+          </Link>
+            </Button>
         </div>
       </div>
     </div>
