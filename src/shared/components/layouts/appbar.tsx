@@ -9,11 +9,11 @@ interface Props {
     onToggle: () => void;
     onLogout?: () => void;
     title:string;
+    userId:string;
   }
 
 export default function PreAppBar(props:Props){
-  const {title}=props
- 
+  const { title } = props; 
     return(
         <div className="">
              <div className="py-2 px-5 lg:hidden" onClick={props.onToggle}>
