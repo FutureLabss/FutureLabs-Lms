@@ -5,7 +5,7 @@ import { IUsers } from "@/core/types/dto/users";
 import { ISingleUserData } from "@/core/types/dto/singleuser";
 
 export function useGetAllUsers() {
-    const Allusers: IQueryArgs<IUsers, IUsers> = {
+    const Allusers: IQueryArgs<IUsers> = {
       key: ["users"],
       callback: () => getAllUsers(),
     };
@@ -13,7 +13,7 @@ export function useGetAllUsers() {
   }
 
   export function useGetSingleUsersAcount(id: string, options: IQueryOptions = {}) {
-  const singleuser: IQueryArgs<string, ISingleUserData> = {
+  const singleuser: IQueryArgs<ISingleUserData> = {
     key: ["singleuser", { id }],
     callback: () => getSingleUser(id),
   };

@@ -8,15 +8,14 @@ import { useRouter } from "next/router";
 export default function DashboardPage() {
   const router = useRouter();
   const userId = router.query.userId as string;
-
   const { data: user } = useGetSingleUsersAcount(userId);
+  const firstName = user?.data?.[0]?.first_name || "User";
 
   return (
     <UserLayout
-      title={`Welcome ${user?.name || "User"} 👋🏻`}
+      title={`Welcome ${firstName || "User"} 👋🏻`}
       description={""}
-      userId={userId} 
-    >
+      userId={userId}>
       <UserDashboardAttendanceDetails />
       <UserDashboardStudentProgress />
       <UserDashboardPreRecordedClasses />
