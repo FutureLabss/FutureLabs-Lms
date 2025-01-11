@@ -1,5 +1,6 @@
 import Button from '@/shared/components/common/Button';
 import Image, { StaticImageData } from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import { IoPerson } from "react-icons/io5";
 
@@ -30,9 +31,11 @@ export default function CardComponent (props: ICardProps){
         </p>
         </div>
         <div className='mt-4 bg-background text-white rounded-lg'>
+          <Link href={'/course'}>
         <Button className=" py-2 px-4 w-fit text-white md:max-w-[400px] md:w-full rounded ">
             Learn more →
         </Button>
+          </Link>
         </div>
         </div>
 
