@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { Icon } from "./icon";
 import Link from "next/link";
-import {useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import Button from "./Button";
 
@@ -49,16 +49,16 @@ export default function Navbar() {
             <NavLinks to="/why-future-academy">Why Future Academy</NavLinks>
           </li>
         </ul>
-      <Button
-        className="py-[10px] max-w-[189px] w-full hidden md:block"
-        isBorder={true}
-        color="black"
-        radius="extraSmall"
-      >
-        <Link href="https://futurelabs-two.vercel.app/services/learnskill" passHref>
-        Apply now
-    </Link>
-      </Button>
+        <Button
+          className="py-[10px] max-w-[189px] w-full hidden md:block"
+          isBorder={true}
+          color="black"
+          radius="extraSmall"
+        >
+          <Link href="https://futurelabs2.netlify.app/services/learnskill" passHref>
+            Apply now
+          </Link>
+        </Button>
 
         {/* Mobile Menu */}
 
@@ -74,9 +74,9 @@ export default function Navbar() {
             <NavLinks to="/schools">Schools</NavLinks>
             <NavLinks to="/why-future-academy">Why Future Academy</NavLinks>
             <Button className="py-[10px] max-w-[189px] w-full" isBorder={true} color="orange" radius="extraSmall">
-            <Link href="https://futurelabs-two.vercel.app/services/learnskill" passHref>
-              Apply now
-          </Link>
+              <Link href="https://futurelabs-two.vercel.app/services/learnskill" passHref>
+                Apply now
+              </Link>
             </Button>
           </div>
         </div>
