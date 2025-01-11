@@ -32,31 +32,35 @@ export const AdminMenus: Menu[] = [
     id: "3",
     icon: MdOutlineAssignment,
     path: `${AdminRoutes.PAYMENT}`,
+    disabled: false,
   },
   {
     title: "Live Classes",
     id: "4",
     icon: RiLiveLine,
-    path: `${AdminRoutes.AdminTeam}`,
-    // disabled: true,
+    path: `${AdminRoutes.LIVESESSIONS}`,
+    disabled: false,
   },
   {
     title: "Leaderboard",
     id: "5",
     icon: MdLeaderboard,
-    // disabled: false,
-    path: `${AdminRoutes.SUBSCRIPTION}`,
+    disabled: false,
+    path: `${AdminRoutes.LEADERBOARD}`,
   },
   {
     title: "Notifications",
     id: "6",
     icon: IoIosNotificationsOutline,
-    // disabled: false,
-    path: `${AdminRoutes.SUBSCRIPTION}`,
+    disabled: false,
+    path: `${AdminRoutes.NOTIFICATION}`,
   },
+ 
 ];
 
 export const AdminMenuLookup = AdminMenus.reduce<{ [key: string]: Menu }>((val, item) => {
   val = { ...val, [item.path]: item };
   return val;
 }, {});
+
+

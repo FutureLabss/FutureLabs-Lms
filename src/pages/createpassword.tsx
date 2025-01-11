@@ -3,17 +3,22 @@ import logo from "../assets/logo.png";
 import auth from "../assets/auth.png";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import { ICreatePassword } from "@/core/types/interface/auth";
 import { useAuthContext } from "@/shared/context/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useGetAllUsers } from "@/shared/hooks/query/users";
+import { ParsedUrlQuery } from "querystring";
 
 
 const schema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.union([
+    z.string().email("Invalid email address"),
+    z.array(z.string().email("Invalid email address")),
+    z.undefined(),
+  ]),
   password: z
     .string()
     .min(1, "Password is required")
@@ -38,7 +43,8 @@ export default function CreatePasswordPage() {
   const {data:users}=useGetAllUsers()
   console.log(users, "users list")
   const { query } = useRouter();
-  const [email, setEmail] = useState("");
+  const { mail }: ParsedUrlQuery = router.query;
+  const [email, setEmail] = useState(mail);
 
   useEffect(() => {
     if (query.email) {

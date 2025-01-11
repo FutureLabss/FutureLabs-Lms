@@ -1,14 +1,27 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import logo from "../../assets/logo.png";
 import verifysuccessimg from "../../assets/verifysuccessimg.png";
 import successlogin from "../../assets/successlogin.png";
+import { useAuthContext } from "@/shared/context/auth";
+import { useGetAllUsers } from "@/shared/hooks/query/users";
 
 export default function EmailVerificationSuccessful() {
   const router = useRouter();
   const { email, token } = router.query;
+  const{VerifyEmail}=useAuthContext()
+  const {data:users}=useGetAllUsers()
+  console.log(users, "users list")
+  console.log(VerifyEmail, "email verification")
+  
+  useEffect(() => {
+    if (!email || !token) {
+    }
+  }, [email, token, router]);
+
   const handleRedirectToLogin = () => {
-    router.push("/createpassword");
+    router.push(`/createpassword?mail=${email}`);
   };
 
   return (
@@ -42,14 +55,6 @@ export default function EmailVerificationSuccessful() {
             Your email has been verified successfully. <br />
             Please proceed to Create Password.
           </p>
-          <div className="text-left mt-4">
-            <p>
-              <strong>Email:</strong> {email || "Loading..."}
-            </p>
-            <p>
-              <strong>Token:</strong> {token || "Loading..."}
-            </p>
-          </div>
           <div className="mt-16">
             <button
               type="button"
