@@ -32,9 +32,11 @@ export default function CardComponent(props: ICardProps) {
           </p>
         </div>
         <div className='mt-4 bg-background text-white rounded-lg'>
-        <Button className=" py-2 px-4 w-fit text-white md:max-w-[400px] md:w-full rounded ">
-            Learn more →
-        </Button>
+          <Link href={"/course"}>
+            <Button className=" py-2 px-4 w-fit text-white md:max-w-[400px] md:w-full rounded ">
+              Learn more →
+            </Button>
+          </Link>
         </div>
       </div>
 
