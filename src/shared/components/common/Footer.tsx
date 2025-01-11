@@ -91,7 +91,7 @@ export default function Footer() {
       </div>
       <div className="absolute hidden md:block bottom-0 left-0">
         <Image
-          src="/icons/shape.svg"
+          src="/shape.svg"
           alt="logo"
           width={500}
           height={500}

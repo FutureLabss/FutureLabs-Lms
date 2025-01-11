@@ -4,6 +4,10 @@ import Image from 'next/image';
 import { Icon } from "@/shared/components/common/icon";
 import Pricing from "./components/Pricing";
 import Footer from "@/shared/components/common/Footer";
+import { useEffect } from "react";
+import { useRouter } from "next/router";
+import Navbar from "@/shared/components/common/NavBar";
+
 
 const programDetails = [
   {
@@ -25,11 +29,20 @@ const programDetails = [
 ];
 
 export default function CoursePage({ children }: { children: React.ReactNode }) {
+  const router = useRouter();
+
+  useEffect(() => {
+    if (router.pathname === '/course') {
+      router.replace('/course/overview');
+    }
+  }, [router]);
 
 
   return (
+
     <div className="flex flex-col bg-[#F5F5FA] min-h-screen max-w-[1440px] mx-auto">
-      <div className="px-6 md:px-20 ">
+      <Navbar />
+      <div className="px-6 md:px-20 pt-[90px]">
         <div>
           <Image
             src={'/images/desktopcourse.png'}
