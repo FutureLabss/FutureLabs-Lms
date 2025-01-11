@@ -9,7 +9,6 @@ import { useAuthContext } from "@/shared/context/auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { useGetAllUsers } from "@/shared/hooks/query/users";
 import { ParsedUrlQuery } from "querystring";
 
 
@@ -40,8 +39,8 @@ export default function CreatePasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { CreatePassword } = useAuthContext();
-  const {data:users}=useGetAllUsers()
-  console.log(users, "users list")
+  // const {data:users}=useGetAllUsers()
+  // console.log(users, "users list")
   const { query } = useRouter();
   const { mail }: ParsedUrlQuery = router.query;
   const [email, setEmail] = useState(mail);
