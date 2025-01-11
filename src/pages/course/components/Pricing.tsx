@@ -1,4 +1,3 @@
-import Button from '@/shared/components/common/Button';
 import { Icon } from '@/shared/components/common/icon';
 import clsx from 'clsx';
 import React, { useState } from 'react';
@@ -74,12 +73,15 @@ const Pricing = () => {
               ))}
             </ul>
             <div>
-              <Button
-                className="w-full py-2  bg-[#F57F20]/10 text-[#F57F20] rounded-[1.875rem] transition"
-                radius="rounded24"
+              <button
+                className={clsx(
+                  "w-full py-3 bg-[#F57F20]/10 text-[#F57F20] rounded-[1.875rem] transition",
+                  hoveredCard === index ? " bg-[#F57F20]/10 rounded-[1.875rem bg-secondary text-white" : "bg-[#F57F20]/10 rounded-[1.875rem"
+                )}
+
               >
                 {plan.buttonLabel}
-              </Button>
+              </button>
             </div>
           </div>
         ))}
