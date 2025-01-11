@@ -5,11 +5,14 @@ import logo from "../../assets/logo.png";
 import verifysuccessimg from "../../assets/verifysuccessimg.png";
 import successlogin from "../../assets/successlogin.png";
 import { useAuthContext } from "@/shared/context/auth";
+import { useGetAllUsers } from "@/shared/hooks/query/users";
 
 export default function EmailVerificationSuccessful() {
   const router = useRouter();
   const { email, token } = router.query;
   const{VerifyEmail}=useAuthContext()
+  const {data:users}=useGetAllUsers()
+  console.log(users, "users list")
   console.log(VerifyEmail, "email verification")
   
   useEffect(() => {
@@ -18,7 +21,7 @@ export default function EmailVerificationSuccessful() {
   }, [email, token, router]);
 
   const handleRedirectToLogin = () => {
-    router.push("/createpassword");
+    router.push(`/createpassword?mail=${email}`);
   };
 
   return (

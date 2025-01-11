@@ -1,5 +1,5 @@
 export interface ICreatePassword {
-    email: string;
+    email?:  string | string[] | undefined;
     password: string;
     confirm_password:string;
     remember_me?:boolean

@@ -77,7 +77,7 @@ export default function CoursePage({ children }: { children: React.ReactNode }) 
             <h2 className="text-center text-[1.5rem] md:text-[2.5rem] font-bold">
               Simple, transparent pricing
             </h2>
-            <p className="text-center text-[#848199]  text-[.975rem] md:text-[1.25rem]">
+            <p className="text-center text-[#848199] text-[.975rem] md:text-[1.25rem]">
               No contracts. No surprise fees.
             </p>
           </div>
