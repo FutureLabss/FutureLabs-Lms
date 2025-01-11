@@ -40,8 +40,8 @@ export default function CreatePasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { CreatePassword } = useAuthContext();
-  const {data:users}=useGetAllUsers()
-  console.log(users, "users list")
+  // const {data:users}=useGetAllUsers()
+  // console.log(users, "users list")
   const { query } = useRouter();
   const { mail }: ParsedUrlQuery = router.query;
   const [email, setEmail] = useState(mail);

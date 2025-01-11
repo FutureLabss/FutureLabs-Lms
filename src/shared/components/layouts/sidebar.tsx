@@ -7,6 +7,8 @@ import { AdminMenus } from "@/core/menu.const";
 import { CiSettings } from "react-icons/ci";
 import { SlSupport } from "react-icons/sl";
 import { CiLogout } from "react-icons/ci";
+import  { useRouter } from "next/router";
+import { useAuthContext } from "@/shared/context/auth";
 
 interface Props {
   display: boolean;
@@ -17,7 +19,13 @@ interface Props {
 export default function AppDrawer(props:Props) {
   const { display, onToggle }=props
   const currentMenuItem = useActiveMenu();
-  console.log("AppDrawer rendered");
+   const router = useRouter();
+  const { islLoggedIn, logout } = useAuthContext();
+
+  const handleLogout = () => {
+    logout();
+    router.push("/login");
+  };
 
   return (
     <>
@@ -83,7 +91,7 @@ export default function AppDrawer(props:Props) {
             </Link>
             <div className="pb-[1.5rem]">
             <button
-              onClick={props.onLogout}
+              onClick={handleLogout}
               className="flex items-center gap-3 text-red-600 hover:text-red-700"
             >
               <span>

@@ -11,8 +11,8 @@ export default function EmailVerificationSuccessful() {
   const router = useRouter();
   const { email, token } = router.query;
   const{VerifyEmail}=useAuthContext()
-  const {data:users}=useGetAllUsers()
-  console.log(users, "users list")
+  // const {data:users}=useGetAllUsers()
+  // console.log(users, "users list")
   console.log(VerifyEmail, "email verification")
   
   useEffect(() => {

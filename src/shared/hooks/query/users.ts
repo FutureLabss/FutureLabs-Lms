@@ -12,10 +12,10 @@ export function useGetAllUsers() {
     return useGetResourcesQuery(Allusers);
   }
 
-  export function useGetSingleUsersAcount(id: string, options: IQueryOptions = {}) {
-  const singleuser: IQueryArgs<ISingleUserData> = {
-    key: ["singleuser", { id }],
-    callback: () => getSingleUser(id),
-  };
-  return useGetResourcesQuery(singleuser, options);
-}
+//   export function useGetSingleUsersAcount(id: string, options: IQueryOptions = {}) {
+//   const singleuser: IQueryArgs<ISingleUserData> = {
+//     key: ["singleuser", { id }],
+//     callback: () => getSingleUser(id),
+//   };
+//   return useGetResourcesQuery(singleuser, options);
+// }
