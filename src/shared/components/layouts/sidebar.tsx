@@ -20,7 +20,7 @@ export default function AppDrawer(props:Props) {
   const { display, onToggle }=props
   const currentMenuItem = useActiveMenu();
    const router = useRouter();
-  const { islLoggedIn, logout } = useAuthContext();
+  const { logout } = useAuthContext();
 
   const handleLogout = () => {
     logout();

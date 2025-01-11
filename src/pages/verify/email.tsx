@@ -5,7 +5,6 @@ import logo from "../../assets/logo.png";
 import verifysuccessimg from "../../assets/verifysuccessimg.png";
 import successlogin from "../../assets/successlogin.png";
 import { useAuthContext } from "@/shared/context/auth";
-import { useGetAllUsers } from "@/shared/hooks/query/users";
 
 export default function EmailVerificationSuccessful() {
   const router = useRouter();

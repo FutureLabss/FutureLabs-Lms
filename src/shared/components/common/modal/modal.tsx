@@ -11,7 +11,7 @@ interface ModalProps {
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, displayClose = false, title, children }) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
-  const handleOutsideClick = (event: any) => {
+  const handleOutsideClick = (event: React.MouseEvent<HTMLDivElement>) => {
     if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
       onClose();
     }
