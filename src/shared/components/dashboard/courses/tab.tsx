@@ -1,5 +1,6 @@
+import { ITabprops } from '@/core/types/interface/landing/courses';
 import clsx from 'clsx';
-import { ITabprops } from '../../../../pages/course/components/data/type';
+
 
 
 type Props = {

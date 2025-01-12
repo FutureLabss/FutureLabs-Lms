@@ -1,11 +1,11 @@
 
 
-import webdesign from "../../../../assets/courses/web-design.png";
-import productdesign from "../../../../assets/courses/product-design.png";
-import dataanalytics from "../../../../assets/courses/analytics.png";
-import webdevelopment from "../../../../assets/courses/web-development.png";
-import digitalmarketing from "../../../../assets/courses/marketing.png";
-import graphicsdesign from "../../../../assets/courses/graphics.png";
+import webdesign from "../../../../src/assets/courses/web-design.png";
+import productdesign from "../../../../src/assets/courses/product-design.png";
+import dataanalytics from "../../../../src/assets/courses/analytics.png";
+import webdevelopment from "../../../../src/assets/courses/web-development.png";
+import digitalmarketing from "../../../../src/assets/courses/marketing.png";
+import graphicsdesign from "../../../../src/assets/courses/graphics.png";
 import { ICourse } from "@/core/types/interface/landing/courses";
 
 export const courses: ICourse[] = [
