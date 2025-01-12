@@ -23,7 +23,6 @@ export default function CoursePage() {
     <div className="flex flex-col bg-[#F5F5FA] min-h-screen max-w-[1440px] mx-auto">
       <Navbar />
       {
-        // courses.map((course) => (
         <div className="px-6 md:px-20 pt-[90px]" key={course?.id}>
           <div>
             <Image
@@ -83,7 +82,6 @@ export default function CoursePage() {
             </div>
           </div>
         </div>
-        // ))
       }
 
       <div>
