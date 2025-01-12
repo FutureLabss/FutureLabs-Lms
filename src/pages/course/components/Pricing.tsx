@@ -1,45 +1,17 @@
 import { Icon } from '@/shared/components/common/icon';
 import clsx from 'clsx';
 import React, { useState } from 'react';
+import { PricingPlan } from './data/type';
 
-const Pricing = () => {
+const Pricing = ({ course }: { course: PricingPlan[] }) => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
-  const pricingPlans = [
-    {
-      price: "NGN20,000",
-      duration: "/month",
-      title: "FutureLabs Skill Subscription",
-      description: "Learn a skill monthly with access to live lessons and pre-recorded courses",
-      features: [
-        "Access to live classes",
-        "Pre-recorded sessions",
-        "Dedicated tutor support",
-        "Weekly assignments and evaluations",
-        "Certificate of Completion",
-      ],
-      buttonLabel: "Choose plan",
-    },
-    {
-      price: "NGN120,000",
-      duration: "/6 month",
-      title: "Invest in Your Future",
-      description: "Simple pricing for 6 months of skill mastery. No extra charges",
-      features: [
-        "Access to live classes",
-        "Pre-recorded sessions",
-        "Dedicated tutor support",
-        "Weekly assignments and evaluations",
-        "Certificate of Completion",
-      ],
-      buttonLabel: "Choose plan",
-    },
-  ];
+
 
   return (
     <div className=" md:px-5">
       <div className="flex justify-center gap-[2.4375rem] flex-wrap ">
-        {pricingPlans.map((plan, index) => (
+        {course.map((plan, index) => (
           <div
             key={index}
             className={clsx(
