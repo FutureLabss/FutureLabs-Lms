@@ -1,14 +1,16 @@
 import Button from "@/shared/components/common/Button";
 import Image from 'next/image';
 import { Icon } from "@/shared/components/common/icon";
-import Pricing from "./components/Pricing";
+import Pricing from "../../shared/components/dashboard/courses/Pricing";
 import Footer from "@/shared/components/common/Footer";
 import Navbar from "@/shared/components/common/NavBar";
-import TabComponent from "./components/tab";
-import { courses } from "./components/data/course";
+import TabComponent from "../../shared/components/dashboard/courses/tab";
+
 import { useState } from "react";
-import TabContent from "./components/tabcontent";
+import TabContent from "../../shared/components/dashboard/courses/tabcontent";
 import { useSearchParams } from "next/navigation";
+import { courses } from "@/core/const/landingpage/course";
+
 
 
 export default function CoursePage() {

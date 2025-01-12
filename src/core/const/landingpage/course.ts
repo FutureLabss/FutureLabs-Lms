@@ -1,4 +1,4 @@
-import { ICourse } from "./type";
+
 
 import webdesign from "../../../../assets/courses/web-design.png";
 import productdesign from "../../../../assets/courses/product-design.png";
@@ -6,6 +6,7 @@ import dataanalytics from "../../../../assets/courses/analytics.png";
 import webdevelopment from "../../../../assets/courses/web-development.png";
 import digitalmarketing from "../../../../assets/courses/marketing.png";
 import graphicsdesign from "../../../../assets/courses/graphics.png";
+import { ICourse } from "@/core/types/interface/landing/courses";
 
 export const courses: ICourse[] = [
   {

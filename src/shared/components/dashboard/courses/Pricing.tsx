@@ -1,7 +1,7 @@
 import { Icon } from '@/shared/components/common/icon';
 import clsx from 'clsx';
 import React, { useState } from 'react';
-import { PricingPlan } from './data/type';
+import { PricingPlan } from '../../../../pages/course/components/data/type';
 
 const Pricing = ({ course }: { course: PricingPlan[] }) => {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { ITabprops } from './data/type';
+import { ITabprops } from '../../../../pages/course/components/data/type';
 type ContentProps = {
   activeTab: number;
   course: ITabprops[];
