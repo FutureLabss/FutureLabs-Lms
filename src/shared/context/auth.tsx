@@ -141,6 +141,8 @@ export default function AuthContext({ children }: { children: ReactNode }) {
     if (callback) callback();
   };
 
+  
+
   const value = { auth, login, logout, loaded, islLoggedIn, CreatePassword, VerifyEmail };
 
   return <>{loaded ? <usersContext.Provider value={value}>{children}</usersContext.Provider> : <> </>}</>;
