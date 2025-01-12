@@ -11,9 +11,6 @@ import TabContent from "./components/tabcontent";
 import { useSearchParams } from "next/navigation";
 
 
-
-
-
 export default function CoursePage() {
   const [activeTab, setActiveTab] = useState(0);
   const searchParams = useSearchParams();
