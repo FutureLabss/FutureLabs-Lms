@@ -9,7 +9,7 @@ interface ICardProps {
   description: string;
   persons: string;
   img: StaticImageData
-  href?: string
+  id: string
 }
 
 export default function CardComponent(props: ICardProps) {
@@ -32,7 +32,7 @@ export default function CardComponent(props: ICardProps) {
           </p>
         </div>
         <div className='mt-4 bg-background text-white rounded-lg'>
-          <Link href={"/course"}>
+          <Link href={`/course?id=${props.id}`}>
             <Button className=" py-2 px-4 w-fit text-white md:max-w-[400px] md:w-full rounded ">
               Learn more →
             </Button>
