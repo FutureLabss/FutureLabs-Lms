@@ -37,7 +37,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function CreatePasswordPage() {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string[]>([]);
   const { CreatePassword } = useAuthContext();
   // const {data:users}=useGetAllUsers()
   // console.log(users, "users list")
@@ -75,12 +75,11 @@ export default function CreatePasswordPage() {
       };
       await CreatePassword(payload);
      
-    } catch (err) {
-      console.error("Error in API call:", err);
-      setError("Failed to create password.");
+    } catch (e) {
+      const loginError = e as Error;
+      setError(loginError.message?.split("\n") ?? [loginError.message]);
     } finally {
       setLoading(false);
-      reset();
     }
   };
   
@@ -88,7 +87,6 @@ export default function CreatePasswordPage() {
       register,
       handleSubmit,
       formState: { errors },
-      reset
     } = useForm<FormData>({
       resolver: zodResolver(schema),
       defaultValues: {

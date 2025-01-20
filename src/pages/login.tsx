@@ -14,11 +14,8 @@ const schema = z.object({
   email: z.string().email("Invalid email address"),
   password: z
     .string()
-    .min(8, "Use at least 8 characters")
-    .regex(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
-      "Use at least 8 characters, including uppercase, lowercase, numbers, and special characters."
-    ),
+    .min(6, "Use at least 8 characters")
+   ,
   remember_me: z.boolean().optional(),
 });
 

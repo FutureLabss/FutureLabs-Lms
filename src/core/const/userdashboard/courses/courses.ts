@@ -1,17 +1,24 @@
 import { StaticImageData } from "next/image";
-import color from "../../../assets/courses/color.png"
-import design from "../../../assets/courses/design.png"
-import ux from "../../../assets/courses/ux.png"
-import intro from "../../../assets/courses/intro.png"
+import color from "../../../../assets/courses/color.png"
+import design from "../../../../assets/courses/design.png"
+import ux from "../../../../assets/courses/ux.png"
+import intro from "../../../../assets/courses/intro.png"
 
-
-export interface CourseCardProps {
-   image:StaticImageData,
-    title: string;
-    instructor: string;
-    role: string;
-    duration: string;
-    progress: number;
+export interface CourseSection {
+  title: string
+  duration: string
+  completed?: boolean
+}
+ export interface CourseCardProps{
+    id: string
+    title: string
+    image:StaticImageData   
+    instructor: string
+    role: string
+    duration: string
+    progress: number
+    description?: string
+    sections?: CourseSection[]
   }
 export const courses:CourseCardProps[] = [
     {
@@ -21,6 +28,7 @@ export const courses:CourseCardProps[] = [
       role: "Product Designer",
       duration: "1 hr 20 minutes",
       progress: 0,
+      id: "1",
     },
     {
       image: color,
@@ -29,6 +37,7 @@ export const courses:CourseCardProps[] = [
       role: "Product Designer",
       duration: "1 hr 20 minutes",
       progress: 0,
+      id: "2"
     },
     {
       image: ux,
@@ -37,6 +46,7 @@ export const courses:CourseCardProps[] = [
       role: "Product Designer",
       duration: "1 hr 20 minutes",
       progress: 10,
+      id: "3"
     },
     {
       image: design,
@@ -45,6 +55,7 @@ export const courses:CourseCardProps[] = [
       role: "Product Designer",
       duration: "1 hr 20 minutes",
       progress: 0,
+      id: "4"
     },
     {
       image: design,
@@ -53,6 +64,7 @@ export const courses:CourseCardProps[] = [
       role: "Product Designer",
       duration: "1 hr 20 minutes",
       progress: 0,
+      id: "5"
     },
     {
       image: design,
@@ -61,6 +73,7 @@ export const courses:CourseCardProps[] = [
       role: "Product Designer",
       duration: "1 hr 20 minutes",
       progress: 0,
+      id: "6"
     },
   ];
   

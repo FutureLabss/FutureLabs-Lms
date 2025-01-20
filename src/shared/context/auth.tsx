@@ -14,6 +14,7 @@ interface AuthContextType {
   loaded: boolean;
   CreatePassword:(data: ICreatePassword) => void;
   VerifyEmail:(data: verifymail) => void;
+  meProfile:()=>void;
 }
 
 const usersContext = createContext<AuthContextType>({
@@ -23,7 +24,8 @@ const usersContext = createContext<AuthContextType>({
   islLoggedIn: false,
   loaded: false,
   CreatePassword: () => { },
-  VerifyEmail: ()=>{ },
+  VerifyEmail: () => { },
+  meProfile: ()=>{ },
 });
 
 export default function AuthContext({ children }: { children: ReactNode }) {
@@ -35,11 +37,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-
-    //remove after testing
-    setAuth({ fullname: "frn", token: "dsf", refreshToken: "dsfd", email: "dsfd", id: "323" });
     setILoggedIn(true);
-
     if (storedToken) {
       try {
         const tokens = JSON.parse(storedToken);
@@ -106,13 +104,26 @@ export default function AuthContext({ children }: { children: ReactNode }) {
       });
       return response;
   };
-
+  const meProfile = async ( )=>{
+    const Promise = await axios .get("/me")
+    .then((res)=>{
+      console.log(res.data)
+    }).catch((e) => {
+      const message = e.response?.data?.message || "Network Error";
+      if (Array.isArray(message)) {
+        const error = message.join("\n");
+        throw new Error(error);
+      }
+      throw new Error(message);
+    });
+  return Promise;
+  }
   const login = async (data: ILogin) => {
     const Promise = await axios
       .post<AuthResponse>("/auth/login", data)
       .then((res) => {
         localStorage.setItem("token", JSON.stringify(res.data));
-        setToken(res.data?.token);
+        setToken(res.data?.data.token);
         setAuth({ ...res.data });
         setILoggedIn(true);
         setNotification({
@@ -134,7 +145,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
       });
     return Promise;
   };
-
+  
   const logout = (callback?: () => void) => {
     localStorage.removeItem("token");
     setILoggedIn(false);
@@ -143,7 +154,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
 
   
 
-  const value = { auth, login, logout, loaded, islLoggedIn, CreatePassword, VerifyEmail };
+  const value = { auth, login, logout, loaded, islLoggedIn, CreatePassword, VerifyEmail, meProfile };
 
   return <>{loaded ? <usersContext.Provider value={value}>{children}</usersContext.Provider> : <> </>}</>;
 }

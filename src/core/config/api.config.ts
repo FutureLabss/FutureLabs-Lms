@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://futurelabs-manager-be.onrender.com/api/v1";
+const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://futurelabs-manager-be-api.onrender.com/api/v1";
 const API_KEY = "NKa4Do2rjKnhYhmHHXIyw9nGEG3o7fNvCGoS9s0VFRQ";
 
 axios.defaults.baseURL = BASE_URL;
