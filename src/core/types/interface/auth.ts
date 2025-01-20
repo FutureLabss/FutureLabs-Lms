@@ -10,8 +10,8 @@ export interface ILogin {
   }
   
 export interface verifymail {
-    email: string;
-    token: string;
+    email?: string | undefined | string[];
+    token?: string | undefined | string[];
   }
   export interface Auth {
     name: string;

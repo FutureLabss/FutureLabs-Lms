@@ -38,6 +38,24 @@ export async function getMeUserProfile(): Promise<ApiMEResponse> {
     })
     .catch(handleError);
 }
+// const meProfile = async () => {
+//   try {
+//     const response = await axios.get("/me");
+//     if (!response.data) {
+//       throw new Error("Unexpected response: data is null or undefined");
+//     }
+//     console.log("Response Data:", response.data);
+//     return response.data;
+//   } catch (e) {
+//     const message = e.response?.data?.message || "Network Error";
+//     if (Array.isArray(message)) {
+//       throw new Error(message.join("\n"));
+//     }
+//     throw new Error(message);
+//   }
+// };
+
+// meProfile()
 // export async function getMeProfile(): Promise<ApiMEResponse> {
 //   return axios
 //     .get<ApiMEResponse>("/me")

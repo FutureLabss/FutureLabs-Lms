@@ -14,7 +14,7 @@ interface AuthContextType {
   loaded: boolean;
   CreatePassword:(data: ICreatePassword) => void;
   VerifyEmail:(data: verifymail) => void;
-  meProfile:()=>void;
+  // meProfile:()=>void;
 }
 
 const usersContext = createContext<AuthContextType>({
@@ -25,7 +25,7 @@ const usersContext = createContext<AuthContextType>({
   loaded: false,
   CreatePassword: () => { },
   VerifyEmail: () => { },
-  meProfile: ()=>{ },
+  // meProfile: ()=>{ },
 });
 
 export default function AuthContext({ children }: { children: ReactNode }) {
@@ -80,8 +80,10 @@ export default function AuthContext({ children }: { children: ReactNode }) {
       return response;
   };
   const VerifyEmail = async (data: verifymail) => {
+    console.log(data, "verifydata");
       const response = await axios.post("/verify/email", data)
       .then((res) => {
+        console.log(res.data)
         localStorage.setItem("token", JSON.stringify(res.data));
         setToken(res.data?.token);
         setAuth({ ...res.data });
@@ -93,6 +95,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
           },
         });
         router.push("/passwordsuccesspage");
+        return res.data
       })
       .catch((e) => {
         const message = e.response?.data?.message || "Network Error";
@@ -104,20 +107,6 @@ export default function AuthContext({ children }: { children: ReactNode }) {
       });
       return response;
   };
-  const meProfile = async ( )=>{
-    const Promise = await axios .get("/me")
-    .then((res)=>{
-      console.log(res.data)
-    }).catch((e) => {
-      const message = e.response?.data?.message || "Network Error";
-      if (Array.isArray(message)) {
-        const error = message.join("\n");
-        throw new Error(error);
-      }
-      throw new Error(message);
-    });
-  return Promise;
-  }
   const login = async (data: ILogin) => {
     const Promise = await axios
       .post<AuthResponse>("/auth/login", data)
@@ -154,7 +143,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
 
   
 
-  const value = { auth, login, logout, loaded, islLoggedIn, CreatePassword, VerifyEmail, meProfile };
+  const value = { auth, login, logout, loaded, islLoggedIn, CreatePassword, VerifyEmail };
 
   return <>{loaded ? <usersContext.Provider value={value}>{children}</usersContext.Provider> : <> </>}</>;
 }

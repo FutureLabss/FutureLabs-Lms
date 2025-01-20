@@ -5,17 +5,22 @@ import logo from "../../assets/logo.png";
 import verifysuccessimg from "../../assets/verifysuccessimg.png";
 import successlogin from "../../assets/successlogin.png";
 import { useAuthContext } from "@/shared/context/auth";
+// import { verifymail } from "@/core/types/interface/auth";
 
 export default function EmailVerificationSuccessful() {
   const router = useRouter();
   const { email, token } = router.query;
   const{VerifyEmail}=useAuthContext()
-  console.log(VerifyEmail, "email verification")
-  
-  useEffect(() => {
+
+
+  useEffect(()=>{
+     VerifyEmail({
+      email: email,
+      token:token,
+     })
     if (!email || !token) {
     }
-  }, [email, token, router]);
+  }, [email, token, router,]);
 
   const handleRedirectToLogin = () => {
     router.push(`/createpassword?mail=${email}`);
