@@ -20,7 +20,7 @@ export default function EmailVerificationSuccessful() {
      })
     if (!email || !token) {
     }
-  }, [email, token, router,]);
+  }, [email, token, router, VerifyEmail]);
 
   const handleRedirectToLogin = () => {
     router.push(`/createpassword?mail=${email}`);
