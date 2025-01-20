@@ -1,19 +1,21 @@
+import { assignmentsData, headers } from "@/core/const/tabledata";
+import Table from "@/shared/components/table";
 import UserLayout, { layoutInterface } from "@/shared/layouts/userLayout";
 
 export default function UserAssignmentPage(){
     return(
         <div>
-
+            <Table headers={headers} data={assignmentsData} search={true} />
         </div>
     )
 }
-function Layout(props: layoutInterface) {
+function Layouts(props: layoutInterface) {
         return (
             <UserLayout
                 {...props}
-                title="Pre recorded courses for you"
-                description=""
+                title="Assignments"
+                description="View and manage your course assignments"
             />
         );
       }
-      UserAssignmentPage.Layout = Layout;
+      UserAssignmentPage.Layout = Layouts;

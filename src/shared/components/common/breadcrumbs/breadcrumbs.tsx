@@ -8,6 +8,7 @@ import { FaLongArrowAltLeft } from "react-icons/fa";
 
 const routeLabels: { [key: string]: string } = {
   user: "User",
+  courses:"Course"
 };
 
 function Breadcrumb() {
@@ -31,7 +32,7 @@ function Breadcrumb() {
   });
 
   return (
-    <nav className="flex items-center space-x-2 text-sm text-gray-500">
+    <nav className="flex items-center space-x-1 text-sm text-gray-500">
       <button
         className="flex items-center justify-center space-x-3 text-gray-500"
         onClick={() => router.back()}
