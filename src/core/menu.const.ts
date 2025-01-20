@@ -39,20 +39,20 @@ export const AdminMenus: Menu[] = [
     id: "4",
     icon: RiLiveLine,
     path: `${AdminRoutes.LIVESESSIONS}`,
-    disabled: false,
+    disabled: true,
   },
   {
     title: "Leaderboard",
     id: "5",
     icon: MdLeaderboard,
-    disabled: false,
+    disabled: true,
     path: `${AdminRoutes.LEADERBOARD}`,
   },
   {
     title: "Notifications",
     id: "6",
     icon: IoIosNotificationsOutline,
-    disabled: false,
+    disabled: true,
     path: `${AdminRoutes.NOTIFICATION}`,
   },
  

@@ -1,21 +1,23 @@
 import UserDashboardAttendanceDetails from "@/shared/components/userDashboard/attendancedetails";
 import UserDashboardPreRecordedClasses from "@/shared/components/userDashboard/studentprerecordedclasses";
 import UserDashboardStudentProgress from "@/shared/components/userDashboard/studentprogress";
-// import { useGetSingleUsersAcount } from "@/shared/hooks/query/users";
+// import { useAuthContext } from "@/shared/context/auth";
+// import { useGetAllUsers, useGetMeprofile } from "@/shared/hooks/query/users";
 import UserLayout from "@/shared/layouts/userLayout";
 import { useRouter } from "next/router";
 
 export default function DashboardPage() {
   const router = useRouter();
   const userId = router.query.userId as string;
-  // const { data: user, } = useGetSingleUsersAcount(userId); 
-  // console.log(user)
-  // const firstName = user?.data?.[0]?.first_name || "User";
-  // ${isLoading ? "Loading..." : firstName} 
-  // let isLoading = false;
+  // console.log(auth?.data.id, "profileId", {meProfile})
+  // const {data:users}=useGetAllUsers()
+  // console.log(users, "users list")
+  // const {data: me}=useGetMeprofile()
+  // console.log({me}, "this is me")
+
   return (
     <UserLayout
-      title={`Welcome 👋🏻`}
+      title={`Welcome user👋🏻`}
       description={""}
       userId={userId}
     >

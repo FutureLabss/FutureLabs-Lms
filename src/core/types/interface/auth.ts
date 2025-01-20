@@ -13,12 +13,16 @@ export interface verifymail {
     email: string;
     token: string;
   }
-  
-  export interface AuthResponse {
-    id: string;
-    email: string;
-    fullname: string;
+  export interface Auth {
+    name: string;
+    id:string;
     token: string;
-    refreshToken: string;
+
   }
+  export interface AuthResponse {
+    success: boolean;
+    message: string;
+    data: Auth;
+  }
+  
   
