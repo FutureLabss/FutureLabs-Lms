@@ -4,30 +4,20 @@ import UserDashboardStudentProgress from "@/shared/components/userDashboard/stud
 import {useGetMeprofile } from "@/shared/hooks/query/users";
 import UserLayout from "@/shared/layouts/userLayout";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+
 
 export default function DashboardPage() {
-  const router = useRouter();
-  const userId = router.query.userId as string;
-  useEffect(()=>{
-  },[])
-  const {data:user}=useGetMeprofile()
-  console.log(user, "me responses")
-  // const userData= user?.data.map(()=>(
-  //   <>
-  //   </>
-  // ))
-
+  const router = useRouter()
+  const userId = router.query.userId as string
+  const { data: user } = useGetMeprofile()
+  // useEffect(() => {
+  //   refetch()
+  // }, [refetch])
   return (
-    <UserLayout
-      title={`Welcome ${user?.data.fullname ||  "user"}👋🏻`}
-      description={""}
-      userId={userId}
-    >
+    <UserLayout title={`Welcome ${user?.data.fullname || "user"}👋🏻`} description={""} userId={userId}>
       <UserDashboardAttendanceDetails />
       <UserDashboardStudentProgress />
       <UserDashboardPreRecordedClasses />
     </UserLayout>
-  );
+  )
 }
-

@@ -93,7 +93,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
             title: "Verify email Successful",
           },
         });
-        return res?.data;
+        // return res?.data;
         // router.push("/passwordsuccesspage");
       })
       .catch((e) => {
