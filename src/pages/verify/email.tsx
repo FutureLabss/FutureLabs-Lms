@@ -12,7 +12,6 @@ export default function EmailVerificationSuccessful() {
   const { email, token } = router.query;
   const{VerifyEmail}=useAuthContext()
 
-
   useEffect(()=>{
      VerifyEmail({
       email: email,

@@ -80,7 +80,6 @@ export default function AuthContext({ children }: { children: ReactNode }) {
       return response;
   };
   const VerifyEmail = async (data: verifymail) => {
-    console.log(data, "verifydata");
       const response = await axios.post("/verify/email", data)
       .then((res) => {
         console.log(res.data)
@@ -91,11 +90,11 @@ export default function AuthContext({ children }: { children: ReactNode }) {
         setNotification({
           type: NotificationType.success,
           content: {
-            title: "Create Password Successful",
+            title: "Verify email Successful",
           },
         });
-        router.push("/passwordsuccesspage");
-        return res.data
+        return res?.data;
+        // router.push("/passwordsuccesspage");
       })
       .catch((e) => {
         const message = e.response?.data?.message || "Network Error";
