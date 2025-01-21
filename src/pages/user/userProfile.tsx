@@ -4,10 +4,18 @@ import Image from "next/image";
 import { IoMdCloudUpload } from "react-icons/io";
 import { MdEdit } from "react-icons/md";
 import Breadcrumb from "@/shared/components/common/breadcrumbs/breadcrumbs";
-
+import { useGetMeprofile } from "@/shared/hooks/query/users";
 
 
 export default function UserProfilePage() {
+  const { data: user } = useGetMeprofile()
+  const profileData = {
+    "Full name": user?.data.fullname || "Big John Doe",
+    "Email address": user?.data.email || "BigJohnDoe@gmail.com",
+    "Phone number": user?.data.profile.phone_number || "+234123456789",
+    "Chosen skill":  "Product Design",
+    "Contact Address": user?.data.profile.address || "No. 3 Chubb Road, Ikot Ekpene, Akwa Ibom",
+  };
   return (
     <div>
       <div className="pb-5 sm:mt-[-5rem] ">
@@ -43,22 +51,11 @@ export default function UserProfilePage() {
         <div className="flex-1 w-full md:w-2/3">
           {/* Profile Details */}
           <ul className="text-gray-700 space-y-4 ">
-            <li>
-              <strong>Full name:</strong> <br /> Big John Doe
-            </li>
-            <li>
-              <strong>Email address:</strong> <br /> BigJohnDoe@gmail.com
-            </li>
-            <li>
-              <strong>Phone number:</strong> <br /> +234123456789
-            </li>
-            <li>
-              <strong>Chosen skill:</strong> <br /> Product Design
-            </li>
-            <li>
-              <strong>Contact Address:</strong> <br /> No. 3 Chubb Road, Ikot
-              Ekpene, Akwa Ibom
-            </li>
+            {Object.entries(profileData).map(([label, value], index) => (
+                  <li key={index}>
+                    <strong>{label}:</strong> <br /> {value}
+                  </li>
+                ))}
           </ul>
         </div>
         </div>
