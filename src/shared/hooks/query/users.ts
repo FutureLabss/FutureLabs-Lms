@@ -24,7 +24,7 @@ export function useGetSingleUsersprofile(id: string, options: IQueryOptions = {}
 }
 export function useGetMeprofile() {
   const meuser: IQueryArgs<ApiMEResponse> = {
-    key: ["userProfile"],
+    key: ["getMe"],
     callback: () => getMeUserProfile(),
   };
   return useGetResourcesQuery(meuser);
