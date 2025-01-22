@@ -10,9 +10,7 @@ export default function DashboardPage() {
   const router = useRouter()
   const userId = router.query.userId as string
   const { data: user } = useGetMeprofile()
-  // useEffect(() => {
-  //   refetch()
-  // }, [refetch])
+
   return (
     <UserLayout title={`Welcome ${user?.data.fullname || "user"}👋🏻`} description={""} userId={userId}>
       <UserDashboardAttendanceDetails />

@@ -23,7 +23,7 @@ export default function UserLayout(props: layoutInterface) {
   useEffect(() => {
     if (!loaded) return;
     if (!islLoggedIn) {
-      router.push("/user");
+      router.push("/login");
     }
   }, [islLoggedIn, loaded]);
 
