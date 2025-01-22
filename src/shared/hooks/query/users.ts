@@ -3,7 +3,6 @@ import { IQueryArgs, IQueryOptions } from "@/core/types/interface/query";
 import { useGetResourcesQuery } from "../helper/query";
 import { IUsers } from "@/core/types/dto/users";
 import { ApiMEResponse, ISingleUserData } from "@/core/types/dto/singleuser";
-import { useAuthContext } from "@/shared/context/auth";
 
 export function useGetAllUsers() {
   const Allusers: IQueryArgs<IUsers> = {
@@ -14,8 +13,6 @@ export function useGetAllUsers() {
 }
 
 export function useGetSingleUsersprofile(id: string, options: IQueryOptions = {}) {
-  const { auth } = useAuthContext()
-  console.log(auth?.data.id, "profileIdcontext")
   const singleuser: IQueryArgs<ISingleUserData> = {
     key: ["userProfile", { id }],
     callback: () => getSingleUserProfile(id),

@@ -5,7 +5,6 @@ import useNotificationStore from "@/stores/notificationState";
 import axios from "axios";
 import router from "next/router";
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
-import { useGetMeprofile } from "../hooks/query/users";
 
 interface AuthContextType {
   auth?: AuthResponse;
@@ -15,7 +14,6 @@ interface AuthContextType {
   loaded: boolean;
   CreatePassword: (data: ICreatePassword) => void;
   VerifyEmail: (data: verifymail) => void;
-  // meProfile:()=>void;
 }
 
 const usersContext = createContext<AuthContextType>({
@@ -26,22 +24,16 @@ const usersContext = createContext<AuthContextType>({
   loaded: false,
   CreatePassword: () => { },
   VerifyEmail: () => { },
-  // meProfile: ()=>{ },
 });
 
 export default function AuthContext({ children }: { children: ReactNode }) {
-  //   const [error, setError] = useState<string>("");
   const [islLoggedIn, setILoggedIn] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [auth, setAuth] = useState<AuthResponse>();
   const setNotification = useNotificationStore((state) => state.displayNotification);
 
-  const { data: user } = useGetMeprofile({ enabled: islLoggedIn })
-
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    // setILoggedIn(true);
-    console.log({ loaded })
     if (storedToken) {
       try {
         const tokens = JSON.parse(storedToken);
