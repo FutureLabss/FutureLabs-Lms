@@ -14,7 +14,7 @@ export function useGetAllUsers() {
 }
 
 export function useGetSingleUsersprofile(id: string, options: IQueryOptions = {}) {
-  const {auth}= useAuthContext()
+  const { auth } = useAuthContext()
   console.log(auth?.data.id, "profileIdcontext")
   const singleuser: IQueryArgs<ISingleUserData> = {
     key: ["userProfile", { id }],
@@ -22,10 +22,10 @@ export function useGetSingleUsersprofile(id: string, options: IQueryOptions = {}
   };
   return useGetResourcesQuery(singleuser, options);
 }
-export function useGetMeprofile() {
+export function useGetMeprofile(options: IQueryOptions = {}) {
   const meuser: IQueryArgs<ApiMEResponse> = {
     key: ["getMe"],
     callback: () => getMeUserProfile(),
   };
-  return useGetResourcesQuery(meuser);
+  return useGetResourcesQuery(meuser, {...options,loadingConfig:{displayLoader:false}});
 }
