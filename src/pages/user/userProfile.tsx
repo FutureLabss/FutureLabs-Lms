@@ -49,7 +49,6 @@ export default function UserProfilePage() {
 
         {/* Right Column: Profile Details */}
         <div className="flex-1 w-full md:w-2/3">
-          {/* Profile Details */}
           <ul className="text-gray-700 space-y-4 ">
             {Object.entries(profileData).map(([label, value], index) => (
                   <li key={index}>

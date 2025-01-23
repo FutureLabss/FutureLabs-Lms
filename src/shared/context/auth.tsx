@@ -12,9 +12,8 @@ interface AuthContextType {
   logout: (callback?: () => void) => void;
   islLoggedIn: boolean;
   loaded: boolean;
-  CreatePassword:(data: ICreatePassword) => void;
-  VerifyEmail:(data: verifymail) => void;
-  // meProfile:()=>void;
+  CreatePassword: (data: ICreatePassword) => void;
+  VerifyEmail: (data: verifymail) => void;
 }
 
 const usersContext = createContext<AuthContextType>({
@@ -25,11 +24,9 @@ const usersContext = createContext<AuthContextType>({
   loaded: false,
   CreatePassword: () => { },
   VerifyEmail: () => { },
-  // meProfile: ()=>{ },
 });
 
 export default function AuthContext({ children }: { children: ReactNode }) {
-  //   const [error, setError] = useState<string>("");
   const [islLoggedIn, setILoggedIn] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [auth, setAuth] = useState<AuthResponse>();
@@ -37,14 +34,13 @@ export default function AuthContext({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    setILoggedIn(true);
     if (storedToken) {
       try {
         const tokens = JSON.parse(storedToken);
-        if (tokens?.token) {
-          setToken(tokens.token);
+        if (tokens?.data.token) {
+          setToken(tokens.data.token);
           setILoggedIn(true);
-          setAuth(tokens);
+          setAuth(tokens.data);
         }
       } catch (error) {
         console.error("Error parsing JSON from localStorage:", error);
@@ -53,9 +49,9 @@ export default function AuthContext({ children }: { children: ReactNode }) {
     setLoaded(true);
   }, []);
 
-  
+
   const CreatePassword = async (data: ICreatePassword) => {
-      const response = await axios.post("/auth/register", data)
+    const response = await axios.post("/auth/register", data)
       .then((res) => {
         localStorage.setItem("token", JSON.stringify(res.data));
         setToken(res.data?.token);
@@ -77,10 +73,10 @@ export default function AuthContext({ children }: { children: ReactNode }) {
         }
         throw new Error(message);
       });
-      return response;
+    return response;
   };
   const VerifyEmail = async (data: verifymail) => {
-      const response = await axios.post("/verify/email", data)
+    const response = await axios.post("/verify/email", data)
       .then((res) => {
         console.log(res.data)
         localStorage.setItem("token", JSON.stringify(res.data));
@@ -104,7 +100,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
         }
         throw new Error(message);
       });
-      return response;
+    return response;
   };
   const login = async (data: ILogin) => {
     const Promise = await axios
@@ -133,14 +129,14 @@ export default function AuthContext({ children }: { children: ReactNode }) {
       });
     return Promise;
   };
-  
+
   const logout = (callback?: () => void) => {
     localStorage.removeItem("token");
     setILoggedIn(false);
     if (callback) callback();
   };
 
-  
+
 
   const value = { auth, login, logout, loaded, islLoggedIn, CreatePassword, VerifyEmail };
 
