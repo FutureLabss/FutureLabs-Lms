@@ -1,9 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
-import { Check, Play, MoreVertical, ChevronDown, Pause } from 'lucide-react'
+import {  Play, MoreVertical, ChevronDown, Pause } from 'lucide-react'
 import Tabs from '../../tabs'
 import { tabs } from './courseinfo'
 import { useRouter } from 'next/router'
 import { prerecordedCourses, type Section } from '@/core/const/userdashboard/courses/prerecorded'
+import { IoCheckmarkDoneCircleOutline } from "react-icons/io5";
+import { MdOutlinePlayCircleOutline } from "react-icons/md";
+
+
 
 interface SelectedLesson {
   sectionId: string
@@ -171,7 +175,7 @@ export default function PrerecordedComponent() {
                         }`}
                       >
                         <div>
-                          <span className={`text-[13px] ${
+                          <span className={`text-[14px] text-primary font-semibold  ${
                             selectedLesson?.sectionId === section.id && 
                             selectedLesson?.lessonIndex === lessonIndex
                               ? 'text-orange-900 font-medium'
@@ -181,7 +185,7 @@ export default function PrerecordedComponent() {
                           }`}>
                             {lesson.title}
                           </span>
-                          <p className={`text-xs ml-auto ${
+                          <p className={`text-xs  ml-auto ${
                             lesson.completed ? 'text-orange-600' : 'text-gray-400'
                           }`}>
                             {lesson.completed ? 'Completed' : 'Pending'}
@@ -196,9 +200,9 @@ export default function PrerecordedComponent() {
                             : 'text-gray-400'
                         }`}>
                           {lesson.completed ? (
-                            <Check className="h-4 w-4" />
+                            <IoCheckmarkDoneCircleOutline className="h-5 w-5" />
                           ) : (
-                            <Play className="h-4 w-4" />
+                            <MdOutlinePlayCircleOutline className="h-5 w-5" />
                           )}
                         </div>
                       </div>

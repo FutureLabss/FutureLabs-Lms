@@ -2,6 +2,7 @@ import { useState } from "react";
 import Modal from "../../common/modal/modal";
 import { Assignment } from "@/core/types/interface/assignments";
 import { TableHeaderActionProp } from "@/core/types/interface/component/table";
+import UploadAssignmentsModalContent from "../uploadassigmentmodal";
 
 export default function AssignmentsTableActionComponent(props: TableHeaderActionProp<Assignment>) {
   const [open, setOpen] = useState(false);
@@ -27,8 +28,14 @@ export default function AssignmentsTableActionComponent(props: TableHeaderAction
     <div className="flex flex-col gap-4">
       <div className="flex flex-row items-center gap-4">
         <span
-          className={`cursor-pointer 
-            ${isSubmissionAllowed(props.item!) ? "text-[#727272]" : "text-gray-400"} ${selectedAssignment?.submit === "Submitted"? "text-[#4CC21A]": "text-[#727272]"}`}
+          className={`cursor-pointer text-center 
+            ${
+              isSubmissionAllowed(props.item!)
+                ? props.item?.submit === "Submitted"
+                  ? "text-green-600 font-bold text-sm"
+                  : "text-gray-600 font-normal text-sm"
+                : "text-gray-400 italic font-normal text-sm"
+            }`}
           onClick={() => isSubmissionAllowed(props.item!) && handleModalOpen(props.item!)}
         >
           {isSubmissionAllowed(props.item!) ? props.item?.submit : "Submission Closed"}
@@ -36,12 +43,10 @@ export default function AssignmentsTableActionComponent(props: TableHeaderAction
       </div>
 
       {open && selectedAssignment && (
-        <Modal isOpen={open} onClose={handleCloseModal} displayClose={true} title="Assignment Action">
+        <Modal isOpen={open} onClose={handleCloseModal} displayClose={false} title="">
           {selectedAssignment.submit === "Upload" && (
             <div>
-              <h3>Upload Assignment</h3>
-              <p>Due Date: {selectedAssignment.dueDate}</p>
-              {/* Add file upload inputs here */}
+              <UploadAssignmentsModalContent />
             </div>
           )}
           {selectedAssignment.submit === "Submitted" && (

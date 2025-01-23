@@ -17,7 +17,6 @@ export default function CoursePage() {
   const [activeTab, setActiveTab] = useState(0);
   const searchParams = useSearchParams();
   const id = searchParams.get('id');
-  // 
   const course = courses.find((item) => item.id === id);
 
   return (

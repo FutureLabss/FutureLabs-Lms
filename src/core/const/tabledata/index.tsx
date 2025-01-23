@@ -72,5 +72,86 @@ export const assignmentsData: Assignment[] = [
     id: "6",
     allowLateSubmission: false
   },
+  {
+    assignmentTitle: 'Creating a Design System',
+    courseLesson: 'Design Systems and Components',
+    dueDate: 'September 5, 2024',
+    status: 'Pending',
+    submit: 'Upload',
+    id: "7",
+    allowLateSubmission: false
+  },
+  {
+    assignmentTitle: 'Creating a Design System',
+    courseLesson: 'Design Systems and Components',
+    dueDate: 'September 5, 2024',
+    status: 'Pending',
+    submit: 'Upload',
+    id: "8",
+    allowLateSubmission: false
+  },
+  {
+    assignmentTitle: 'Creating a Design System',
+    courseLesson: 'Design Systems and Components',
+    dueDate: 'September 5, 2024',
+    status: 'Pending',
+    submit: 'Upload',
+    id: "9",
+    allowLateSubmission: false
+  },
+  {
+    assignmentTitle: 'Creating a Design System',
+    courseLesson: 'Design Systems and Components',
+    dueDate: 'September 5, 2024',
+    status: 'Pending',
+    submit: 'Upload',
+    id: "10",
+    allowLateSubmission: false
+  },
+  {
+    assignmentTitle: 'Creating a Design System',
+    courseLesson: 'Design Systems and Components',
+    dueDate: 'September 5, 2024',
+    status: 'Pending',
+    submit: 'Upload',
+    id: "11",
+    allowLateSubmission: false
+  },
+  {
+    assignmentTitle: 'Creating a Design System',
+    courseLesson: 'Design Systems and Components',
+    dueDate: 'September 5, 2024',
+    status: 'Pending',
+    submit: 'Upload',
+    id: "12",
+    allowLateSubmission: false
+  },
+  {
+    assignmentTitle: 'Creating a Design System',
+    courseLesson: 'Design Systems and Components',
+    dueDate: 'September 5, 2024',
+    status: 'Pending',
+    submit: 'Upload',
+    id: "13",
+    allowLateSubmission: false
+  },
+  {
+    assignmentTitle: 'Creating a Design System',
+    courseLesson: 'Design Systems and Components',
+    dueDate: 'September 5, 2024',
+    status: 'Pending',
+    submit: 'Upload',
+    id: "14",
+    allowLateSubmission: false
+  },
+  {
+    assignmentTitle: 'Creating a Design System',
+    courseLesson: 'Design Systems and Components',
+    dueDate: 'September 5, 2024',
+    status: 'Pending',
+    submit: 'Upload',
+    id: "15",
+    allowLateSubmission: false
+  },
 ];
 
