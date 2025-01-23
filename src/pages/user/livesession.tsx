@@ -15,11 +15,14 @@ export default function UserLiveClasses() {
 
   return (
     <div className=''>
-      <TabLayout
-        sessionTabs={sessionTabs}
-        activeTab={activeTab}
-        setActiveTab={handleTabClick}
-      />
+      <div className='w-[80%] '>
+
+        <TabLayout
+          sessionTabs={sessionTabs}
+          activeTab={activeTab}
+          setActiveTab={handleTabClick}
+        />
+      </div>
       {/* Render Tab Content */}
       <div className="tab-content mt-4  py-[55px] px-[22px] rounded-[10px]">
         {sessionTabs
