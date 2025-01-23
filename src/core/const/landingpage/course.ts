@@ -1,5 +1,3 @@
-
-
 import webdesign from "../../../../src/assets/courses/web-design.png";
 import productdesign from "../../../../src/assets/courses/product-design.png";
 import dataanalytics from "../../../../src/assets/courses/analytics.png";
