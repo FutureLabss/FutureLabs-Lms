@@ -35,11 +35,14 @@ export default function Table<T>(props: TableProps<T>) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortColumn, setSortColumn] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  // const [currentPage, setCurrentPage] = useState(pagination?.currentPage ?? 1);
+  // const itemsPerPage = pagination?.pageSize ?? 10;
   const [currentPage, setCurrentPage] = useState(pagination?.currentPage ?? 1);
+  const [itemsPerPage, setItemsPerPage] = useState(pagination?.pageSize ?? 10);
+
 
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
-  const itemsPerPage = pagination?.pageSize ?? 10;
 
   const enableCheckbox = !!checkboxAction;
 
@@ -126,6 +129,11 @@ export default function Table<T>(props: TableProps<T>) {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+  const handlePageSizeChange = (page: number, size: number) => {
+    setItemsPerPage(size);
+    setCurrentPage(1); 
+  };
+
   const handleRedirect = (e: React.MouseEvent<HTMLTableRowElement, MouseEvent>, userId?: string) => {
     e.preventDefault();
     //  console.log("Navigating to ID:", userId);
@@ -193,9 +201,9 @@ export default function Table<T>(props: TableProps<T>) {
                     </section>
                   </th>
                 ))}
-                <th scope="col" className="relative px-6 py-3">
+                {/* <th scope="col" className="relative px-6 py-3">
                   <span className="sr-only">Actions</span>
-                </th>
+                </th> */}
               </tr>
             </thead>
             {loading ? (
@@ -247,11 +255,13 @@ export default function Table<T>(props: TableProps<T>) {
         </div>
         {totalPages > 1 && (
             <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              pageSize={itemsPerPage}
-              onPageChange={handlePageChange}
-            />
+            currentPage={currentPage}
+            totalPages={totalPages}
+            pageSize={itemsPerPage}
+            onPageChange={handlePageChange} 
+            onPageSizeChange={handlePageSizeChange}  
+           
+          />
           )}
       </div>
     </section>
