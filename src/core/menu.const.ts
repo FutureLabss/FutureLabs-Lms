@@ -39,7 +39,7 @@ export const AdminMenus: Menu[] = [
     id: "4",
     icon: RiLiveLine,
     path: `${AdminRoutes.LIVESESSIONS}`,
-    disabled: true,
+    disabled: false,
   },
   {
     title: "Leaderboard",
@@ -55,7 +55,7 @@ export const AdminMenus: Menu[] = [
     disabled: true,
     path: `${AdminRoutes.NOTIFICATION}`,
   },
- 
+
 ];
 
 export const AdminMenuLookup = AdminMenus.reduce<{ [key: string]: Menu }>((val, item) => {
