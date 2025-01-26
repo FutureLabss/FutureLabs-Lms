@@ -8,6 +8,7 @@ export type Session = {
   role?: string;
   sessionTitle?: string;
   time?: string;
+  timer?: string;
   duration?: string;
   date?: string;
   joinButton?: {
@@ -163,9 +164,10 @@ export const sessionTabs: Tab[] = [
     isActive: false,
     sessions: [
       {
-        tutor: "Boss Tee",
+        tutor: "Emmanuel",
         avatar: avatar,
         role: "Tutor",
+        timer: "1hr 30 Mins",
         sessionTitle: "UX Design Fundamentals",
         time: "03.30 - 05.00 PM",
         date: "Wednesday, 30 June 2021",
@@ -175,10 +177,11 @@ export const sessionTabs: Tab[] = [
         },
       },
       {
-        tutor: "Emediong",
-        role: "Tutor",
+        tutor: "Ella",
+        role: "Designer",
         avatar: avatar,
-        sessionTitle: "Interaction Design",
+        timer: "1hr 20 Mins",
+        sessionTitle: "Typography Basics",
         time: "10.00 - 12.30 PM",
         date: "Friday, 2 July 2021",
         joinButton: {
@@ -190,7 +193,21 @@ export const sessionTabs: Tab[] = [
         tutor: "Emediong",
         role: "Tutor",
         avatar: avatar,
+        timer: "2 Hours",
         sessionTitle: "Interaction Design",
+        time: "02.00 - 04.30 PM",
+        date: "Friday, 2 July 2021",
+        joinButton: {
+          text: "Join Now",
+          isActive: false,
+        },
+      },
+      {
+        tutor: "Maya",
+        role: "Developer",
+        avatar: avatar,
+        timer: "2hr 30 Mins",
+        sessionTitle: "Responsive Web Design",
         time: "02.00 - 04.30 PM",
         date: "Friday, 2 July 2021",
         joinButton: {

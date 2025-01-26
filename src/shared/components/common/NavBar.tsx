@@ -43,10 +43,10 @@ export default function Navbar() {
             <NavLinks to="/">Home</NavLinks>
           </li>
           <li>
-            <NavLinks to="/schools">Schools</NavLinks>
+            <NavLinks to="#schools">Schools</NavLinks>
           </li>
           <li>
-            <NavLinks to="/why-future-academy">Why Future Academy</NavLinks>
+            <NavLinks to="#why-future-academy">Why Future Academy</NavLinks>
           </li>
         </ul>
         <Button
