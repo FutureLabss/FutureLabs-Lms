@@ -14,7 +14,7 @@ interface IProps {
           props.className
         } `}
       >
-        <GoDotFill />
+        <GoDotFill className="mt-[3px]" />
         {props.text}
       </span>
     );

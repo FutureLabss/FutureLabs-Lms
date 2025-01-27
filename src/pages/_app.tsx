@@ -17,7 +17,8 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <Loader />
       <NotificationComponent />
-      <QueryClientProvider client={queryClient}>
+      <QueryClientProvider  
+      client={queryClient}>
         <AuthContext>
           <Layout>
             <PageComponent {...pageProps} />

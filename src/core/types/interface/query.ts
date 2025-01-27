@@ -1,6 +1,5 @@
 import { LoadingConfig, ErrorConfig, SuccessConfig } from "@/shared/components/loader/loader.interface";
 
-
 export interface IAPIFilter {
   // page?: number;
   [index: string]: string | number | undefined;
