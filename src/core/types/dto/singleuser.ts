@@ -56,5 +56,16 @@ interface User {
     message: string;
     data: MeUserData;
   }
+  export interface EditUserProfileData {
+    first_name: string;
+    surname: string;
+    age_range: string; 
+    gender: string; 
+    state: string; 
+    lga: string; 
+    phone_number: string; 
+    image: File; 
+  }
+  
   
   

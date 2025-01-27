@@ -145,7 +145,7 @@ export default function Table<T>(props: TableProps<T>) {
       <div className="justify-center 2xl:p-10 2xl:pt-10 ">
         <div className="shadow-md overflow-x-auto bg-white pt-[22px] pl-[25px] ">
         <div className=" flex items-center">
-      <div className={` relative flex items-center transition-all duration-300 ${isExpanded ? 'w-80' : 'w-10'}`}>
+      <div className={` relative flex items-center transition-all duration-300 ${isExpanded ? 'w-60' : 'w-10'}`}>
       <SearchIcon
        onClick={toggleSearch}
        className="text-gray-400 mr-2 absolute top-3 2xl:top-10 left-3 2xl:left-10" />
