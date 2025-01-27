@@ -8,6 +8,10 @@ export default {
     './src/shared/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    // fontFamily: {
+    //   sans: ["var(--font-inter)", "sans-serif"],
+    //   poppins: ["var(--font-poppins)", "sans-serif"],
+    // },
     extend: {
       screens: {
         xsm: "320px",
