@@ -10,7 +10,7 @@ import { CiLogout } from "react-icons/ci";
 import { useRouter } from "next/router";
 import { useAuthContext } from "@/shared/context/auth";
 // import Modal from "../common/modal/modal";
-import { useState } from "react";
+// import { useState } from "react";
 
 interface Props {
   display: boolean;

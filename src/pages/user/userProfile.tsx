@@ -45,7 +45,6 @@ export default function UserProfilePage() {
     if (file) {
       const localImageUrl = URL.createObjectURL(file);
       setProfileImage(localImageUrl);
-
       const imageData: EditUserProfileData = {
         _method: "PUT",
         first_name: user?.data.fullname || "",
@@ -57,12 +56,11 @@ export default function UserProfilePage() {
         phone_number: user?.data.profile.phone_number || "",
         image: file,
       };
-
       const formData = createFormData(imageData);
-
+      console.log("these are edited formData",formData)
       try {
         editUser(formData as unknown as EditUserProfileData);
-        console.log("Profile image updated successfully");
+        console.log("Profile image updated successfully", formData);
       } catch (error) {
         console.error("Error uploading profile image:", error);
       }
@@ -106,14 +104,14 @@ export default function UserProfilePage() {
           <div className="w-full max-w-4xl flex flex-col md:flex-row gap-8 pl-14 p-6">
             <div className="flex flex-col items-center gap-4 ">
               <div className="relative w-[409px] h-[409px]">
-                {/* <Image
+                <Image
                   src={profileImage || user?.data.profile.image_url || profile1}
                   alt="profile"
                   layout="fill"
                   objectFit="cover"
                   className=""
-                /> */}
-                {user?.data.profile.image_url ? (
+                />
+                {/* {user?.data.profile.image_url ? (
                 <Image
                   src={user?.data.profile.image_url}
                   alt="profile"
@@ -125,7 +123,7 @@ export default function UserProfilePage() {
                 <Image src={profile1} alt="profile"
                 layout="fill"
                 objectFit="cover" />
-              )}
+              )} */}
               </div>
               <div className="flex flex-row justify-end items-end w-full">
                 <input
