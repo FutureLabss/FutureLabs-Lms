@@ -9,6 +9,8 @@ import { SlSupport } from "react-icons/sl";
 import { CiLogout } from "react-icons/ci";
 import { useRouter } from "next/router";
 import { useAuthContext } from "@/shared/context/auth";
+// import Modal from "../common/modal/modal";
+// import { useState } from "react";
 
 interface Props {
   display: boolean;
@@ -21,11 +23,18 @@ export default function AppDrawer(props: Props) {
   const currentMenuItem = useActiveMenu();
   const router = useRouter();
   const { logout } = useAuthContext();
+  // const [logoutModal, setLogoutModal] = useState(false);
 
   const handleLogout = () => {
     logout();
     router.push("/login");
   };
+  //  const handleOpenModal = ()=>{
+  //   setLogoutModal(true);
+  //   };
+  //   const toggleLogoutModal = () => {
+  //     setLogoutModal((val) => !val);
+  //   };
 
   return (
     <>
@@ -106,6 +115,21 @@ export default function AppDrawer(props: Props) {
             </div>
           </div>
         </div>
+        {/* <Modal isOpen={logoutModal} onClose={() => setLogoutModal(false)}>
+        <div className="py-5 bg-white">
+          <p className="text-center">Are you sure you want to logout?</p>
+          <div className="flex flex-row gap-5  ">
+            <div className=" text-secondary-default font-medium text-[14px] sm:text-[20px] font-manrope
+         border border-secondary-default px-5 py-1 rounded">
+              <button className="cursor-pointer" onClick={handleLogout}>Yes</button>
+            </div>
+            <div className=" text-white font-medium text-[14px] sm:text-[20px] font-manrope
+         bg-secondary-default px-3 py-1 rounded">
+              <button className="cursor-pointer" onClick={toggleLogoutModal}>No</button>
+            </div>
+          </div>
+        </div>
+      </Modal> */}
       </div>
       {display && (
         <div

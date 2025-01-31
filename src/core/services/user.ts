@@ -39,60 +39,11 @@ export async function getMeUserProfile(): Promise<ApiMEResponse> {
     .catch(handleError);
 }
 export async function editUserProfile(profileId: string, formData: EditUserProfileData): Promise<EditUserProfileData> {
-  try {
-    const response = await axios.post<EditUserProfileData>(
-      `profile/${profileId}`,
-      formData,
-      {
-        params: {
-          _method: "PUT"
-        }
-      }
-    );
-    return response.data;
-  } catch (e: any) {
-    const message = e.response?.data?.message || "Network Error";
-    if (Array.isArray(message)) {
-      const error = message.join("\n");
-      console.error({ error });
-      throw new Error(error);
-    }
-    throw new Error(message);
+return axios.post<EditUserProfileData>(`profile/${profileId}`, formData,)
+.then((response: AxiosResponse<EditUserProfileData>)=>{
+  return response.data
+}).catch(handleError);
   }
-}
-
-// export async function editUserProfile(
-//   profileId: string | undefined,
-//   formData: EditUserProfileData,
-// ): Promise<EditUserProfileData> {
-//   if (!profileId) {
-//     console.error("Profile ID is undefined")
-//     throw new Error("Profile ID is required")
-//   }
-
-//   try {
-//     const response = await axios.post<EditUserProfileData>(`profile/${profileId}`, formData, {
-//       params: {
-//         _method: "PUT",
-//       },
-//       headers: {
-//         "Content-Type": "multipart/form-data",
-//       },
-//     })
-//     return response.data
-//   } catch (e: any) {
-//     if (axios.isAxiosError(e)) {
-//       const message = e.response?.data?.message || e.message
-//       console.error("API Error:", message)
-//       if (Array.isArray(message)) {
-//         throw new Error(message.join("\n"))
-//       }
-//       throw new Error(message)
-//     }
-//     console.error("Unexpected Error:", e)
-//     throw new Error("An unexpected error occurred")
-//   }
-// }
 
 
 

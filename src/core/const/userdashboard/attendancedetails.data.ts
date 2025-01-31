@@ -4,6 +4,7 @@ import { BsHouseDash } from "react-icons/bs";
 import { MdOutlineAssignment } from "react-icons/md";
 import { RiLiveLine } from "react-icons/ri";
 import prerecorded from "../../../assets/userdashboardimages/prerecorded.png"
+import profile from "../../../assets/courses/avatar.png"
 
 interface IAttendanceData {
   title: string;
@@ -12,8 +13,11 @@ interface IAttendanceData {
 }
 interface IPreRecordedData {
     img:StaticImageData
-    title: string;
     description: string;
+    progress: number;
+    profile:StaticImageData;
+    name:string;
+    role:string;
 }
 
 export const AttendaceDetails:IAttendanceData[] =[
@@ -38,19 +42,35 @@ export const AttendaceDetails:IAttendanceData[] =[
 
 export const prerecordedClasses:IPreRecordedData[] =[
     {
-        title: "Product Design", description: "Beginner's Guide to Becoming A Designer",
-        img: prerecorded
+        description: "Beginner's Guide to Becoming A Designer",
+        img: prerecorded,
+        progress: 20,
+        profile: profile,
+        name: "Boss tee",
+        role: "Product Designer"
     },
     {
-        title: "Product Design", description: "Beginner's Guide to Becoming A Designer",
-        img: prerecorded
+        description: "Beginner's Guide to Becoming A Designer",
+        img: prerecorded,
+        progress: 2,
+        profile: profile,
+         name: "Boss tee",
+        role: "Product Designer"
     },
     {
-        title: "Product Design", description: "Beginner's Guide to Becoming A Designere",
-        img: prerecorded
+        description: "Beginner's Guide to Becoming A Designere",
+        img: prerecorded,
+        progress: 10,
+        profile: profile,
+        name: "Boss tee",
+        role: "Product Designer"
     },
     {
-        title: "Product Design", description: "Beginner's Guide to Becoming A Designer",
-        img: prerecorded
+        description: "Beginner's Guide to Becoming A Designer",
+        img: prerecorded,
+        progress: 3,
+        profile: profile,
+        name: "Boss tee",
+        role: "Product Designer"
     },
   ]

@@ -28,6 +28,7 @@ export interface IQueryOptions {
   enabled?: boolean;
   retry?: boolean;
   cacheTime?: number;
+  staleTime?:number;
   loadingConfig?: LoadingConfig;
   errorConfig?: ErrorConfig;
   successConfig?: SuccessConfig;

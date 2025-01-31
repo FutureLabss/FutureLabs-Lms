@@ -167,7 +167,7 @@ export default function LoginPage() {
             <hr />
             <button
               type="button"
-              className="w-full bg-gray-100 text-black py-[1rem] rounded-md flex items-center gap-3 justify-center text-[20px] mt-4"
+              className="w-full bg-gray-100 text-white py-[1rem] rounded-md flex items-center gap-3 justify-center text-[20px] mt-4"
             >
               <Image src={google} alt="Google Logo" className="w-6 h-6" />
               Or sign in with Google
