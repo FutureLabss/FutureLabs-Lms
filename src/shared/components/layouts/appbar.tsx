@@ -22,7 +22,7 @@ export default function PreAppBar(props:Props){
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h8m-8 6h16" />
             </svg>
           </div>
-        <div className="flex flex-row lg:mt-[1.75rem] lg:ml-[16rem] 2xl:ml-[30rem] px-5 justify-between" >
+        <div className="flex flex-row lg:mt-[1.75rem]  lg:ml-[16rem] 2xl:ml-[22rem] px-5 justify-between" >
             <div className="w-full xsm:max-w-[210px]  xxs:max-w-[240px] md:max-w-[400px]">
                 <h3 className="md:text-[27px] xsm:text-[1.15rem] xxs:text-[1.35rem] font-bold pt-2">{title}</h3>
                 <p className="text-[1rem] 2xl:text-[2rem] text-gray-600  hidden md:col lg:flex font-[400]">{description}</p>
@@ -36,9 +36,9 @@ export default function PreAppBar(props:Props){
             <Link href={"/user/userProfile"}>
           <div
           //  onClick={toggleModal}
-          className="text-xs flex flex-row md:gap-4">
-            <p className="md:text-[1.1rem] text-[#85878D] font-medium">profile</p>
-          <div className="mt-[-3]">
+          className="text-xs flex flex-row md:gap-4 items-center">
+            <p className="md:text-[1.1rem]  text-[#85878D] font-medium">profile</p>
+          <div className="">
           <IoIosArrowForward size={29}/>
           </div>
           </div>

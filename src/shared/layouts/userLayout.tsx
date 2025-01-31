@@ -47,7 +47,7 @@ export default function UserLayout(props: layoutInterface) {
       {islLoggedIn ? (
         <div className="h-screen bg-[#f1f1f1]">
 
-          <div className="max-w-[1440px] mx-auto w-full flex ">
+          <div className="md:max-w-[1440px] 2xl:max-w-[2440px]  mx-auto w-full flex ">
             <div className="">
               <AppDrawer onLogout={toggleLogOutModal} display={showDrawer} onToggle={toggleDrawer} />
             </div>

@@ -19,7 +19,7 @@ export default function CourseCard(props: CourseCardProps) {
     <div className="bg-white rounded-lg shadow-md w-[100%] md:max-w-[528px] 2xl:max-w-[1000px]">
       <div className="flex flex-col xl:flex-row">
         {/* Course Image */}
-        <div className="w-[100%] md:max-w-[420px] 2xl:max-w-[500px]  overflow-hidden">
+        <div className="w-[100%]  2xl:max-w-[500px]  overflow-hidden">
           <Image
             src={props.image}
             alt={props.title}

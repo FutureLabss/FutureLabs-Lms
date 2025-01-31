@@ -19,10 +19,16 @@ export function useGetSingleUsersprofile(id: string, options: IQueryOptions = {}
   };
   return useGetResourcesQuery(singleuser, options);
 }
+
 export function useGetMeprofile(options: IQueryOptions = {}) {
   const meuser: IQueryArgs<ApiMEResponse> = {
     key: ["getMe"],
     callback: () => getMeUserProfile(),
   };
-  return useGetResourcesQuery(meuser, {...options,loadingConfig:{displayLoader:false}});
+  return useGetResourcesQuery(meuser, {...options,
+    loadingConfig:{displayLoader:false},
+    cacheTime: 1000 * 60 * 60,
+    staleTime: 1000 * 60 * 30,
+  });
 }
+

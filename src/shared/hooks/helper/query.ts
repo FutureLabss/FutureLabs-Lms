@@ -5,7 +5,7 @@ import { IPaginatedQueryArgs, IQueryArgs, IQueryOptions } from "@/core/types/int
 export function useGetResourcesQuery<IReturn>({ callback, key }: IQueryArgs<IReturn>, options: IQueryOptions = {}) {
   const { loadingConfig = { displayLoader: true }, errorConfig = { displayError: false }, ...queryOptions } = options;
 
-  const { status, data, isLoading, isFetching, error } = useQuery(
+  const { status, data, isLoading, isFetching, error, } = useQuery(
     key,
     (arg) => callback && callback(arg),
     queryOptions
