@@ -8,7 +8,7 @@ export default function AssignmentsTableActionComponent(props: TableHeaderAction
   const [open, setOpen] = useState(false);
   const [selectedAssignment, setSelectedAssignment] = useState<Assignment | null>(null);
 
-  const handleModalOpen = (assignment: Assignment) => {
+  const handleModalOpen = (assignment: Assignment)=>{
     setSelectedAssignment(assignment);
     setOpen(true);
   };
