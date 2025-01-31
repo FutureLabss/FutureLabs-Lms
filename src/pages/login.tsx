@@ -71,7 +71,7 @@ export default function LoginPage() {
             best.
           </p>
         </div>
-        <div className="md:pt-[8rem] 2xl:mt-[10rem] p-[3rem]">
+        <div className="md:pt-[8rem] 2xl:mt-[17rem] p-[3rem]">
           <p className="mb-2 text-sm w-[100%] max-w-[290px] md:leading-5">
             My journey as a designer isn&apos;t complete without Futurelabs. To anyone out
             there, take on the opportunity. Best wishes.
@@ -122,8 +122,7 @@ export default function LoginPage() {
               <p className="text-red-500 text-sm">{errors.email.message}</p>
             )}
             </div>
-
-            <div className="relative">
+            <div className="relative 2xl:pt-10">
               <input
                 {...register("password")}
                 type={hidePassword ? "text" : "password"}
@@ -133,7 +132,7 @@ export default function LoginPage() {
                 autoComplete="off"
               />
               <div
-                className="absolute right-3 top-3 cursor-pointer"
+                className="absolute right-3 top-3 2xl:top-14 cursor-pointer"
                 onClick={togglePasswordVisibility}
               >
                 {hidePassword ? <FaRegEye /> : <FaRegEyeSlash />}
@@ -163,11 +162,10 @@ export default function LoginPage() {
               {loading ? "Loading..." : "Sign in"}
             </button>
             </div>
-
-            <hr />
+            <hr  className="2xl:mt-10"/>
             <button
               type="button"
-              className="w-full bg-gray-100 text-white py-[1rem] rounded-md flex items-center gap-3 justify-center text-[20px] mt-4"
+              className="w-full bg-gray-100 text-white py-[1rem] rounded-md flex items-center gap-3 justify-center text-[20px] mt-4 2xl:mt-10"
             >
               <Image src={google} alt="Google Logo" className="w-6 h-6" />
               Or sign in with Google
