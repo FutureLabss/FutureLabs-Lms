@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from "axios";
 import { IUsers } from "../types/dto/users";
 import { handleError } from "@/shared/components/common/exception/catchErrors";
 import { ApiMEResponse, EditUserProfileData, ISingleUserData } from "../types/dto/singleuser";
-import { METHODS } from "http";
 
 
 
