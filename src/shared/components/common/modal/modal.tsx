@@ -33,7 +33,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, displayClose = false, ti
   return (
     <div
       onClick={handleOutsideClick}
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full z-[40] p-1 flex items-center justify-center"
+      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto z-50
+       h-full w-full p-1 flex items-center justify-center"
     >
       <div ref={modalRef} className="relative p-7 border w-[38rem] shadow-lg rounded-lg bg-white">
         <div className="flex justify-between items-center">

@@ -36,9 +36,9 @@ export default function PreAppBar(props:Props){
             <Link href={"/user/userProfile"}>
           <div
           //  onClick={toggleModal}
-          className="text-xs flex flex-row md:gap-4">
-            <p className="md:text-[1.1rem] text-[#85878D] font-medium">profile</p>
-          <div className="mt-[-3]">
+          className="text-xs flex flex-row md:gap-4 items-center">
+            <p className="md:text-[1.1rem]  text-[#85878D] font-medium">profile</p>
+          <div className="">
           <IoIosArrowForward size={29}/>
           </div>
           </div>

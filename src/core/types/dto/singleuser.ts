@@ -1,3 +1,5 @@
+import { StaticImport } from "next/dist/shared/lib/get-img-props";
+
 interface User {
   first_name: string;
     id: number;
@@ -42,10 +44,11 @@ interface User {
     created_at: string; 
     updated_at: string;
     email_verified: 0 | 1; 
+    image_url?:string | StaticImport
   }
   
   interface MeUserData {
-    id: number;
+    id: string;
     fullname: string;
     email: string;
     profile: IMeProfile; 
@@ -57,6 +60,7 @@ interface User {
     data: MeUserData;
   }
   export interface EditUserProfileData {
+    _method:"PUT";
     first_name: string;
     surname: string;
     age_range: string; 
