@@ -3,9 +3,9 @@ import CardComponent from "./card";
 
 export default function DashboardCardExplore() {
   return (
-    <div className="bg-background py-10" id="schools">
+    <div className="bg-background py-10 w-full" id="schools">
       <h2 className="text-center md:text-3xl xsm:text-[1.5rem] font-bold text-white mb-6">Explore a World of <span className="text-orange-400">Skills</span></h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 md:pr-[108px] md:pl-[80px] gap-[40px] mt-10">
+      <div className="grid grid-cols-1 md:grid-cols-2 md:pr-[108px] md:pl-[80px] 2xl:grid-cols-3 gap-[40px] mt-10 ">
         {displayExploreData.map((data, index) => (
           <CardComponent
             key={index}
