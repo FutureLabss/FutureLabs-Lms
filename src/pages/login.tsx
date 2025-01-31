@@ -61,7 +61,7 @@ export default function LoginPage() {
     <div className="bg-white grid grid-cols-1 md:grid-cols-2">
       {/* Left Section */}
       <div className="hidden md:flex">
-      <div className="bg-background text-white md:px-[75px] ">
+      <div className="bg-background text-white md:px-[75px] h-screen ">
         <div className="md:pt-[15.25rem] p-[3rem]">
           <h2 className="md:text-[3rem] text-[1.5rem] font-bold">
             Join Futurelabs and Start Your Tech Journey!
@@ -71,7 +71,7 @@ export default function LoginPage() {
             best.
           </p>
         </div>
-        <div className="md:pt-[8rem] p-[3rem]">
+        <div className="md:pt-[8rem] 2xl:mt-[10rem] p-[3rem]">
           <p className="mb-2 text-sm w-[100%] max-w-[290px] md:leading-5">
             My journey as a designer isn&apos;t complete without Futurelabs. To anyone out
             there, take on the opportunity. Best wishes.
@@ -143,7 +143,7 @@ export default function LoginPage() {
             )}
             </div>
 
-            <div className="flex items-center pt-2">
+            <div className="flex items-center pt-2 ">
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
@@ -154,7 +154,7 @@ export default function LoginPage() {
                 <span className="ml-3 text-sm font-medium text-gray-900">Remember me</span>
               </label>
             </div>
-            <div className="pt-10">
+            <div className="pt-10 2xl:pt-14">
             <button
               type="submit"
               className="w-full bg-background text-white py-[1rem] rounded-md hover:bg-background focus:outline-none focus:ring focus:ring-blue-300 mb-4 text-[20px]"
