@@ -124,6 +124,16 @@ export default function UserProfilePage() {
       </div>
       <div className="bg-white w-full h-full flex justify-center py-10 mt-10">
         <div className=" ">
+          {/* <div className="flex justify-end px-5">
+            <button
+              className="px-4 py-[10px] text-sm font-medium
+           text-black bg-transparent  border border-[#212C4A] rounded-xl hover:bg-transparent flex gap-2"
+            >
+              <MdEdit size={19} />
+              Edit profile
+            </button>
+          </div> */}
+          {/* Left Column: Avatar */}
           {loading ? (
             <div>
               <EmptyState />
