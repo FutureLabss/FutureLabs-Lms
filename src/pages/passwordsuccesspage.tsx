@@ -13,7 +13,7 @@ export default function PasswordSuccessPage() {
   return (
     <div className="bg-white grid grid-cols-1 md:grid-cols-2 h-screen">
       <div className="bg-background text-white hidden md:flex items-center justify-center">
-        <div className="md:pt-[2.55rem] ">
+        <div className="md:pt-[2.55rem] 2xl:mt-[37rem]">
           <Image
             src={auth}
             alt="User Avatar"
@@ -26,7 +26,7 @@ export default function PasswordSuccessPage() {
         <div className="flex items-end flex-row justify-end w-full">
           <Image src={logo} alt="Futurelabs Logo" />
         </div>
-        <div className="text-center">
+        <div className="text-center 2xl:mt-[18rem]">
           <h2 className="text-2xl font-semibold mb-4 text-black pt-5">
             Password created!
           </h2>

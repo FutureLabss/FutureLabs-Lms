@@ -148,20 +148,20 @@ export default function Table<T>(props: TableProps<T>) {
       <div className={` relative flex items-center transition-all duration-300 ${isExpanded ? 'w-60' : 'w-10'}`}>
       <SearchIcon
        onClick={toggleSearch}
-       className="text-gray-400 mr-2 absolute top-3 2xl:top-10 left-3 2xl:left-10" />
+       className="text-gray-400 mr-2 absolute top-3 2xl:top-7 left-3 2xl:left-10" />
         <input
           type="text"
           placeholder=""
           value={searchQuery}
           onChange={handleSearch}
           className={`border border-gray-300 text-sm focus:outline-none
-               text-gray-600 rounded-xl pl-10 py-2 2xl:px-20 2xl:py-8 w-full
+               text-gray-600 rounded-xl pl-10 py-2 2xl:px-14 2xl:py-6 w-full
                 transition-all duration-300 
                  ${isExpanded ? 'opacity-100' : 'opacity-[1]'}
                 `}
         />
       </div>
-      <div className="ml-4 flex items-center">
+      <div className="ml-4 2xl:ml-24 flex items-center">
         <span className="text-gray-500 text-sm">Filter by</span>
         <span className="text-orange-500 text-sm ml-2 cursor-pointer">dates</span>
         <span className="text-gray-300 text-sm mx-2">|</span>
@@ -176,7 +176,7 @@ export default function Table<T>(props: TableProps<T>) {
                     key={`table_header_index_${header.title}`}
                     scope="col"
                     className="px-5 py-3 text-left md:text-[0.65rem]
-                     2xl:text-[1.90rem]  lg:text-[1rem] font-medium text-[#344054] 
+                     2xl:text-[1rem]  lg:text-[1rem] font-medium text-[#344054] 
                      uppercase cursor-pointer min-w-[8rem] "
                     onClick={() => header.sortable && handleSort(header.field)}
                   >
@@ -222,8 +222,8 @@ export default function Table<T>(props: TableProps<T>) {
                       whitespace-nowrap
                        text-xs 
                        lg:text-[0.75rem]
-                       2xl:text-[2rem] 
-                       2xl:py-12  text-gray-900">
+                       2xl:text-[1rem] 
+                       2xl:py-10  text-gray-900">
                         <section className="flex space-x-1">
                           {index == 0 && enableCheckbox ? (
                             <input
