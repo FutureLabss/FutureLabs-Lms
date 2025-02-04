@@ -9,6 +9,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { GoDotFill } from "react-icons/go";
+import Link from "next/link";
 
 const schema = z.object({
   email: z.string().email("Invalid email address"),
@@ -173,9 +174,9 @@ export default function LoginPage() {
           </form>
           <p className="text-center mt-5 text-gray-600 text-sm">
             Don&apos;t have an account?{" "}
-            <a href="#" className="text-blue-500 hover:underline">
+            <Link href="/signup" className="text-blue-500 hover:underline">
               Sign up now
-            </a>
+            </Link>
           </p>
         </div>
       </div>

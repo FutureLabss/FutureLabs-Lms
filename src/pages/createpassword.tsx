@@ -96,8 +96,8 @@ export default function CreatePasswordPage() {
     });
   return (
     <div className="bg-white grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 h-full lg:min-h-[850px]">
-       <div className="bg-background text-white  hidden lg:flex items-center justify-center">
-        <div className="md:pt-[2.55rem]">
+       <div className="bg-background text-white  hidden lg:flex items-center justify-center h-screen">
+        <div className="md:pt-[2.55rem] 2xl:mt-[37rem]">
           <Image
             src={auth}
             alt="User Avatar"
@@ -110,14 +110,14 @@ export default function CreatePasswordPage() {
           <Image src={logo} alt="Futurelabs Logo" />
         </div>
         {error && <p className="text-red-500 text-sm text-center">{error}</p>}
-        <div className="p-5 mx-auto md:mt-[5rem]">
+        <div className="p-5 mx-auto md:mt-[5rem] 2xl:mt-[8rem]">
           <h2 className="text-2xl font-semibold mb-6 text-black">
             Create password 
           </h2>
           </div>
           <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-[27px]"
+          className="flex flex-col gap-[27px] 2xl:gap-[5rem]"
           >
             <input
               type="email"
