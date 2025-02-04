@@ -25,7 +25,7 @@ export default function PreAppBar(props:Props){
         <div className="flex flex-row lg:mt-[1.75rem]  lg:ml-[16rem] 2xl:ml-[22rem] px-5 justify-between" >
             <div className="w-full xsm:max-w-[210px]  xxs:max-w-[240px] md:max-w-[400px]">
                 <h3 className="md:text-[27px] xsm:text-[1.15rem] xxs:text-[1.35rem] font-bold pt-2">{title}</h3>
-                <p className="text-[1rem] 2xl:text-[2rem] text-gray-600  hidden md:col lg:flex font-[400]">{description}</p>
+                <p className="text-[1rem] 2xl:text-[1rem] text-gray-600  hidden md:col lg:flex font-[400]">{description}</p>
                 {/* <h3 className="text-[27px] font-bold pt-2">Welcome manny 👋🏻</h3> */}
             </div>
             <div className="flex flex-col md:flex-row items-center gap-4 cursor-pointer
