@@ -98,14 +98,14 @@ export default function ProceedSignUpPage(){
             <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-300 text-gray-500 text-[18px] font-bold">
                 1
               </div>
-              <span className="ml-2 text-black text-[22px] font-semibold">Step 1</span>
+              <span className="ml-2 text-gray-500 text-[22px] font-semibold">Step 1</span>
             </div>
             <div className="flex-grow h-[2px] bg-gray-300"></div>
             <div className="flex items-center">
             <div className="w-8 h-8 flex items-center justify-center rounded-full bg-black text-white text-[18px] font-bold" >
             2
               </div>
-              <span className="ml-2 text-gray-500 text-[22px] font-semibold">Step 2</span>
+              <span className="ml-2 text-black text-[22px] font-semibold">Step 2</span>
             </div>
           </div>
          <div className="p-5 mx-auto ">
@@ -133,7 +133,7 @@ export default function ProceedSignUpPage(){
 
             </select>
             <select id="level"
-             className="w-full rounded-md py-8 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
+             className="w-full rounded-md py-7 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
               // className="bg-[#f1f0f0] border border-gray-300 text-gray-900 text-sm 
               // rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
               //  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -145,7 +145,7 @@ export default function ProceedSignUpPage(){
               <option value="Others" className="text-[#686666]">Advance</option>
             </select>
             <select id="age"
-             className="w-full rounded-md py-8 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
+             className="w-full rounded-md py-7 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
               // className="bg-[#f1f0f0] border border-gray-300 text-gray-900 text-sm 
               // rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
               //  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -159,12 +159,12 @@ export default function ProceedSignUpPage(){
 
             </select>
             <textarea name="" placeholder="How did you hear about us" id=""
-            className="w-full rounded-md py-8 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
+            className="w-full rounded-md py-7 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
 >
 
             </textarea>
             
-             <div className="pb-5">
+             <div className="pb-3">
              <button
                 type="submit"
                className="w-full bg-background text-white py-3 rounded-md hover:bg-background-dark focus:outline-none focus:ring focus:ring-blue-300 text-[20px]"

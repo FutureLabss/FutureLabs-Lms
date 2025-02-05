@@ -82,7 +82,7 @@ export default function SignUpPage(){
            <Image src={logo} alt="Futurelabs Logo" />
          </div>
          {/* {error && <p className="text-red-500 text-sm text-center">{error}</p>} */}
-         <div className="flex items-center space-x-4 md:mt-[5rem] 2xl:mt-[8rem]">
+         <div className="flex items-center space-x-4 md:mt-[5rem] 2xl:mt-[7rem] pb-20">
             <div className="flex items-center">
               <div className="w-8 h-8 flex items-center justify-center rounded-full bg-black text-white text-[18px] font-bold" >
                 1
@@ -137,21 +137,31 @@ export default function SignUpPage(){
                 placeholder="address no.33 chubb road"
                className="w-full rounded-md py-3 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
              />
-             <select id="Gender"
-             className="w-full rounded-md py-3 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
-              // className="bg-[#f1f0f0] border border-gray-300 text-gray-900 text-sm 
-              // rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-              //  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-              //   dark:focus:ring-blue-500 dark:focus:border-blue-500"
+             <div className="relative w-full">
+              <select 
+                id="Gender"
+                className="w-full appearance-none rounded-md py-3 px-3 pr-10 mb-4 placeholder-gray-400 bg-[#f1f0f0] outline-gray-400 border focus:outline-none"
+              >
+                <option selected className="text-[#686666]">Gender</option>
+                <option value="Male" className="text-[#686666]">Male</option>
+                <option value="Female" className="text-[#686666]">Female</option>
+                <option value="Others" className="text-[#686666]">Others</option>
+              </select>
+              {/* Custom dropdown icon */}
+              <div className="absolute inset-y-0 justify-center right-3 flex items-center pointer-events-none">
+                <svg 
+                  className="w-6 h-6 text-gray-600"
+                  xmlns="http://www.w3.org/2000/svg" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
                 >
-              <option selected className="text-[#686666]">Gender</option>
-              <option value="Male" className="text-[#686666]">Male</option>
-              <option value="Female" className="text-[#686666]">Female</option>
-              <option value="Others" className="text-[#686666]">Others</option>
-            </select>
-            
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
                 <Link href={"/signup/proceed"}>
-             <div className="pb-5">
+             <div className="pb-3">
              <button
                 // type="submit"
                className="w-full bg-background text-white py-3 rounded-md hover:bg-background-dark focus:outline-none focus:ring focus:ring-blue-300 text-[20px]"
