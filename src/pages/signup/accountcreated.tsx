@@ -47,8 +47,8 @@ export default function AccountCreatedSuccessful() {
             />
           </div>
           <p className="text-blacktext-2xl font-normal mb-6 w-full max-w-[500px]">
-          We’ve sent a verification link to {email}. 
-          Please check your inbox and click on the link to verify your account."
+          We&ldquo;sent a verification link to {email}. 
+          Please check your inbox and click on the link to verify your account.
           </p>
           <div className="mt-16">
             <button
@@ -65,7 +65,7 @@ export default function AccountCreatedSuccessful() {
               Entered the wrong email?<span className="text-[#007AFF] pl-2"> <Link href={"/signup"}> Change it here</Link></span>
               </p>
               <p className="pt-20 pb-10 italic text-xs text-center">
-              Didn't receive an email? Emails can sometimes take a few minutes to arrive."
+              Didn&lsquo;t receive an email? Emails can sometimes take a few minutes to arrive.
               </p>
              </div>
         </div>
