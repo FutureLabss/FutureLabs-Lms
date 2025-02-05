@@ -62,7 +62,7 @@ export default function LoginPage() {
     <div className="bg-white grid grid-cols-1 md:grid-cols-2">
       {/* Left Section */}
       <div className="hidden md:flex">
-      <div className="bg-background text-white md:px-[75px] h-screen ">
+      <div className="bg-background text-white md:px-[75px] 2xl:h-screen ">
         <div className="md:pt-[15.25rem] p-[3rem]">
           <h2 className="md:text-[3rem] text-[1.5rem] font-bold">
             Join Futurelabs and Start Your Tech Journey!
@@ -107,7 +107,7 @@ export default function LoginPage() {
             ))}
           </div>
         )}
-        <div className="p-5 mx-auto md:mt-[10rem]">
+        <div className="p-5 mx-auto md:mt-[5rem] 2xl:mt-[10rem]">
           <h2 className="text-2xl font-semibold mb-6 text-black">
             Nice to have you back!
           </h2>
