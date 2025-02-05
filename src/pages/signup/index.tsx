@@ -42,25 +42,25 @@ export default function SignUpPage(){
     return(
         <div className="bg-white grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 h-full lg:min-h-[850px]">
             {/* right */}
-        <div className="hidden lg:flex h-screen">
-         <div className="w-full relative">
+        <div className="hidden lg:flex 2xl:h-screen">
+         <div className="w-full relative  h-full">
            <Image
              src={signup}
              alt="User Avatar"
              className=" object-cover w-full h-full "
            />
-         <div className="absolute mt-[-62rem] text-start w-full max-w-[900px] px-[74px]">
-            <h2 className=" text-[1rem] 2xl:text-[5rem] text-white font-semibold">
+         <div className="absolute 2xl:mt-[-62rem] md:mt-[-47rem] text-start w-full max-w-[900px] 2xl:px-[74px] px-[55px]">
+            <h2 className=" text-[1rem] md:text-[3.5rem] 2xl:text-[5rem] text-white font-semibold">
             Join Futurelabs and Start Your Tech  Journey!
             </h2>
-            <p className="ext-[1rem] 2xl:text-[1.44rem] text-white font-normal" >
+            <p className="text-[1rem]  2xl:text-[1.44rem] text-white font-normal" >
             Kick start your tech join with us and learn from the  industry best
             </p>
-            <div className="bg-primary p-10 mt-[11rem] rounded-3xl">
-                <p className="text-[1rem] 2xl:text-[1.5rem] text-white font-medium w-full max-w-[500px]" >
+            <div className="bg-primary 2xl:p-10 p-5 mt-[11rem] rounded-3xl">
+                <p className="text-[1rem] md:text-[1.2rem] 2xl:text-[1.5rem] text-white font-medium w-full max-w-[500px]" >
                 My journey as a designer isnt complete without futurelabs. To anyone out there,take on the opportunity. Best wishes
                 </p>
-                <div className="flex gap-3 items-center pt-10">
+                <div className="flex gap-3 items-center pt-8">
             <Image
               src={loginprofile}
               alt="User Avatar"
@@ -82,7 +82,7 @@ export default function SignUpPage(){
            <Image src={logo} alt="Futurelabs Logo" />
          </div>
          {/* {error && <p className="text-red-500 text-sm text-center">{error}</p>} */}
-         <div className="flex items-center space-x-4 md:mt-[5rem] 2xl:mt-[8rem]">
+         <div className="flex items-center space-x-4 md:mt-[3rem] 2xl:mt-[7rem] ">
             <div className="flex items-center">
               <div className="w-8 h-8 flex items-center justify-center rounded-full bg-black text-white text-[18px] font-bold" >
                 1
@@ -97,16 +97,16 @@ export default function SignUpPage(){
               <span className="ml-2 text-gray-500 text-[22px] font-semibold">Step 2</span>
             </div>
           </div>
-         <div className="p-5 mx-auto ">
+         <div className="p-5 mx-auto pt-20 md:pt-10">
            <h2 className="text-2xl font-semibold mb-6 text-black">
            Welcome,Lets get to know you
            </h2>
            </div>
            <form
            onSubmit={handleSubmit(onSubmit)}
-           className="flex flex-col gap-[27px] 2xl:gap-[3rem]"
+           className="flex flex-col gap-[27px] md:gap-4 2xl:gap-[3rem]"
            >
-            <div className="flex flex-row gap-11">
+            <div className="flex flex-row 2xl:gap-11 gap-5">
                 <input type="text"
                 placeholder="First name" 
                 className="w-full rounded-md py-4 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
@@ -137,21 +137,31 @@ export default function SignUpPage(){
                 placeholder="address no.33 chubb road"
                className="w-full rounded-md py-3 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
              />
-             <select id="Gender"
-             className="w-full rounded-md py-3 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
-              // className="bg-[#f1f0f0] border border-gray-300 text-gray-900 text-sm 
-              // rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
-              //  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
-              //   dark:focus:ring-blue-500 dark:focus:border-blue-500"
+             <div className="relative w-full">
+              <select 
+                id="Gender"
+                className="w-full appearance-none rounded-md py-3 px-3 pr-10 mb-4 placeholder-gray-400 bg-[#f1f0f0] outline-gray-400 border focus:outline-none"
+              >
+                <option selected className="text-[#686666]">Gender</option>
+                <option value="Male" className="text-[#686666]">Male</option>
+                <option value="Female" className="text-[#686666]">Female</option>
+                <option value="Others" className="text-[#686666]">Others</option>
+              </select>
+              {/* Custom dropdown icon */}
+              <div className="absolute inset-y-0 justify-center right-3 flex items-center pointer-events-none">
+                <svg 
+                  className="w-6 h-6 text-gray-600"
+                  xmlns="http://www.w3.org/2000/svg" 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
                 >
-              <option selected className="text-[#686666]">Gender</option>
-              <option value="Male" className="text-[#686666]">Male</option>
-              <option value="Female" className="text-[#686666]">Female</option>
-              <option value="Others" className="text-[#686666]">Others</option>
-            </select>
-            
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
                 <Link href={"/signup/proceed"}>
-             <div className="pb-5">
+             <div className="pb-3 pt-5">
              <button
                 // type="submit"
                className="w-full bg-background text-white py-3 rounded-md hover:bg-background-dark focus:outline-none focus:ring focus:ring-blue-300 text-[20px]"

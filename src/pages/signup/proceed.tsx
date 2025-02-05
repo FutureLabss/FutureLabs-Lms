@@ -43,25 +43,25 @@ export default function ProceedSignUpPage(){
     return(
         <div className="bg-white grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 h-full lg:min-h-[850px]">
             {/* right */}
-        <div className="hidden lg:flex h-screen">
-         <div className="w-full relative">
+            <div className="hidden lg:flex 2xl:h-screen">
+         <div className="w-full relative  h-full">
            <Image
              src={signup}
              alt="User Avatar"
              className=" object-cover w-full h-full "
            />
-         <div className="absolute mt-[-62rem] text-start w-full max-w-[900px] px-[74px]">
-            <h2 className=" text-[1rem] 2xl:text-[5rem] text-white font-semibold">
+         <div className="absolute 2xl:mt-[-62rem] md:mt-[-47rem] text-start w-full max-w-[900px] 2xl:px-[74px] px-[55px]">
+            <h2 className=" text-[1rem] md:text-[3.5rem] 2xl:text-[5rem] text-white font-semibold">
             Join Futurelabs and Start Your Tech  Journey!
             </h2>
-            <p className="ext-[1rem] 2xl:text-[1.44rem] text-white font-normal" >
+            <p className="text-[1rem]  2xl:text-[1.44rem] text-white font-normal" >
             Kick start your tech join with us and learn from the  industry best
             </p>
-            <div className="bg-primary p-10 mt-[11rem] rounded-3xl">
-                <p className="text-[1rem] 2xl:text-[1.5rem] text-white font-medium w-full max-w-[500px]" >
+            <div className="bg-primary 2xl:p-10 p-5 mt-[11rem] rounded-3xl">
+                <p className="text-[1rem] md:text-[1.2rem] 2xl:text-[1.5rem] text-white font-medium w-full max-w-[500px]" >
                 My journey as a designer isnt complete without futurelabs. To anyone out there,take on the opportunity. Best wishes
                 </p>
-                <div className="flex gap-3 items-center pt-10">
+                <div className="flex gap-3 items-center pt-8">
             <Image
               src={loginprofile}
               alt="User Avatar"
@@ -85,7 +85,7 @@ export default function ProceedSignUpPage(){
          {/* {error && <p className="text-red-500 text-sm text-center">{error}</p>} */}
          <div className="md:mt-[5rem] 2xl:mt-[3rem]">
          <button
-                   className="flex items-center justify-center space-x-3 text-gray-500 mb-[80px]"
+                   className="flex items-center justify-center space-x-3 text-gray-500 2xl:mb-[80px] pb-[50px]"
                    onClick={() => router.back()}
                  >
                    <button className=" text-[#212C4A] border-4 border-[#212C4A] py-2 px-2 rounded-md ">
@@ -98,14 +98,14 @@ export default function ProceedSignUpPage(){
             <div className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-300 text-gray-500 text-[18px] font-bold">
                 1
               </div>
-              <span className="ml-2 text-black text-[22px] font-semibold">Step 1</span>
+              <span className="ml-2 text-gray-500 text-[22px] font-semibold">Step 1</span>
             </div>
             <div className="flex-grow h-[2px] bg-gray-300"></div>
             <div className="flex items-center">
             <div className="w-8 h-8 flex items-center justify-center rounded-full bg-black text-white text-[18px] font-bold" >
             2
               </div>
-              <span className="ml-2 text-gray-500 text-[22px] font-semibold">Step 2</span>
+              <span className="ml-2 text-black text-[22px] font-semibold">Step 2</span>
             </div>
           </div>
          <div className="p-5 mx-auto ">
@@ -119,7 +119,7 @@ export default function ProceedSignUpPage(){
            className="flex flex-col gap-[27px] 2xl:gap-[3rem]"
            >
              <select id="choice"
-             className="w-full rounded-md py-8 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
+             className="w-full rounded-md py-4 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
               // className="bg-[#f1f0f0] border border-gray-300 text-gray-900 text-sm 
               // rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
               //  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -133,7 +133,7 @@ export default function ProceedSignUpPage(){
 
             </select>
             <select id="level"
-             className="w-full rounded-md py-8 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
+             className="w-full rounded-md py-4 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
               // className="bg-[#f1f0f0] border border-gray-300 text-gray-900 text-sm 
               // rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
               //  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -145,7 +145,7 @@ export default function ProceedSignUpPage(){
               <option value="Others" className="text-[#686666]">Advance</option>
             </select>
             <select id="age"
-             className="w-full rounded-md py-8 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
+             className="w-full rounded-md py-4 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
               // className="bg-[#f1f0f0] border border-gray-300 text-gray-900 text-sm 
               // rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5
               //  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white
@@ -159,12 +159,13 @@ export default function ProceedSignUpPage(){
 
             </select>
             <textarea name="" placeholder="How did you hear about us" id=""
-            className="w-full rounded-md py-8 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
+            className="w-full rounded-md py-4 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
 >
 
             </textarea>
             
-             <div className="pb-5">
+             <div className="pb-3">
+              <Link href={"/signup/accountcreated"}>
              <button
                 type="submit"
                className="w-full bg-background text-white py-3 rounded-md hover:bg-background-dark focus:outline-none focus:ring focus:ring-blue-300 text-[20px]"
@@ -172,6 +173,7 @@ export default function ProceedSignUpPage(){
                 {/* {!loading ? `submit` : "Loading..."} */}
                 submit
              </button>
+              </Link>
              </div>
              <div className="text-center">
               <p>
