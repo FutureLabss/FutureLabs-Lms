@@ -59,12 +59,13 @@ export default function LoginPage() {
   const togglePasswordVisibility = () => setHidePassword(!hidePassword);
 
   return (
-    <div className="bg-white grid grid-cols-1 md:grid-cols-2">
+    // <div className="bg-white grid grid-cols-1 md:grid-cols-2">
+    <div className="bg-white grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 ">
       {/* Left Section */}
-      <div className="hidden md:flex">
+      <div className="hidden lg:flex">
       <div className="bg-background text-white md:px-[75px] 2xl:h-screen ">
-        <div className="md:pt-[15.25rem] p-[3rem]">
-          <h2 className="md:text-[3rem] text-[1.5rem] font-bold">
+        <div className="md:pt-[10.25rem] p-[3rem] 2xl:pt-[15.25rem]">
+          <h2 className="md:text-[2rem] text-[1.5rem] 2xl:text-[3rem] font-bold">
             Join Futurelabs and Start Your Tech Journey!
           </h2>
           <p className="text-sm w-[100%] max-w-[290px]">
@@ -93,8 +94,9 @@ export default function LoginPage() {
       </div>
 
       {/* Right Section */}
-      <div className="md:px-[76px]">
-        <div className="pt-[30px] pb-[20px] xsm:px-5 flex items-end justify-end">
+      <div className="md:px-[76px] 2xl:px-[76px]">
+      {/* <div className="md:px-[76px] xsm:px-4 2xl:px-[8rem] "> */}
+        <div className="pt-[30px]  pb-[20px] xsm:px-5 flex items-end justify-end">
           <Image src={logo} alt="Logo" />
         </div>
         {error.length > 0 && (
@@ -107,17 +109,20 @@ export default function LoginPage() {
             ))}
           </div>
         )}
-        <div className="p-5 mx-auto md:mt-[5rem] 2xl:mt-[10rem]">
+        <div className="p-5 mx-auto md:mt-[2.3rem] 2xl:mt-[10rem]">
           <h2 className="text-2xl font-semibold mb-6 text-black">
             Nice to have you back!
           </h2>
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col xsm:gap-6">
+          <form onSubmit={handleSubmit(onSubmit)} 
+          className="flex flex-col gap-4 xsm:gap-6"
+          // className="flex flex-col gap-[5px] md:gap-1 2xl:gap-[3rem]"
+          >
             <div>
             <input
               type="text"
               {...register("email")}
               placeholder="Email or phone number"
-              className="w-full rounded-md py-2 px-3 mb-4 bg-white border focus:outline-none focus:border-background"
+              className="w-full rounded-md py-2 px-3 2xl:mb-4 bg-white border focus:outline-none focus:border-background"
             />
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -128,7 +133,7 @@ export default function LoginPage() {
                 {...register("password")}
                 type={hidePassword ? "text" : "password"}
                 placeholder="Enter password"
-                className="w-full rounded-md py-2 px-3 mb-4
+                className="w-full rounded-md py-2 px-3 2xl:mb-4
                  bg-white border focus:outline-none focus:border-background"
                 autoComplete="off"
               />
@@ -154,7 +159,7 @@ export default function LoginPage() {
                 <span className="ml-3 text-sm font-medium text-gray-900">Remember me</span>
               </label>
             </div>
-            <div className="pt-10 2xl:pt-14">
+            <div className="pt-3 2xl:pt-14">
             <button
               type="submit"
               className="w-full bg-background text-white py-[1rem] rounded-md hover:bg-background focus:outline-none focus:ring focus:ring-blue-300 mb-4 text-[20px]"

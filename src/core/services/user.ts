@@ -38,6 +38,7 @@ export async function getMeUserProfile(): Promise<ApiMEResponse> {
     })
     .catch(handleError);
 }
+
 export async function editUserProfile(profileId: string, formData: EditUserProfileData): Promise<EditUserProfileData> {
 return axios.post<EditUserProfileData>(`profile/${profileId}`, formData,)
 .then((response: AxiosResponse<EditUserProfileData>)=>{

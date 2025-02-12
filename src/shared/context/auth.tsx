@@ -1,7 +1,8 @@
 import { setToken } from "@/core/config/api.config";
 import { NotificationType } from "@/core/types/enum/notification";
-import { AuthResponse, ICreatePassword, ILogin, verifymail } from "@/core/types/interface/auth";
+import { AuthResponse, CreateUserProfile, ICreatePassword, ILogin, verifymail } from "@/core/types/interface/auth";
 import useNotificationStore from "@/stores/notificationState";
+import { useUserDataStore } from "@/stores/signupstore";
 import axios from "axios";
 import router from "next/router";
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
@@ -14,6 +15,8 @@ interface AuthContextType {
   loaded: boolean;
   CreatePassword: (data: ICreatePassword) => void;
   VerifyEmail: (data: verifymail) => void;
+  SignUp:(userData: CreateUserProfile)=>void;
+  resendEmailVerification:(profileId:string) => void;
 }
 
 const usersContext = createContext<AuthContextType>({
@@ -24,6 +27,8 @@ const usersContext = createContext<AuthContextType>({
   loaded: false,
   CreatePassword: () => { },
   VerifyEmail: () => { },
+  SignUp: () => { },
+  resendEmailVerification:()=>{ },
 });
 
 export default function AuthContext({ children }: { children: ReactNode }) {
@@ -31,6 +36,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
   const [auth, setAuth] = useState<AuthResponse>();
   const setNotification = useNotificationStore((state) => state.displayNotification);
+  const {formData}=useUserDataStore()
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
@@ -51,7 +57,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
 
 
   const CreatePassword = async (data: ICreatePassword) => {
-    const response = await axios.post("/auth/register", data)
+    const response = await axios.post("/auth/complete-registration", data)
       .then((res) => {
         localStorage.setItem("token", JSON.stringify(res.data));
         setToken(res.data?.token);
@@ -102,6 +108,31 @@ export default function AuthContext({ children }: { children: ReactNode }) {
       });
     return response;
   };
+  const resendEmailVerification = async ( profileId:string) => {
+    const response = await axios.get(`/resend/email/verification/${profileId}}`)
+      .then((res) => {
+        console.log(res.data)
+        localStorage.setItem("token", JSON.stringify(res.data));
+        setToken(res.data?.token);
+        setAuth({ ...res.data });
+        setILoggedIn(true);
+        setNotification({
+          type: NotificationType.success,
+          content: {
+            title: "Please check your inbox and click on the link to verify your account.",
+          },
+        });
+      })
+      .catch((e) => {
+        const message = e.response?.data?.message || "Network Error";
+        if (Array.isArray(message)) {
+          const error = message.join("\n");
+          throw new Error(error);
+        }
+        throw new Error(message);
+      });
+    return response;
+  };
   const login = async (data: ILogin) => {
     const Promise = await axios
       .post<AuthResponse>("/auth/login", data)
@@ -129,6 +160,32 @@ export default function AuthContext({ children }: { children: ReactNode }) {
       });
     return Promise;
   };
+  const SignUp = async(userData: CreateUserProfile)=>{
+    const Promise = await axios.post("/auth/register", userData)
+    .then((res) => {
+      localStorage.setItem("token", JSON.stringify(res.data));
+      setToken(res.data?.data.token);
+      setAuth({ ...res.data });
+      setNotification({
+        type: NotificationType.success,
+        content: {
+          title: "Successful",
+          text: "Account Created Successfully!",
+        },
+      });
+      router.push(`/signup/accountcreated?email=${(userData?.email)}`);
+      // router.push("/signup/accountcreated");
+    })
+    .catch((e) => {
+      const message = e.response?.data?.message || "Network Error";
+      if (Array.isArray(message)) {
+        const error = message.join("\n");
+        throw new Error(error);
+      }
+      throw new Error(message);
+    });
+    return Promise;
+  }
 
   const logout = (callback?: () => void) => {
     localStorage.removeItem("token");
@@ -138,7 +195,8 @@ export default function AuthContext({ children }: { children: ReactNode }) {
 
 
 
-  const value = { auth, login, logout, loaded, islLoggedIn, CreatePassword, VerifyEmail };
+  const value = { auth, login, logout, loaded, islLoggedIn, 
+    CreatePassword, VerifyEmail, SignUp, resendEmailVerification };
 
   return <>{loaded ? <usersContext.Provider value={value}>{children}</usersContext.Provider> : <> </>}</>;
 }
