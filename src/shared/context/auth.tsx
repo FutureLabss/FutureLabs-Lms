@@ -2,7 +2,6 @@ import { setToken } from "@/core/config/api.config";
 import { NotificationType } from "@/core/types/enum/notification";
 import { AuthResponse, CreateUserProfile, ICreatePassword, ILogin, verifymail } from "@/core/types/interface/auth";
 import useNotificationStore from "@/stores/notificationState";
-import { useUserDataStore } from "@/stores/signupstore";
 import axios from "axios";
 import router from "next/router";
 import { ReactNode, createContext, useContext, useEffect, useState } from "react";
@@ -36,7 +35,6 @@ export default function AuthContext({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(false);
   const [auth, setAuth] = useState<AuthResponse>();
   const setNotification = useNotificationStore((state) => state.displayNotification);
-  const {formData}=useUserDataStore()
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");

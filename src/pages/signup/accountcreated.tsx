@@ -13,7 +13,6 @@ export default function AccountCreatedSuccessful() {
   const [email, setEmail] = useState<string | null>(null);
   // const [loading, setLoading]=useState(false)  
   // const{resendEmailVerification}=useAuthContext()
-  const id = router.query;
 
   useEffect(() => {
     if (router.isReady) {
