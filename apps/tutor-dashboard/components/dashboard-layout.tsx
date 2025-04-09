@@ -1,5 +1,7 @@
 "use client";
 
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+
 import type React from "react";
 
 import { useState, useEffect } from "react";
@@ -34,13 +36,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-// import { useAuth } from "../hooks/use-auth";
-import { useAuth } from "../hooks/use-auth";
+import { useAuth } from "@/hooks/use-auth";
 import { signOut } from "next-auth/react";
 
 const navigationItems = [
@@ -89,7 +89,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           <SheetContent side="left" className="pr-0 sm:max-w-xs">
             <nav className="grid gap-2 text-lg font-medium">
               {navigationItems.map((item) => (
-                <Link
+                <a
                   key={item.href}
                   href={item.href}
                   className={cn(
@@ -100,7 +100,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 >
                   <item.icon className="h-5 w-5" />
                   {item.name}
-                </Link>
+                </a>
               ))}
             </nav>
           </SheetContent>
@@ -125,7 +125,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Profile</DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/profile">Profile</Link>
+                </DropdownMenuItem>
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()}>

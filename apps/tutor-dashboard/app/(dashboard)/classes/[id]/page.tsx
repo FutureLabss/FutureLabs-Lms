@@ -1,19 +1,39 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
-import { useParams, useRouter } from "next/navigation"
-import { ArrowLeft, Calendar, Clock, Edit, MoreHorizontal, Plus, Trash, Users } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  Edit,
+  MoreHorizontal,
+  Plus,
+  Trash,
+  Users,
+  AlertTriangle,
+  Loader2,
+  BookOpen,
+  FileText,
+  Layers,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import {
   Dialog,
   DialogContent,
@@ -21,15 +41,27 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { AddStudentModal } from "@/components/add-student-modal"
-import { StudentProgressModal } from "@/components/student-progress-modal"
-import { Badge } from "@/components/ui/badge"
-import { toast } from "@/components/ui/use-toast"
-import { ToastAction } from "@/components/ui/toast"
+} from "@/components/ui/dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { AddStudentModal } from "@/components/add-student-modal";
+import { StudentProgressModal } from "@/components/student-progress-modal";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "@/components/ui/use-toast";
+import { ToastAction } from "@/components/ui/toast";
 // Import the AddMaterialModal component
-import { AddMaterialModal } from "@/components/add-material-modal"
+import { AddMaterialModal } from "@/components/add-material-modal";
+// Import the EditClassModal component
+import { EditClassModal } from "@/components/edit-class-modal";
+// Import the AddModuleModal component
+import { AddModuleModal } from "@/components/add-module-modal";
+// Import the EditModuleModal component
+import { EditModuleModal } from "@/components/edit-module-modal";
+// Import the AddTopicModal component
+import { AddTopicModal } from "@/components/add-topic-modal";
+// Import the useClass hook
+import { useClass } from "@/hooks/use-classes";
+// Add these imports at the top with the other imports
+import { EditTopicModal } from "@/components/edit-topic-modal";
 
 // Mock data for a specific class
 const initialClassData = {
@@ -57,7 +89,13 @@ const initialClassData = {
       avatar: "/placeholder.svg",
       enrollmentDate: "2023-09-01",
     },
-    { id: "2", name: "Bob Smith", email: "bob@example.com", avatar: "/placeholder.svg", enrollmentDate: "2023-09-02" },
+    {
+      id: "2",
+      name: "Bob Smith",
+      email: "bob@example.com",
+      avatar: "/placeholder.svg",
+      enrollmentDate: "2023-09-02",
+    },
     {
       id: "3",
       name: "Charlie Brown",
@@ -67,122 +105,458 @@ const initialClassData = {
     },
   ],
   materials: [
-    { id: "1", title: "Calculus Fundamentals", type: "pdf", url: "#", createdAt: "2023-09-05" },
-    { id: "2", title: "Algebra Practice Problems", type: "pdf", url: "#", createdAt: "2023-09-10" },
-    { id: "3", title: "Geometry Formulas", type: "document", url: "#", createdAt: "2023-09-15" },
+    {
+      id: "1",
+      title: "Calculus Fundamentals",
+      type: "pdf",
+      url: "#",
+      createdAt: "2023-09-05",
+    },
+    {
+      id: "2",
+      title: "Algebra Practice Problems",
+      type: "pdf",
+      url: "#",
+      createdAt: "2023-09-10",
+    },
+    {
+      id: "3",
+      title: "Geometry Formulas",
+      type: "document",
+      url: "#",
+      createdAt: "2023-09-15",
+    },
   ],
   assignments: [
-    { id: "1", title: "Calculus Quiz 1", dueDate: "2023-09-15", points: 20, submissions: [] },
-    { id: "2", title: "Algebra Homework", dueDate: "2023-09-20", points: 15, submissions: [] },
-    { id: "3", title: "Geometry Project", dueDate: "2023-10-01", points: 30, submissions: [] },
+    {
+      id: "1",
+      title: "Calculus Quiz 1",
+      dueDate: "2023-09-15",
+      points: 20,
+      submissions: [],
+    },
+    {
+      id: "2",
+      title: "Algebra Homework",
+      dueDate: "2023-09-20",
+      points: 15,
+      submissions: [],
+    },
+    {
+      id: "3",
+      title: "Geometry Project",
+      dueDate: "2023-10-01",
+      points: 30,
+      submissions: [],
+    },
   ],
-}
+  // Add modules to the initial class data
+  modules: [
+    {
+      id: "1",
+      title: "Introduction to Calculus",
+      description:
+        "Fundamental concepts of calculus including limits, derivatives, and integrals.",
+      order: 1,
+      topics: [
+        {
+          id: "1",
+          title: "Limits and Continuity",
+          description:
+            "Understanding the concept of limits and continuity in functions.",
+          order: 1,
+          duration: 60, // minutes
+          type: "lesson",
+        },
+        {
+          id: "2",
+          title: "Introduction to Derivatives",
+          description: "Basic concepts and applications of derivatives.",
+          order: 2,
+          duration: 90,
+          type: "lesson",
+        },
+      ],
+    },
+    {
+      id: "2",
+      title: "Advanced Algebra",
+      description: "Complex algebraic concepts and problem-solving techniques.",
+      order: 2,
+      topics: [
+        {
+          id: "3",
+          title: "Polynomial Functions",
+          description: "Working with polynomial functions and equations.",
+          order: 1,
+          duration: 75,
+          type: "lesson",
+        },
+      ],
+    },
+  ],
+};
 
 export default function ClassDetailsPage() {
-  const params = useParams()
-  const router = useRouter()
-  const [classData, setClassData] = useState(initialClassData)
-  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
-  const [isAddStudentDialogOpen, setIsAddStudentDialogOpen] = useState(false)
-  const [isAddMaterialDialogOpen, setIsAddMaterialDialogOpen] = useState(false)
-  const [isAddAssignmentDialogOpen, setIsAddAssignmentDialogOpen] = useState(false)
-  const [studentToRemove, setStudentToRemove] = useState<string | null>(null)
-  const [isRemoveStudentDialogOpen, setIsRemoveStudentDialogOpen] = useState(false)
-  const [selectedStudent, setSelectedStudent] = useState<any | null>(null)
-  const [isProgressModalOpen, setIsProgressModalOpen] = useState(false)
+  const params = useParams();
+  const router = useRouter();
+  // Replace the useState for classData with the useClass hook
+  const classId = params.id as string;
+  const { classData, isLoading, error, refreshClass, updateClassData } =
+    useClass(classId);
+  const [localClassData, setLocalClassData] = useState(initialClassData);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isAddStudentDialogOpen, setIsAddStudentDialogOpen] = useState(false);
+  const [isAddMaterialDialogOpen, setIsAddMaterialDialogOpen] = useState(false);
+  const [isAddAssignmentDialogOpen, setIsAddAssignmentDialogOpen] =
+    useState(false);
+  const [studentToRemove, setStudentToRemove] = useState<string | null>(null);
+  const [isRemoveStudentDialogOpen, setIsRemoveStudentDialogOpen] =
+    useState(false);
+  const [selectedStudent, setSelectedStudent] = useState<any | null>(null);
+  const [isProgressModalOpen, setIsProgressModalOpen] = useState(false);
+  // Add a new state for the edit class modal
+  const [isEditClassDialogOpen, setIsEditClassDialogOpen] = useState(false);
+  // Add states for module management
+  const [isAddModuleDialogOpen, setIsAddModuleDialogOpen] = useState(false);
+  const [isEditModuleDialogOpen, setIsEditModuleDialogOpen] = useState(false);
+  const [isDeleteModuleDialogOpen, setIsDeleteModuleDialogOpen] =
+    useState(false);
+  const [isAddTopicDialogOpen, setIsAddTopicDialogOpen] = useState(false);
+  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
+  const [selectedModule, setSelectedModule] = useState<any | null>(null);
+  // Add these state variables in the component after the other state variables
+  const [isEditTopicDialogOpen, setIsEditTopicDialogOpen] = useState(false);
+  const [isDeleteTopicDialogOpen, setIsDeleteTopicDialogOpen] = useState(false);
+  const [selectedTopic, setSelectedTopic] = useState<any | null>(null);
+  const [selectedTopicModuleId, setSelectedTopicModuleId] = useState<
+    string | null
+  >(null);
 
-  // In a real application, you would fetch the class data based on the ID
-  const classId = params.id as string
+  // Add a useEffect to update localClassData when classData changes
+  useEffect(() => {
+    if (classData) {
+      // If classData doesn't have modules, add an empty array
+      const updatedClassData = {
+        ...classData,
+        modules: classData.modules || [],
+        assignments:
+          classData.assignments?.map((assignment) => ({
+            ...assignment,
+            submissions: assignment.submissions || [],
+          })) || [],
+        materials: classData.materials || [],
+      };
+      // Type assertion to match the expected type
+      setLocalClassData(updatedClassData as typeof initialClassData);
+    }
+  }, [classData]);
 
   const handleAddStudent = (student: any) => {
     // Check if student is already in the class
-    const isStudentAlreadyEnrolled = classData.students.some((s) => s.id === student.id)
+    const isStudentAlreadyEnrolled = localClassData.students.some(
+      (s) => s.id === student.id
+    );
 
     if (isStudentAlreadyEnrolled) {
       toast({
         title: "Student already enrolled",
         description: `${student.name} is already enrolled in this class.`,
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
     // Check if class is at maximum capacity
-    if (classData.students.length >= classData.maxStudents) {
+    if (localClassData.students.length >= localClassData.maxStudents) {
       toast({
         title: "Class is full",
-        description: `This class has reached its maximum capacity of ${classData.maxStudents} students.`,
+        description: `This class has reached its maximum capacity of ${localClassData.maxStudents} students.`,
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
 
     // Add student to the class
     const updatedClassData = {
-      ...classData,
-      students: [...classData.students, student],
-      currentStudents: classData.currentStudents + 1,
-    }
+      ...localClassData,
+      students: [...localClassData.students, student],
+      currentStudents: localClassData.currentStudents + 1,
+    };
 
-    setClassData(updatedClassData)
+    setLocalClassData(updatedClassData);
 
     toast({
       title: "Student added",
-      description: `${student.name} has been added to ${classData.name}.`,
-    })
-  }
+      description: `${student.name} has been added to ${localClassData.name}.`,
+    });
+  };
 
   const handleRemoveStudent = (studentId: string) => {
-    setStudentToRemove(studentId)
-    setIsRemoveStudentDialogOpen(true)
-  }
+    setStudentToRemove(studentId);
+    setIsRemoveStudentDialogOpen(true);
+  };
 
   const confirmRemoveStudent = () => {
-    if (!studentToRemove) return
+    if (!studentToRemove) return;
 
-    const studentToRemoveData = classData.students.find((s) => s.id === studentToRemove)
-    const updatedStudents = classData.students.filter((s) => s.id !== studentToRemove)
+    const studentToRemoveData = localClassData.students.find(
+      (s) => s.id === studentToRemove
+    );
+    const updatedStudents = localClassData.students.filter(
+      (s) => s.id !== studentToRemove
+    );
 
     const updatedClassData = {
-      ...classData,
+      ...localClassData,
       students: updatedStudents,
-      currentStudents: classData.currentStudents - 1,
-    }
+      currentStudents: localClassData.currentStudents - 1,
+    };
 
-    setClassData(updatedClassData)
-    setIsRemoveStudentDialogOpen(false)
-    setStudentToRemove(null)
+    setLocalClassData(updatedClassData);
+    setIsRemoveStudentDialogOpen(false);
+    setStudentToRemove(null);
 
     toast({
       title: "Student removed",
-      description: `${studentToRemoveData?.name} has been removed from ${classData.name}.`,
+      description: `${studentToRemoveData?.name} has been removed from ${localClassData.name}.`,
       action: (
-        <ToastAction altText="Undo" onClick={() => handleAddStudent(studentToRemoveData)}>
+        <ToastAction
+          altText="Undo"
+          onClick={() => handleAddStudent(studentToRemoveData)}
+        >
           Undo
         </ToastAction>
       ),
-    })
-  }
+    });
+  };
 
   const handleViewProgress = (student: any) => {
-    setSelectedStudent(student)
-    setIsProgressModalOpen(true)
-  }
+    setSelectedStudent(student);
+    setIsProgressModalOpen(true);
+  };
 
   // Update the handleAddMaterial function in the ClassDetailsPage component
   const handleAddMaterial = (material: any) => {
     // Add material to the class
     const updatedClassData = {
-      ...classData,
-      materials: [...classData.materials, material],
-    }
+      ...localClassData,
+      materials: [...localClassData.materials, material],
+    };
 
-    setClassData(updatedClassData)
+    setLocalClassData(updatedClassData);
 
     toast({
       title: "Material added",
-      description: `${material.title} has been added to ${classData.name}.`,
-    })
+      description: `${material.title} has been added to ${localClassData.name}.`,
+    });
+  };
+
+  // Add a handler function for adding a module
+  const handleAddModule = (module: any) => {
+    // Add module to the class
+    const updatedClassData = {
+      ...localClassData,
+      modules: [...(localClassData.modules || []), module],
+    };
+
+    setLocalClassData(updatedClassData);
+
+    toast({
+      title: "Module added",
+      description: `${module.title} has been added to ${localClassData.name}.`,
+    });
+  };
+
+  // Add a handler function for editing a module
+  const handleEditModule = (updatedModule: any) => {
+    // Update the module in the class
+    const updatedModules = localClassData.modules.map((module) => {
+      if (module.id === updatedModule.id) {
+        return updatedModule;
+      }
+      return module;
+    });
+
+    const updatedClassData = {
+      ...localClassData,
+      modules: updatedModules,
+    };
+
+    setLocalClassData(updatedClassData);
+
+    toast({
+      title: "Module updated",
+      description: `${updatedModule.title} has been updated successfully.`,
+    });
+  };
+
+  // Add a handler function for deleting a module
+  const handleDeleteModule = () => {
+    if (!selectedModuleId) return;
+
+    // Remove the module from the class
+    const updatedModules = localClassData.modules.filter(
+      (module) => module.id !== selectedModuleId
+    );
+    const moduleToDelete = localClassData.modules.find(
+      (module) => module.id === selectedModuleId
+    );
+
+    const updatedClassData = {
+      ...localClassData,
+      modules: updatedModules,
+    };
+
+    setLocalClassData(updatedClassData);
+    setIsDeleteModuleDialogOpen(false);
+    setSelectedModuleId(null);
+    setSelectedModule(null);
+
+    toast({
+      title: "Module deleted",
+      description: `${moduleToDelete?.title} has been deleted from ${localClassData.name}.`,
+    });
+  };
+
+  // Add a handler function for adding a topic to a module
+  const handleAddTopic = (topic: any) => {
+    if (!selectedModuleId) return;
+
+    // Find the selected module
+    const updatedModules = localClassData.modules.map((module) => {
+      if (module.id === selectedModuleId) {
+        return {
+          ...module,
+          topics: [...(module.topics || []), topic],
+        };
+      }
+      return module;
+    });
+
+    const updatedClassData = {
+      ...localClassData,
+      modules: updatedModules,
+    };
+
+    setLocalClassData(updatedClassData);
+
+    toast({
+      title: "Topic added",
+      description: `${topic.title} has been added to the module.`,
+    });
+  };
+
+  // Add these handler functions after the other handler functions
+
+  // Add a handler function for editing a topic
+  const handleEditTopic = (updatedTopic: any) => {
+    if (!selectedTopicModuleId) return;
+
+    // Update the topic in the module
+    const updatedModules = localClassData.modules.map((module) => {
+      if (module.id === selectedTopicModuleId) {
+        return {
+          ...module,
+          topics: module.topics.map((topic) => {
+            if (topic.id === updatedTopic.id) {
+              return updatedTopic;
+            }
+            return topic;
+          }),
+        };
+      }
+      return module;
+    });
+
+    const updatedClassData = {
+      ...localClassData,
+      modules: updatedModules,
+    };
+
+    setLocalClassData(updatedClassData);
+
+    toast({
+      title: "Topic updated",
+      description: `${updatedTopic.title} has been updated successfully.`,
+    });
+  };
+
+  // Add a handler function for deleting a topic
+  const handleDeleteTopic = () => {
+    if (!selectedTopicModuleId || !selectedTopic) return;
+
+    // Find the module and remove the topic
+    const updatedModules = localClassData.modules.map((module) => {
+      if (module.id === selectedTopicModuleId) {
+        return {
+          ...module,
+          topics: module.topics.filter(
+            (topic) => topic.id !== selectedTopic.id
+          ),
+        };
+      }
+      return module;
+    });
+
+    const updatedClassData = {
+      ...localClassData,
+      modules: updatedModules,
+    };
+
+    setLocalClassData(updatedClassData);
+    setIsDeleteTopicDialogOpen(false);
+    setSelectedTopic(null);
+    setSelectedTopicModuleId(null);
+
+    toast({
+      title: "Topic deleted",
+      description: `${selectedTopic.title} has been deleted successfully.`,
+    });
+  };
+
+  // Add a handler function for updating the class
+  // Update the handleUpdateClass function to use the updateClassData method
+  const handleUpdateClass = async (updatedClass: any) => {
+    try {
+      await updateClassData(updatedClass);
+
+      toast({
+        title: "Class updated",
+        description: `${updatedClass.name} has been updated successfully.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to update class. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  // Add a loading state
+  if (isLoading) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+        <p className="text-muted-foreground">Loading class data...</p>
+      </div>
+    );
+  }
+
+  // Add an error state
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[60vh]">
+        <AlertTriangle className="h-8 w-8 text-destructive mb-4" />
+        <p className="text-muted-foreground">
+          Failed to load class data. Please try again.
+        </p>
+        <Button onClick={refreshClass} className="mt-4">
+          Retry
+        </Button>
+      </div>
+    );
   }
 
   return (
@@ -194,16 +568,29 @@ export default function ClassDetailsPage() {
           </Link>
         </Button>
         <div className="flex-1">
-          <h1 className="text-3xl font-bold tracking-tight">{classData.name}</h1>
-          <p className="text-muted-foreground">{classData.program}</p>
+          <h1 className="text-3xl font-bold tracking-tight">
+            {localClassData.name}
+          </h1>
+          <p className="text-muted-foreground">{localClassData.program}</p>
         </div>
         <div className="flex items-center gap-2">
-          <Button variant="outline" asChild>
-            <Link href={`/classes/${classId}/edit`}>
-              <Edit className="mr-2 h-4 w-4" />
-              Edit Class
-            </Link>
-          </Button>
+          {/* Update the Edit Class button to open the modal */}
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline">
+                <Edit className="mr-2 h-4 w-4" />
+                Edit Class
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => setIsEditClassDialogOpen(true)}>
+                Quick Edit
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={`/classes/${classId}/edit`}>Full Edit</Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -230,13 +617,17 @@ export default function ClassDetailsPage() {
           <Card>
             <CardHeader>
               <CardTitle>Class Details</CardTitle>
-              <CardDescription>View and manage class information</CardDescription>
+              <CardDescription>
+                View and manage class information
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 <div>
                   <h3 className="font-medium">Description</h3>
-                  <p className="text-sm text-muted-foreground mt-1">{classData.description}</p>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {localClassData.description}
+                  </p>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-3">
@@ -245,7 +636,9 @@ export default function ClassDetailsPage() {
                       <Calendar className="mr-2 h-4 w-4 text-muted-foreground" />
                       Schedule
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-1">{classData.schedule.daysOfWeek.join(", ")}</p>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {localClassData.schedule.daysOfWeek.join(", ")}
+                    </p>
                   </div>
                   <div>
                     <h3 className="font-medium flex items-center">
@@ -253,7 +646,8 @@ export default function ClassDetailsPage() {
                       Time
                     </h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {classData.schedule.startTime} - {classData.schedule.endTime}
+                      {localClassData.schedule.startTime} -{" "}
+                      {localClassData.schedule.endTime}
                     </p>
                   </div>
                   <div>
@@ -262,7 +656,8 @@ export default function ClassDetailsPage() {
                       Students
                     </h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {classData.currentStudents} / {classData.maxStudents}
+                      {localClassData.currentStudents} /{" "}
+                      {localClassData.maxStudents}
                     </p>
                   </div>
                 </div>
@@ -271,13 +666,13 @@ export default function ClassDetailsPage() {
                   <div>
                     <h3 className="font-medium">Start Date</h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {new Date(classData.startDate).toLocaleDateString()}
+                      {new Date(localClassData.startDate).toLocaleDateString()}
                     </p>
                   </div>
                   <div>
                     <h3 className="font-medium">End Date</h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {new Date(classData.endDate).toLocaleDateString()}
+                      {new Date(localClassData.endDate).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -285,37 +680,225 @@ export default function ClassDetailsPage() {
             </CardContent>
           </Card>
 
-          <Tabs defaultValue="students" className="space-y-4">
+          <Tabs defaultValue="modules" className="space-y-4">
             <TabsList>
+              <TabsTrigger value="modules">Modules</TabsTrigger>
               <TabsTrigger value="students">Students</TabsTrigger>
               <TabsTrigger value="materials">Materials</TabsTrigger>
               <TabsTrigger value="assignments">Assignments</TabsTrigger>
             </TabsList>
+
+            {/* Modules Tab Content */}
+            <TabsContent value="modules" className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <h2 className="text-xl font-semibold">Modules</h2>
+                  <p className="text-sm text-muted-foreground">
+                    {localClassData.modules?.length || 0} modules in this class
+                  </p>
+                </div>
+                <Button onClick={() => setIsAddModuleDialogOpen(true)}>
+                  <Plus className="mr-2 h-4 w-4" />
+                  Add Module
+                </Button>
+              </div>
+
+              {!localClassData.modules ||
+              localClassData.modules.length === 0 ? (
+                <Card>
+                  <CardContent className="flex flex-col items-center justify-center p-6 text-center">
+                    <Layers className="h-12 w-12 text-muted-foreground mb-4" />
+                    <h3 className="text-lg font-medium">No modules created</h3>
+                    <p className="text-sm text-muted-foreground mb-4">
+                      This class doesn't have any modules yet. Add modules to
+                      organize your course content.
+                    </p>
+                    <Button onClick={() => setIsAddModuleDialogOpen(true)}>
+                      <Plus className="mr-2 h-4 w-4" />
+                      Add Module
+                    </Button>
+                  </CardContent>
+                </Card>
+              ) : (
+                <div className="space-y-4">
+                  {localClassData.modules.map((module) => (
+                    <Card key={module.id}>
+                      <CardHeader className="pb-2">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <CardTitle>{module.title}</CardTitle>
+                            <CardDescription>
+                              {module.description}
+                            </CardDescription>
+                          </div>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="icon">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => {
+                                  setSelectedModule(module);
+                                  setIsEditModuleDialogOpen(true);
+                                }}
+                              >
+                                Edit Module
+                              </DropdownMenuItem>
+                              <DropdownMenuItem>
+                                Reorder Module
+                              </DropdownMenuItem>
+                              <DropdownMenuSeparator />
+                              <DropdownMenuItem
+                                className="text-destructive focus:text-destructive"
+                                onClick={() => {
+                                  setSelectedModuleId(module.id);
+                                  setSelectedModule(module);
+                                  setIsDeleteModuleDialogOpen(true);
+                                }}
+                              >
+                                Delete Module
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <div className="flex items-center justify-between">
+                          <h3 className="text-sm font-medium">Topics</h3>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => {
+                              setSelectedModuleId(module.id);
+                              setIsAddTopicDialogOpen(true);
+                            }}
+                          >
+                            <Plus className="mr-2 h-3 w-3" />
+                            Add Topic
+                          </Button>
+                        </div>
+
+                        {!module.topics || module.topics.length === 0 ? (
+                          <div className="flex flex-col items-center justify-center p-4 text-center border rounded-lg">
+                            <p className="text-sm text-muted-foreground mb-2">
+                              No topics in this module yet
+                            </p>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => {
+                                setSelectedModuleId(module.id);
+                                setIsAddTopicDialogOpen(true);
+                              }}
+                            >
+                              <Plus className="mr-2 h-3 w-3" />
+                              Add Topic
+                            </Button>
+                          </div>
+                        ) : (
+                          <div className="space-y-2">
+                            {module.topics.map((topic) => (
+                              <div
+                                key={topic.id}
+                                className="flex items-center justify-between p-3 bg-muted rounded-md"
+                              >
+                                <div className="flex items-center gap-2">
+                                  {topic.type === "lesson" ? (
+                                    <BookOpen className="h-4 w-4 text-muted-foreground" />
+                                  ) : (
+                                    <FileText className="h-4 w-4 text-muted-foreground" />
+                                  )}
+                                  <div>
+                                    <p className="text-sm font-medium">
+                                      {topic.title}
+                                    </p>
+                                    <p className="text-xs text-muted-foreground">
+                                      {topic.duration} min •{" "}
+                                      {topic.type.charAt(0).toUpperCase() +
+                                        topic.type.slice(1)}
+                                    </p>
+                                  </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                  <Button variant="ghost" size="sm">
+                                    View
+                                  </Button>
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button variant="ghost" size="icon">
+                                        <MoreHorizontal className="h-4 w-4" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          setSelectedTopic(topic);
+                                          setSelectedTopicModuleId(module.id);
+                                          setIsEditTopicDialogOpen(true);
+                                        }}
+                                      >
+                                        Edit
+                                      </DropdownMenuItem>
+                                      <DropdownMenuItem>
+                                        Reorder
+                                      </DropdownMenuItem>
+                                      <DropdownMenuSeparator />
+                                      <DropdownMenuItem
+                                        className="text-destructive focus:text-destructive"
+                                        onClick={() => {
+                                          setSelectedTopic(topic);
+                                          setSelectedTopicModuleId(module.id);
+                                          setIsDeleteTopicDialogOpen(true);
+                                        }}
+                                      >
+                                        Delete
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              )}
+            </TabsContent>
 
             <TabsContent value="students" className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
                   <h2 className="text-xl font-semibold">Students</h2>
                   <p className="text-sm text-muted-foreground">
-                    {classData.students.length} of {classData.maxStudents} students enrolled
+                    {localClassData.students.length} of{" "}
+                    {localClassData.maxStudents} students enrolled
                   </p>
                 </div>
                 <Button
                   onClick={() => setIsAddStudentDialogOpen(true)}
-                  disabled={classData.students.length >= classData.maxStudents}
+                  disabled={
+                    localClassData.students.length >= localClassData.maxStudents
+                  }
                 >
                   <Plus className="mr-2 h-4 w-4" />
                   Add Student
                 </Button>
               </div>
 
-              {classData.students.length === 0 ? (
+              {localClassData.students.length === 0 ? (
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                     <Users className="h-12 w-12 text-muted-foreground mb-4" />
-                    <h3 className="text-lg font-medium">No students enrolled</h3>
+                    <h3 className="text-lg font-medium">
+                      No students enrolled
+                    </h3>
                     <p className="text-sm text-muted-foreground mb-4">
-                      This class doesn't have any students yet. Add students to get started.
+                      This class doesn't have any students yet. Add students to
+                      get started.
                     </p>
                     <Button onClick={() => setIsAddStudentDialogOpen(true)}>
                       <Plus className="mr-2 h-4 w-4" />
@@ -327,23 +910,40 @@ export default function ClassDetailsPage() {
                 <Card>
                   <CardContent className="p-0">
                     <div className="divide-y">
-                      {classData.students.map((student) => (
-                        <div key={student.id} className="flex items-center justify-between p-4">
+                      {localClassData.students.map((student) => (
+                        <div
+                          key={student.id}
+                          className="flex items-center justify-between p-4"
+                        >
                           <div className="flex items-center gap-3">
                             <Avatar>
-                              <AvatarImage src={student.avatar} alt={student.name} />
-                              <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
+                              <AvatarImage
+                                src={student.avatar}
+                                alt={student.name}
+                              />
+                              <AvatarFallback>
+                                {student?.name ? student.name.charAt(0) : "?"}
+                              </AvatarFallback>
                             </Avatar>
                             <div>
                               <p className="font-medium">{student.name}</p>
-                              <p className="text-sm text-muted-foreground">{student.email}</p>
+                              <p className="text-sm text-muted-foreground">
+                                {student.email}
+                              </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
                             <Badge variant="outline" className="ml-2">
-                              Enrolled: {new Date(student.enrollmentDate).toLocaleDateString()}
+                              Enrolled:{" "}
+                              {new Date(
+                                student.enrollmentDate
+                              ).toLocaleDateString()}
                             </Badge>
-                            <Button variant="outline" size="sm" onClick={() => handleViewProgress(student)}>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleViewProgress(student)}
+                            >
                               View Progress
                             </Button>
                             <DropdownMenu>
@@ -353,14 +953,20 @@ export default function ClassDetailsPage() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => handleViewProgress(student)}>
+                                <DropdownMenuItem
+                                  onClick={() => handleViewProgress(student)}
+                                >
                                   View Progress
                                 </DropdownMenuItem>
-                                <DropdownMenuItem>Send Message</DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  Send Message
+                                </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem
                                   className="text-destructive focus:text-destructive"
-                                  onClick={() => handleRemoveStudent(student.id)}
+                                  onClick={() =>
+                                    handleRemoveStudent(student.id)
+                                  }
                                 >
                                   Remove from Class
                                 </DropdownMenuItem>
@@ -387,12 +993,16 @@ export default function ClassDetailsPage() {
               <Card>
                 <CardContent className="p-0">
                   <div className="divide-y">
-                    {classData.materials.map((material) => (
-                      <div key={material.id} className="flex items-center justify-between p-4">
+                    {localClassData.materials.map((material) => (
+                      <div
+                        key={material.id}
+                        className="flex items-center justify-between p-4"
+                      >
                         <div>
                           <p className="font-medium">{material.title}</p>
                           <p className="text-sm text-muted-foreground">
-                            {material.type.toUpperCase()} • Added on {new Date(material.createdAt).toLocaleDateString()}
+                            {material.type.toUpperCase()} • Added on{" "}
+                            {new Date(material.createdAt).toLocaleDateString()}
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
@@ -434,17 +1044,24 @@ export default function ClassDetailsPage() {
               <Card>
                 <CardContent className="p-0">
                   <div className="divide-y">
-                    {classData.assignments.map((assignment) => (
-                      <div key={assignment.id} className="flex items-center justify-between p-4">
+                    {localClassData.assignments.map((assignment) => (
+                      <div
+                        key={assignment.id}
+                        className="flex items-center justify-between p-4"
+                      >
                         <div>
                           <p className="font-medium">{assignment.title}</p>
                           <p className="text-sm text-muted-foreground">
-                            Due: {new Date(assignment.dueDate).toLocaleDateString()} • {assignment.points} points
+                            Due:{" "}
+                            {new Date(assignment.dueDate).toLocaleDateString()}{" "}
+                            • {assignment.points} points
                           </p>
                         </div>
                         <div className="flex items-center gap-2">
                           <Button variant="outline" size="sm" asChild>
-                            <Link href={`/assignments/${assignment.id}`}>View</Link>
+                            <Link href={`/assignments/${assignment.id}`}>
+                              View
+                            </Link>
                           </Button>
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
@@ -487,16 +1104,27 @@ export default function ClassDetailsPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Students</span>
                   <span className="text-sm">
-                    {classData.currentStudents} / {classData.maxStudents}
+                    {localClassData.currentStudents} /{" "}
+                    {localClassData.maxStudents}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Materials</span>
-                  <span className="text-sm">{classData.materials.length}</span>
+                  <span className="text-sm">
+                    {localClassData.materials.length}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Assignments</span>
-                  <span className="text-sm">{classData.assignments.length}</span>
+                  <span className="text-sm">
+                    {localClassData.assignments.length}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">Modules</span>
+                  <span className="text-sm">
+                    {localClassData.modules?.length || 0}
+                  </span>
                 </div>
               </div>
             </CardContent>
@@ -509,7 +1137,10 @@ export default function ClassDetailsPage() {
             <CardContent>
               <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="flex items-center gap-4 p-3 rounded-lg border">
+                  <div
+                    key={i}
+                    className="flex items-center gap-4 p-3 rounded-lg border"
+                  >
                     <div className="flex-shrink-0 w-12 h-12 flex flex-col items-center justify-center rounded-md bg-primary/10 text-primary">
                       <span className="text-xs font-medium">SEP</span>
                       <span className="text-lg font-bold">{i + 10}</span>
@@ -517,7 +1148,8 @@ export default function ClassDetailsPage() {
                     <div>
                       <p className="font-medium">Session {i}</p>
                       <p className="text-xs text-muted-foreground">
-                        {classData.schedule.startTime} - {classData.schedule.endTime}
+                        {localClassData.schedule.startTime} -{" "}
+                        {localClassData.schedule.endTime}
                       </p>
                     </div>
                   </div>
@@ -534,22 +1166,54 @@ export default function ClassDetailsPage() {
           <DialogHeader>
             <DialogTitle>Delete Class</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete this class? This action cannot be undone.
+              Are you sure you want to delete this class? This action cannot be
+              undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
+            >
               Cancel
             </Button>
             <Button
               variant="destructive"
               onClick={() => {
-                setIsDeleteDialogOpen(false)
-                router.push("/classes")
+                setIsDeleteDialogOpen(false);
+                router.push("/classes");
               }}
             >
               <Trash className="mr-2 h-4 w-4" />
               Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Module Dialog */}
+      <Dialog
+        open={isDeleteModuleDialogOpen}
+        onOpenChange={setIsDeleteModuleDialogOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Module</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this module? All topics within
+              this module will also be deleted. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteModuleDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteModule}>
+              <Trash className="mr-2 h-4 w-4" />
+              Delete Module
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -564,17 +1228,23 @@ export default function ClassDetailsPage() {
       />
 
       {/* Remove Student Dialog */}
-      <Dialog open={isRemoveStudentDialogOpen} onOpenChange={setIsRemoveStudentDialogOpen}>
+      <Dialog
+        open={isRemoveStudentDialogOpen}
+        onOpenChange={setIsRemoveStudentDialogOpen}
+      >
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Remove Student</DialogTitle>
             <DialogDescription>
-              Are you sure you want to remove this student from the class? They will lose access to all class materials
-              and assignments.
+              Are you sure you want to remove this student from the class? They
+              will lose access to all class materials and assignments.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsRemoveStudentDialogOpen(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setIsRemoveStudentDialogOpen(false)}
+            >
               Cancel
             </Button>
             <Button variant="destructive" onClick={confirmRemoveStudent}>
@@ -591,9 +1261,10 @@ export default function ClassDetailsPage() {
           open={isProgressModalOpen}
           onOpenChange={setIsProgressModalOpen}
           student={selectedStudent}
-          classData={classData}
+          classData={localClassData}
         />
       )}
+
       {/* Add Material Modal */}
       <AddMaterialModal
         open={isAddMaterialDialogOpen}
@@ -601,6 +1272,77 @@ export default function ClassDetailsPage() {
         onMaterialAdded={handleAddMaterial}
         classId={classId}
       />
+
+      {/* Edit Class Modal */}
+      <EditClassModal
+        open={isEditClassDialogOpen}
+        onOpenChange={setIsEditClassDialogOpen}
+        onClassUpdated={handleUpdateClass}
+        classData={{
+          ...localClassData,
+          status: localClassData.status as "active" | "inactive" | "completed",
+        }}
+      />
+
+      {/* Add Module Modal */}
+      <AddModuleModal
+        open={isAddModuleDialogOpen}
+        onOpenChange={setIsAddModuleDialogOpen}
+        onModuleAdded={handleAddModule}
+        classId={classId}
+      />
+
+      {/* Edit Module Modal */}
+      <EditModuleModal
+        open={isEditModuleDialogOpen}
+        onOpenChange={setIsEditModuleDialogOpen}
+        onModuleUpdated={handleEditModule}
+        module={selectedModule}
+      />
+
+      {/* Add Topic Modal */}
+      <AddTopicModal
+        open={isAddTopicDialogOpen}
+        onOpenChange={setIsAddTopicDialogOpen}
+        onTopicAdded={handleAddTopic}
+        moduleId={selectedModuleId}
+      />
+      {/* Delete Topic Dialog */}
+      <Dialog
+        open={isDeleteTopicDialogOpen}
+        onOpenChange={setIsDeleteTopicDialogOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Topic</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this topic? This action cannot be
+              undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteTopicDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button variant="destructive" onClick={handleDeleteTopic}>
+              <Trash className="mr-2 h-4 w-4" />
+              Delete Topic
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Topic Modal */}
+      <EditTopicModal
+        open={isEditTopicDialogOpen}
+        onOpenChange={setIsEditTopicDialogOpen}
+        onTopicUpdated={handleEditTopic}
+        topic={selectedTopic}
+        moduleId={selectedTopicModuleId}
+      />
     </div>
-  )
+  );
 }

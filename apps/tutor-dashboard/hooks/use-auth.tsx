@@ -1,10 +1,10 @@
 "use client";
 
-import React from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import type React from "react";
 
-import type { User } from "../lib/types";
-import { authService } from "../services/auth-service";
+import { createContext, useContext, useEffect, useState } from "react";
+import type { User } from "@/lib/types";
+import { authService } from "@/services/auth-service";
 
 interface AuthContextType {
   user: User | null;
@@ -13,13 +13,9 @@ interface AuthContextType {
   signOut: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export default function AuthProvider({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -68,7 +64,7 @@ export default function AuthProvider({
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === null) {
+  if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
