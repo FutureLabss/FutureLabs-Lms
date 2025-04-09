@@ -4,7 +4,7 @@ import type React from "react";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/toaster";
-import AuthProvider from "@/hooks/use-auth";
+import { AuthProvider } from "@/hooks/use-auth";
 
 // const inter = Inter({ subsets: ["latin"] });
 

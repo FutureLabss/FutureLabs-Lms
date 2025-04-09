@@ -143,7 +143,7 @@ export function StudentProgressModal({ open, onOpenChange, student, classData }:
         <div className="flex items-center gap-4 py-4">
           <Avatar className="h-16 w-16">
             <AvatarImage src={student.avatar} alt={student.name} />
-            <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
+            <AvatarFallback>{student?.name ? student.name.charAt(0) : "?"}</AvatarFallback>
           </Avatar>
           <div>
             <h2 className="text-xl font-bold">{student.name}</h2>
