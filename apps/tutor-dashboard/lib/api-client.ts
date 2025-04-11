@@ -1,7 +1,8 @@
 import axios, { type AxiosError, type AxiosInstance, type AxiosRequestConfig, type AxiosResponse } from "axios"
 
 // Define the base URL for your API
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://api.example.com"
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY
 
 // Create a class for the API client
 class ApiClient {
@@ -10,8 +11,10 @@ class ApiClient {
   constructor() {
     this.client = axios.create({
       baseURL: API_BASE_URL,
+
       headers: {
         "Content-Type": "application/json",
+        "x-api-key": API_KEY,
       },
     })
 
