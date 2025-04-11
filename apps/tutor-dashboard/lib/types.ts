@@ -3,9 +3,9 @@
 // User types
 export interface User {
   id: string;
-  name: string;
+  fullname: string;
   email: string;
-  role: "tutor" | "student" | "admin";
+  role: "tutor" | "student" | "admin"
   avatar?: string;
   bio?: string;
   title?: string;
