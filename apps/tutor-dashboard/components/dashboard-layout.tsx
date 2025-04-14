@@ -7,6 +7,8 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+// import { logout } from "@/services/logout";
+
 import {
   BookOpen,
   Calendar,
@@ -41,7 +43,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/use-auth";
-import { signOut } from "next-auth/react";
 
 const navigationItems = [
   { name: "Dashboard", href: "/", icon: Home },
@@ -58,6 +59,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
   const { user, isLoading } = useAuth();
   const router = useRouter();
+  const { signOut } = useAuth();
 
   useEffect(() => {
     // If not loading and no user, redirect to login
@@ -117,7 +119,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 <Button variant="ghost" size="icon" className="rounded-full">
                   <Avatar className="h-8 w-8">
                     <AvatarFallback>
-                      {user.name?.charAt(0) || "U"}
+                      {user.fullname?.charAt(0) || "U"}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -169,12 +171,12 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
                 <div className="flex items-center gap-2">
                   <Avatar className="h-9 w-9">
                     <AvatarFallback>
-                      {user.name?.charAt(0) || "U"}
+                      {user.fullname?.charAt(0) || "U"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="grid gap-0.5 text-sm">
-                    <div className="font-medium">{user.name || "User"}</div>
-                    <div className="text-muted-foreground">{user.email}</div>
+                    <div className="font-medium">{user.fullname || "User"}</div>
+                    <div className="text-muted-foreground">{user?.email}</div>
                   </div>
                 </div>
               </SidebarFooter>

@@ -3,6 +3,8 @@ import type { User } from "@/lib/types";
 
 
 
+
+
 // Mock user data for demo purposes
 // const MOCK_USER: User = {
 //   id: "1",
@@ -21,6 +23,7 @@ export interface UserData {
   fullname: string;
   roles: Role[];
   profile_id: number;
+  email?: string;
 }
 
 export interface LoginResponse {
@@ -32,6 +35,13 @@ export interface LoginResponse {
     roles: Role[];
     profile_id: number;
   };
+}
+
+export interface LogoutResponse {
+  success: Boolean;
+  message: string;
+  data: string[];
+
 }
 
 
@@ -83,20 +93,43 @@ class AuthService {
   async logout(): Promise<void> {
     // In a real app, this would make an API call
     // return apiClient.post('/auth/logout')
+    try {
+
+      await apiClient.post<LogoutResponse>('/auth/logout');
+      console.log(apiClient);
+
+      localStorage.removeItem("auth_token");
+      localStorage.removeItem("user");
+    } catch (error: any) {
+      const message =
+        error.response?.data?.message || 'An error occurred during logout';
+      throw new Error(message);
+    }
+
 
     // For demo purposes, we'll just clear localStorage
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        localStorage.removeItem("auth_token");
-        localStorage.removeItem("user");
-        resolve();
-      }, 500);
-    });
+    // return new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     localStorage.removeItem("auth_token");
+    //     localStorage.removeItem("user");
+    //     resolve();
+    //   }, 500);
+    // });
   }
 
   async getCurrentUser(): Promise<User> {
     // In a real app, this would make an API call
     // return apiClient.get('/auth/me')
+
+    // try {
+    //   const response = await apiClient.get<User>('/auth/me');
+    //   return response;
+    // } catch (error: any) {
+    //   const message =
+    //     error.response?.data?.message || 'Failed to fetch current user';
+    //   throw new Error(message);
+    // }
+
 
     // For demo purposes, we'll check localStorage
     return new Promise((resolve, reject) => {
