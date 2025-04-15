@@ -52,7 +52,7 @@ class AuthService {
     // return apiClient.post('/auth/login', { email, password })
     try {
 
-      const response = await apiClient.post<LoginResponse>('/auth/login', {
+      const response = await apiClient.post<LoginResponse>('auth/login', {
         email,
         password,
       });
