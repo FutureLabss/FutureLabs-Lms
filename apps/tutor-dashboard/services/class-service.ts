@@ -1,4 +1,8 @@
-import type { Class } from "@/lib/types";
+// import type { ClassroomResponse } from "@/lib/types";
+
+import { handleError } from "@/components/ui/exception/catchErrors";
+import { ClassroomScheduleResponse } from "@/lib/types/classroom";
+import axios, { AxiosResponse } from "axios";
 
 // Get all classes
 export const getClasses = async () => {
@@ -33,30 +37,17 @@ export const getClassById = async (classId: string) => {
 };
 
 // Create a new class
-export const createClass = async (classData: Partial<Class>) => {
-  try {
-    // In a real app, you would make an API call here
-    // const response = await apiClient.post('/classes', classData);
-    // return response.data;
-
-    // For now, we'll simulate a successful creation
-    return {
-      success: true,
-      data: {
-        id: Math.random().toString(36).substring(2, 9),
-        ...classData,
-      },
-    };
-  } catch (error) {
-    console.error("Error creating class:", error);
-    throw error;
-  }
-};
-
+export async function createClasscroom(formData: ClassroomScheduleResponse): Promise<ClassroomScheduleResponse> {
+  return axios.post<ClassroomScheduleResponse>("classrooms/", formData,)
+  .then((response: AxiosResponse<ClassroomScheduleResponse>)=>{
+    return response.data
+  }).catch(handleError);
+    }
+  
 // Update a class
 export const updateClass = async (
   classId: string,
-  classData: Partial<Class>
+  classData: Partial<ClassroomScheduleResponse>
 ) => {
   try {
     // In a real app, you would make an API call here

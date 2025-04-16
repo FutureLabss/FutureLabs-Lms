@@ -1,19 +1,14 @@
-import type React from "react";
-// import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
+"use client";
+
+import React from "react";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Toaster } from "@/components/toaster";
 import { AuthProvider } from "@/hooks/use-auth";
+import { QueryClient, QueryClientProvider } from "react-query";
 
-// const inter = Inter({ subsets: ["latin"] });
 
-// export const metadata: Metadata = {
-//   title: "Tutor Dashboard",
-//   description: "Manage your classes and courses efficiently",
-//   generator: "v0.dev",
-// };
-
+const queryClient = new QueryClient();
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -22,18 +17,18 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <AuthProvider>{children}</AuthProvider>
-          <Toaster />
-        </ThemeProvider>
+        <QueryClientProvider client={queryClient}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <AuthProvider>{children}</AuthProvider>
+            <Toaster />
+          </ThemeProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
 }
-
-import "./globals.css";
