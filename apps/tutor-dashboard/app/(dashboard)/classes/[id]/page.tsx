@@ -59,7 +59,7 @@ import { EditModuleModal } from "@/components/edit-module-modal";
 // Import the AddTopicModal component
 import { AddTopicModal } from "@/components/add-topic-modal";
 // Import the useClass hook
-import { useClass } from "@/hooks/use-classes";
+// import { useClass } from "@/hooks/use-classes";
 // Add these imports at the top with the other imports
 import { EditTopicModal } from "@/components/edit-topic-modal";
 
@@ -241,7 +241,7 @@ export default function ClassDetailsPage() {
         ...classData,
         modules: classData.modules || [],
         assignments:
-          classData.assignments?.map((assignment) => ({
+          classData.assignments?.map((assignment: { submissions: any; }) => ({
             ...assignment,
             submissions: assignment.submissions || [],
           })) || [],
@@ -1346,3 +1346,7 @@ export default function ClassDetailsPage() {
     </div>
   );
 }
+function useClass(classId: string): { classData: any; isLoading: any; error: any; refreshClass: any; updateClassData: any; } {
+  throw new Error("Function not implemented.");
+}
+
