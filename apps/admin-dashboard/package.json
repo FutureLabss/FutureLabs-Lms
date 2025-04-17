@@ -1,5 +1,5 @@
 {
-  "name": "tutor-dashboard",
+  "name": "admin-dashboard",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@auth/core": "latest",
-    "@hookform/resolvers": "^5.0.1",
+    "@hookform/resolvers": "latest",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.4",
     "@radix-ui/react-aspect-ratio": "^1.1.1",
