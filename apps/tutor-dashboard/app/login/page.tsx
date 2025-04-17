@@ -98,10 +98,10 @@ export default function LoginPage() {
           </Form>
         </CardContent>
         <CardFooter className="flex flex-col">
-          <div className="mt-2 text-center text-sm text-muted-foreground">
+          {/* <div className="mt-2 text-center text-sm text-muted-foreground">
             <span>Demo credentials: </span>
             <span className="font-medium">tutor@example.com / password123</span>
-          </div>
+          </div> */}
         </CardFooter>
       </Card>
     </div>
