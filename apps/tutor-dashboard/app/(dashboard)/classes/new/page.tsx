@@ -14,17 +14,15 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowLeft, Calendar, Clock } from "lucide-react"
 import Link from "next/link"
+import { useCreateClassroom } from "@/hooks/mutate/classroom"
 
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Class name must be at least 2 characters.",
   }),
   description: z.string().optional(),
-  program: z.string({
+  course: z.string({
     required_error: "Please select a program.",
-  }),
-  maxStudents: z.coerce.number().min(1, {
-    message: "Class must allow at least 1 student.",
   }),
   startDate: z.string(),
   endDate: z.string(),
@@ -36,14 +34,19 @@ const formSchema = z.object({
 export default function NewClassPage() {
   const router = useRouter()
   const [activeTab, setActiveTab] = useState("details")
-
+  const {mutate: createclassroomdata}=useCreateClassroom({onSuccess(data) {
+      
+  },
+onError(error) {
+    
+},})
+console.log(createclassroomdata)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       description: "",
-      program: "",
-      maxStudents: 20,
+      course: "",
       startDate: "",
       endDate: "",
       startTime: "",
@@ -54,7 +57,7 @@ export default function NewClassPage() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values)
-    // Here you would typically save the class data to your backend
+    // createclassroomdata(values)
     router.push("/classes")
   }
 
@@ -122,7 +125,7 @@ export default function NewClassPage() {
                   <div className="grid gap-4 md:grid-cols-2">
                     <FormField
                       control={form.control}
-                      name="program"
+                      name="course"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Program</FormLabel>
@@ -141,21 +144,6 @@ export default function NewClassPage() {
                             </SelectContent>
                           </Select>
                           <FormDescription>The educational program this class belongs to.</FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name="maxStudents"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Maximum Students</FormLabel>
-                          <FormControl>
-                            <Input type="number" {...field} />
-                          </FormControl>
-                          <FormDescription>The maximum number of students allowed in this class.</FormDescription>
                           <FormMessage />
                         </FormItem>
                       )}

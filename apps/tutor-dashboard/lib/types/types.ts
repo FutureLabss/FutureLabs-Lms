@@ -3,55 +3,14 @@
 // User types
 export interface User {
   id: string;
-  name: string;
+  fullname: string;
   email: string;
-  role: "tutor" | "student" | "admin";
+  role: "tutor" | "student" | "admin"
   avatar?: string;
   bio?: string;
   title?: string;
   phone?: string;
   image?: string;
-}
-
-// Class types
-export interface Class {
-  id: string;
-  name: string;
-  description: string;
-  program: string;
-  maxStudents: number;
-  currentStudents: number;
-  startDate: string;
-  endDate: string;
-  schedule: {
-    daysOfWeek: string[];
-    startTime: string;
-    endTime: string;
-  };
-  status: "active" | "inactive" | "completed";
-  tutorId: string;
-  students: {
-    id: string;
-    name: string;
-    email: string;
-    avatar: string;
-    enrollmentDate: string;
-  }[];
-  materials: {
-    id: string;
-    title: string;
-    type: string;
-    url: string;
-    createdAt: string;
-  }[];
-  assignments: {
-    id: string;
-    title: string;
-    dueDate: string;
-    points: number;
-    submissions: any[];
-  }[];
-  modules: Module[];
 }
 
 // Course types (extending from Class)

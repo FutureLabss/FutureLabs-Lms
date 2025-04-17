@@ -19,24 +19,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { useCreateClassroom } from "@/hooks/mutate/classroom"
 
 const formSchema = z.object({
   name: z.string().min(2, {
     message: "Class name must be at least 2 characters.",
   }),
   description: z.string().optional(),
-  program: z.string({
+  course: z.string({
     required_error: "Please select a program.",
   }),
-  maxStudents: z.coerce.number().min(1, {
-    message: "Class must allow at least 1 student.",
-  }),
-  startDate: z.string(),
-  endDate: z.string(),
-  startTime: z.string(),
-  endTime: z.string(),
-  daysOfWeek: z.string(),
-  status: z.enum(["active", "inactive"]).default("active"),
+  start_date: z.string(),
+  end_date: z.string(),
+  start_time: z.string(),
+  end_time: z.string(),
+  days_of_week: z.string(),
+  status: z.enum(["active", "inactive"]),
 })
 
 type CreateClassModalProps = {
@@ -47,50 +45,50 @@ type CreateClassModalProps = {
 
 export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateClassModalProps) {
   const [activeTab, setActiveTab] = useState("details")
+  const {mutate: createclassroomdata}=useCreateClassroom({onSuccess(data) {
+        
+    },
+  onError(error) {
+      
+  },})
+  console.log(createclassroomdata)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: "",
       description: "",
-      program: "",
-      maxStudents: 20,
-      startDate: "",
-      endDate: "",
-      startTime: "",
-      endTime: "",
-      daysOfWeek: "",
+      course: "",
+      start_date: "",
+      end_date: "",
+      start_time: "",
+      end_time: "",
+      days_of_week: "",
       status: "active",
     },
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    // Create a new class object
     const newClass = {
-      id: Math.floor(Math.random() * 1000), // Generate a random ID for demo purposes
+      id: Math.floor(Math.random() * 1000), 
       name: values.name,
-      program: values.program,
-      students: 0, // New class starts with 0 students
+      program: values.course,
+      students: 0,
       nextSession: "Not scheduled yet",
       status: values.status,
       description: values.description,
-      maxStudents: values.maxStudents,
       schedule: {
-        daysOfWeek: values.daysOfWeek.split(",").map((day) => day.trim()),
-        startTime: values.startTime,
-        endTime: values.endTime,
+        daysOfWeek: values.days_of_week.split(",").map((day) => day.trim()),
+        startTime: values.start_time,
+        endTime: values.end_time,
       },
-      startDate: values.startDate,
-      endDate: values.endDate,
+      startDate: values.start_date,
+      endDate: values.end_date,
     }
-
-    // Call the callback with the new class
     onClassCreated(newClass)
-
-    // Close the modal
+    // createclassroomdata(values)
+    console.log(newClass)
     onOpenChange(false)
-
-    // Reset the form
     form.reset()
     setActiveTab("details")
   }
@@ -102,7 +100,6 @@ export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateC
           <DialogTitle>Create New Class</DialogTitle>
           <DialogDescription>Fill in the details to create a new class</DialogDescription>
         </DialogHeader>
-
         <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-2">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="details">Basic Details</TabsTrigger>
@@ -150,7 +147,7 @@ export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateC
                 <div className="grid gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
-                    name="program"
+                    name="course"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Program</FormLabel>
@@ -173,21 +170,6 @@ export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateC
                       </FormItem>
                     )}
                   />
-
-                  <FormField
-                    control={form.control}
-                    name="maxStudents"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Maximum Students</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} />
-                        </FormControl>
-                        <FormDescription>The maximum number of students allowed in this class.</FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
                 </div>
               </TabsContent>
 
@@ -195,7 +177,7 @@ export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateC
                 <div className="grid gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
-                    name="startDate"
+                    name="start_date"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Start Date</FormLabel>
@@ -212,7 +194,7 @@ export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateC
 
                   <FormField
                     control={form.control}
-                    name="endDate"
+                    name="end_date"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>End Date</FormLabel>
@@ -231,7 +213,7 @@ export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateC
                 <div className="grid gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
-                    name="startTime"
+                    name="start_time"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>Start Time</FormLabel>
@@ -248,7 +230,7 @@ export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateC
 
                   <FormField
                     control={form.control}
-                    name="endTime"
+                    name="end_time"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>End Time</FormLabel>
@@ -266,7 +248,7 @@ export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateC
 
                 <FormField
                   control={form.control}
-                  name="daysOfWeek"
+                  name="days_of_week"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Days of Week</FormLabel>
