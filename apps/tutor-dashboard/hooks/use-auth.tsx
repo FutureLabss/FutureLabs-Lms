@@ -3,11 +3,11 @@
 import type React from "react";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import type { User } from "@/lib/types";
-import { authService, UserData } from "@/services/auth-service";
+import { authService } from "@/services/auth-service";
+import { User } from "@/lib/types/types";
 
 interface AuthContextType {
-  user: UserData | null | User;
+  user: User | null;
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -16,7 +16,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null | UserData>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   console.log(user);

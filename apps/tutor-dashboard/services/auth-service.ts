@@ -1,33 +1,9 @@
 import { apiClient } from "@/lib/api-client";
-import type { User } from "@/lib/types";
+import { Role, User } from "@/lib/types/types";
 
 
 
-
-
-// Mock user data for demo purposes
-// const MOCK_USER: User = {
-//   id: "1",
-//   name: "John Doe",
-//   email: "tutor@example.com",
-//   role: "tutor",
-//   avatar: "/placeholder.svg",
-// };
-
-interface Role {
-  id: number;
-  name: string;
-}
-
-export interface UserData {
-  fullname: string;
-  roles: Role[];
-  profile_id: number;
-  email?: string;
-}
-
-export interface LoginResponse {
-  success: boolean;
+type LoginResponse = {
   message: string;
   data: {
     token: string;
@@ -35,7 +11,8 @@ export interface LoginResponse {
     roles: Role[];
     profile_id: number;
   };
-}
+};
+
 
 export interface LogoutResponse {
   success: Boolean;
@@ -47,7 +24,7 @@ export interface LogoutResponse {
 
 
 class AuthService {
-  async login(email: string, password: string): Promise<UserData> {
+  async login(email: string, password: string): Promise<User> {
     // In a real app, this would make an API call
     // return apiClient.post('/auth/login', { email, password })
     try {
@@ -57,9 +34,11 @@ class AuthService {
         password,
       });
 
+      console.log("Login response", response);
+
       const { fullname, roles, profile_id, token } = response.data;
 
-      const user: UserData = {
+      const user: User = {
         fullname,
         roles,
         profile_id,
@@ -76,19 +55,7 @@ class AuthService {
       throw new Error(message);
     }
   }
-  // For demo purposes, we'll use mock data
-  // return new Promise((resolve, reject) => {
-  //   setTimeout(() => {
-  //     if (email === "tutor@example.com" && password === "password123") {
-  //       // Store auth token in localStorage
-  //       localStorage.setItem("auth_token", "mock_jwt_token");
-  //       localStorage.setItem("user", JSON.stringify(MOCK_USER));
-  //       resolve(MOCK_USER);
-  //     } else {
-  //       reject(new Error("Invalid credentials"));
-  //     }
-  //   }, 1000);
-  // });
+
 
   async logout(): Promise<void> {
     // In a real app, this would make an API call
