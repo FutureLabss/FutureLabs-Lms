@@ -103,7 +103,7 @@ export function ClassroomCard({ classroom }: ClassroomCardProps) {
       </CardContent>
       <CardFooter className="border-t bg-slate-50 px-6 py-3">
         <Button asChild className="w-full">
-          <Link href={`/classrooms/${classroom.id}`}>View Classroom</Link>
+          <Link href={`/user/classrooms/${classroom.id}`}>View Classroom</Link>
         </Button>
       </CardFooter>
     </Card>

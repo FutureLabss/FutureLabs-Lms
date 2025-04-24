@@ -82,12 +82,6 @@ export default function ClassroomsPage() {
 }
 
 function Layout(props: layoutInterface) {
-  return (
-    <UserLayout
-      {...props}
-      title="Pre recorded courses for you"
-      description=""
-    />
-  );
+  return <UserLayout {...props} title="My Classrooms" description="" />;
 }
 ClassroomsPage.Layout = Layout;
