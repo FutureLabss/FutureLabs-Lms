@@ -131,29 +131,6 @@ async function uploadToCloudinary(
   }
 }
 
-// Add this function near the top of your component, after the imports
-function ErrorToast({ errors }: { errors: Record<string, string[]> }) {
-  return (
-    <div className="mt-2 max-h-[200px] overflow-y-auto">
-      <ul className="list-disc pl-4 space-y-1">
-        {Object.entries(errors).map(([field, messages]) => {
-          // Make field names more readable
-          const readableField = field
-            .replace(/module\.(\d+)\.video/g, "Module $1 Video")
-            .replace(/module\.(\d+)\.material/g, "Module $1 Material");
-
-          return (
-            <li key={field} className="text-sm">
-              <span className="font-medium">{readableField}:</span>{" "}
-              {Array.isArray(messages) ? messages[0] : messages}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
-}
-
 export default function NewCoursePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("details");
@@ -291,9 +268,7 @@ export default function NewCoursePage() {
     // If moving from details tab to content tab, validate the details fields first
     if (activeTab === "details" && tab === "content") {
       // Trigger validation for the details fields
-      const detailsValid = form.trigger(["title", "category"]);
-
-      detailsValid.then((valid) => {
+      form.trigger(["title", "description", "category"]).then((valid) => {
         if (!valid) {
           // Show toast notification for validation errors
           const errors = form.formState.errors;
@@ -326,95 +301,34 @@ export default function NewCoursePage() {
               variant: "destructive",
             });
           }
-
           return; // Don't change tabs if validation fails
         }
-
-        // If validation passes, change the tab
         setActiveTab(tab);
       });
     } else {
-      // For other tab changes, just change the tab
       setActiveTab(tab);
     }
   };
 
-  // Add this function before the onSubmit function
-  const validateForm = async () => {
-    // Validate all fields
-    const isValid = await form.trigger();
-
-    if (!isValid) {
-      // Collect all validation errors
-      const errors = form.formState.errors;
-      const errorMessages = [];
-
-      // Check basic details errors
-      if (errors.title) {
-        errorMessages.push(`Title: ${errors.title.message}`);
-      }
-      if (errors.description && errors.description.message) {
-        errorMessages.push(`Description: ${errors.description.message}`);
-      }
-      if (errors.category) {
-        errorMessages.push(`Category: ${errors.category.message}`);
-      }
-
-      // Check module errors
-      form.getValues("module").forEach((_, moduleIndex) => {
-        if (errors.module?.[moduleIndex]?.module_title) {
-          errorMessages.push(
-            `Module ${moduleIndex + 1} Title: ${
-              errors.module[moduleIndex].module_title.message
-            }`
-          );
-        }
-
-        // Check for video and material errors
-        if (errors.module?.[moduleIndex]?.video) {
-          errorMessages.push(
-            `Module ${moduleIndex + 1} Video: At least one video is required`
-          );
-        }
-        if (errors.module?.[moduleIndex]?.material) {
-          errorMessages.push(
-            `Module ${
-              moduleIndex + 1
-            } Material: At least one material is required`
-          );
-        }
+  // Helper function to display validation errors
+  const displayValidationErrors = (errorMessages: string[]) => {
+    if (errorMessages.length > 0) {
+      toast({
+        title: "Please fix the following errors:",
+        description: (
+          <div className="mt-2">
+            <ul className="list-disc pl-4 space-y-1">
+              {errorMessages.map((message, index) => (
+                <li key={index} className="text-sm">
+                  {message}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ),
+        variant: "destructive",
       });
-
-      // Show toast with all errors
-      if (errorMessages.length > 0) {
-        toast({
-          title: "Please fix the following errors:",
-          description: (
-            <div className="mt-2 max-h-[200px] overflow-y-auto">
-              <ul className="list-disc pl-4 space-y-1">
-                {errorMessages.map((message, index) => (
-                  <li key={index} className="text-sm">
-                    {message}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ),
-          variant: "destructive",
-        });
-
-        // Navigate to the appropriate tab based on errors
-        if (errors.title || errors.description || errors.category) {
-          setActiveTab("details");
-        } else if (errors.module) {
-          setActiveTab("content");
-        }
-      }
-
-      return false;
     }
-
-    return true;
   };
 
   // Handle form submission
@@ -1123,54 +1037,116 @@ export default function NewCoursePage() {
                         e.preventDefault(); // Explicitly prevent any form submission
                         if (activeTab === "details") {
                           // Validate details fields before proceeding
-                          form.trigger(["title", "category"]).then((valid) => {
-                            if (valid) {
-                              setActiveTab("content");
-                            } else {
-                              // Show toast notification for validation errors
-                              const errors = form.formState.errors;
-                              const errorMessages = [];
+                          form
+                            .trigger(["title", "description", "category"])
+                            .then((valid) => {
+                              if (valid) {
+                                setActiveTab("content");
+                              } else {
+                                // Show toast notification for validation errors
+                                const errors = form.formState.errors;
+                                const errorMessages = [];
 
-                              if (errors.title) {
-                                errorMessages.push(
-                                  `Title: ${errors.title.message}`
-                                );
-                              }
-                              if (
-                                errors.description &&
-                                errors.description.message
-                              ) {
-                                errorMessages.push(
-                                  `Description: ${errors.description.message}`
-                                );
-                              }
-                              if (errors.category) {
-                                errorMessages.push(
-                                  `Category: ${errors.category.message}`
-                                );
-                              }
+                                if (errors.title) {
+                                  errorMessages.push(
+                                    `Title: ${errors.title.message}`
+                                  );
+                                }
+                                if (
+                                  errors.description &&
+                                  errors.description.message
+                                ) {
+                                  errorMessages.push(
+                                    `Description: ${errors.description.message}`
+                                  );
+                                }
+                                if (errors.category) {
+                                  errorMessages.push(
+                                    `Category: ${errors.category.message}`
+                                  );
+                                }
 
-                              if (errorMessages.length > 0) {
-                                toast({
-                                  title: "Please fix the following errors:",
-                                  description: (
-                                    <div className="mt-2">
-                                      <ul className="list-disc pl-4 space-y-1">
-                                        {errorMessages.map((message, index) => (
-                                          <li key={index} className="text-sm">
-                                            {message}
-                                          </li>
-                                        ))}
-                                      </ul>
-                                    </div>
-                                  ),
-                                  variant: "destructive",
-                                });
+                                displayValidationErrors(errorMessages);
                               }
+                            });
+                        }
+                        if (activeTab === "content") {
+                          // Validate that all modules have titles before proceeding
+                          const modules = form.getValues("module");
+                          const missingTitles = modules.some(
+                            (mod) =>
+                              !mod.module_title ||
+                              mod.module_title.trim() === ""
+                          );
+
+                          if (missingTitles) {
+                            toast({
+                              title: "Missing Module Titles",
+                              description:
+                                "Please provide a title for all modules before proceeding to settings.",
+                              variant: "destructive",
+                            });
+                            return;
+                          }
+
+                          // Also check for videos and materials
+                          const moduleErrors: Record<string, string[]> = {};
+
+                          modules.forEach((mod, index) => {
+                            if (!mod.video || mod.video.length === 0) {
+                              moduleErrors[`module.${index}.video`] = [
+                                "The module video field is required.",
+                              ];
+                            }
+
+                            if (!mod.material || mod.material.length === 0) {
+                              moduleErrors[`module.${index}.material`] = [
+                                "The module material field is required.",
+                              ];
                             }
                           });
+
+                          if (Object.keys(moduleErrors).length > 0) {
+                            toast({
+                              title: "Validation Error",
+                              description: (
+                                <div className="mt-2 max-h-[200px] overflow-y-auto">
+                                  <ul className="list-disc pl-4 space-y-1">
+                                    {Object.entries(moduleErrors).map(
+                                      ([field, messages]) => {
+                                        // Make field names more readable
+                                        const readableField = field
+                                          .replace(
+                                            /module\.(\d+)\.video/g,
+                                            "Module $1 Video"
+                                          )
+                                          .replace(
+                                            /module\.(\d+)\.material/g,
+                                            "Module $1 Material"
+                                          );
+
+                                        return (
+                                          <li key={field} className="text-sm">
+                                            <span className="font-medium">
+                                              {readableField}:
+                                            </span>{" "}
+                                            {Array.isArray(messages)
+                                              ? messages[0]
+                                              : messages}
+                                          </li>
+                                        );
+                                      }
+                                    )}
+                                  </ul>
+                                </div>
+                              ),
+                              variant: "destructive",
+                            });
+                            return;
+                          }
+
+                          setActiveTab("settings");
                         }
-                        if (activeTab === "content") setActiveTab("settings");
                       }}
                     >
                       Next
