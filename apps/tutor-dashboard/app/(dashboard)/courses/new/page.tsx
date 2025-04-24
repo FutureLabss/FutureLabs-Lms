@@ -37,16 +37,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, File, Loader2, Plus, Upload, X } from "lucide-react";
 import Link from "next/link";
 import type { CreateRecordedCourseRequest } from "@/lib/types/recorded-courses";
-// import { useCreateRecordedCourses } from "@/hooks/mutate/recorded-courses";
 import { toast } from "@/components/ui/use-toast";
 import { useCreateRecordedCourses } from "@/hooks/mutate/recorded-courses";
 
 const formSchema = z.object({
   title: z
     .string()
-    .min(2, { message: "Course title must be at least 2 characters." }),
-  description: z.string().optional(),
-  category: z.string({ required_error: "Please select a category." }),
+    .min(2, { message: "Course title must be at least 2 characters." })
+    .nonempty("Course title is required"),
+  description: z
+    .string()
+    .min(10, { message: "Description must be at least 10 characters." })
+    .nonempty("Course description is required"),
+  category: z
+    .string({ required_error: "Please select a category." })
+    .nonempty("Category is required"),
   course_visibility: z.enum(["draft", "published"]),
   module: z.array(
     z.object({
@@ -88,14 +93,22 @@ const categories = [
 async function uploadToCloudinary(
   file: File
 ): Promise<{ secure_url: string; public_id: string }> {
-  const cloudName = "dg3p9nqor";
+  const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
-  const preset_name = "umg1npgk";
+  const presetName = process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET; // Default preset if not set
+
   try {
     // Create a FormData instance
     const formData = new FormData();
     formData.append("file", file);
-    formData.append("upload_preset", preset_name); // Re
+    if (presetName) {
+      formData.append("upload_preset", presetName);
+    } else {
+      toast({
+        title: "Error",
+        description: "Cloudinary upload preset is not defined.",
+      });
+    }
 
     // Upload to Cloudinary
     const response = await fetch(
@@ -118,6 +131,29 @@ async function uploadToCloudinary(
   }
 }
 
+// Add this function near the top of your component, after the imports
+function ErrorToast({ errors }: { errors: Record<string, string[]> }) {
+  return (
+    <div className="mt-2 max-h-[200px] overflow-y-auto">
+      <ul className="list-disc pl-4 space-y-1">
+        {Object.entries(errors).map(([field, messages]) => {
+          // Make field names more readable
+          const readableField = field
+            .replace(/module\.(\d+)\.video/g, "Module $1 Video")
+            .replace(/module\.(\d+)\.material/g, "Module $1 Material");
+
+          return (
+            <li key={field} className="text-sm">
+              <span className="font-medium">{readableField}:</span>{" "}
+              {Array.isArray(messages) ? messages[0] : messages}
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
 export default function NewCoursePage() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState("details");
@@ -134,11 +170,72 @@ export default function NewCoursePage() {
       router.push("/courses");
     },
     onError: (error) => {
-      toast({
-        title: "Error",
-        description:
-          error.message || "An error occurred while creating the course.",
-      });
+      console.error("Error creating course:", error);
+
+      // Check if the error response has the specific validation error format
+      if ((error as any)?.response?.data) {
+        const errorData = (error as any)?.response?.data;
+
+        if (errorData.errors) {
+          // Format validation errors for display
+          const errorMessages = Object.entries(errorData.errors)
+            .map(([field, messages]) => {
+              // Convert field names to more readable format
+              const readableField = field
+                .replace(/\./g, " ")
+                .replace(/\d+/g, (match) => ` ${Number.parseInt(match) + 1} `);
+
+              return `${readableField}: ${
+                Array.isArray(messages) ? messages[0] : messages
+              }`;
+            })
+            .join("\n");
+
+          toast({
+            title: errorData.message || "Validation Error",
+            description: (
+              <div className="mt-2 max-h-[200px] overflow-y-auto">
+                <ul className="list-disc pl-4 space-y-1">
+                  {Object.entries(errorData.errors).map(([field, messages]) => {
+                    // Make field names more readable
+                    const readableField = field
+                      .replace(/module\.(\d+)\.video/g, "Module $1 Video")
+                      .replace(
+                        /module\.(\d+)\.material/g,
+                        "Module $1 Material"
+                      );
+
+                    return (
+                      <li key={field} className="text-sm">
+                        <span className="font-medium">{readableField}:</span>{" "}
+                        {Array.isArray(messages) ? messages[0] : messages}
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            ),
+            variant: "destructive",
+          });
+        } else {
+          // Handle non-validation errors
+          toast({
+            title: "Error",
+            description:
+              errorData.message ||
+              "An error occurred while creating the course.",
+            variant: "destructive",
+          });
+        }
+      } else {
+        // Fallback for unexpected error formats
+        toast({
+          title: "Error",
+          description:
+            error.message || "An error occurred while creating the course.",
+          variant: "destructive",
+        });
+      }
 
       setIsSubmitting(false);
     },
@@ -189,9 +286,189 @@ export default function NewCoursePage() {
     }
   };
 
+  // Handle tab navigation
+  const handleTabChange = (tab: string) => {
+    // If moving from details tab to content tab, validate the details fields first
+    if (activeTab === "details" && tab === "content") {
+      // Trigger validation for the details fields
+      const detailsValid = form.trigger(["title", "category"]);
+
+      detailsValid.then((valid) => {
+        if (!valid) {
+          // Show toast notification for validation errors
+          const errors = form.formState.errors;
+          const errorMessages = [];
+
+          if (errors.title) {
+            errorMessages.push(`Title: ${errors.title.message}`);
+          }
+          if (errors.description && errors.description.message) {
+            errorMessages.push(`Description: ${errors.description.message}`);
+          }
+          if (errors.category) {
+            errorMessages.push(`Category: ${errors.category.message}`);
+          }
+
+          if (errorMessages.length > 0) {
+            toast({
+              title: "Please fix the following errors:",
+              description: (
+                <div className="mt-2">
+                  <ul className="list-disc pl-4 space-y-1">
+                    {errorMessages.map((message, index) => (
+                      <li key={index} className="text-sm">
+                        {message}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ),
+              variant: "destructive",
+            });
+          }
+
+          return; // Don't change tabs if validation fails
+        }
+
+        // If validation passes, change the tab
+        setActiveTab(tab);
+      });
+    } else {
+      // For other tab changes, just change the tab
+      setActiveTab(tab);
+    }
+  };
+
+  // Add this function before the onSubmit function
+  const validateForm = async () => {
+    // Validate all fields
+    const isValid = await form.trigger();
+
+    if (!isValid) {
+      // Collect all validation errors
+      const errors = form.formState.errors;
+      const errorMessages = [];
+
+      // Check basic details errors
+      if (errors.title) {
+        errorMessages.push(`Title: ${errors.title.message}`);
+      }
+      if (errors.description && errors.description.message) {
+        errorMessages.push(`Description: ${errors.description.message}`);
+      }
+      if (errors.category) {
+        errorMessages.push(`Category: ${errors.category.message}`);
+      }
+
+      // Check module errors
+      form.getValues("module").forEach((_, moduleIndex) => {
+        if (errors.module?.[moduleIndex]?.module_title) {
+          errorMessages.push(
+            `Module ${moduleIndex + 1} Title: ${
+              errors.module[moduleIndex].module_title.message
+            }`
+          );
+        }
+
+        // Check for video and material errors
+        if (errors.module?.[moduleIndex]?.video) {
+          errorMessages.push(
+            `Module ${moduleIndex + 1} Video: At least one video is required`
+          );
+        }
+        if (errors.module?.[moduleIndex]?.material) {
+          errorMessages.push(
+            `Module ${
+              moduleIndex + 1
+            } Material: At least one material is required`
+          );
+        }
+      });
+
+      // Show toast with all errors
+      if (errorMessages.length > 0) {
+        toast({
+          title: "Please fix the following errors:",
+          description: (
+            <div className="mt-2 max-h-[200px] overflow-y-auto">
+              <ul className="list-disc pl-4 space-y-1">
+                {errorMessages.map((message, index) => (
+                  <li key={index} className="text-sm">
+                    {message}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ),
+          variant: "destructive",
+        });
+
+        // Navigate to the appropriate tab based on errors
+        if (errors.title || errors.description || errors.category) {
+          setActiveTab("details");
+        } else if (errors.module) {
+          setActiveTab("content");
+        }
+      }
+
+      return false;
+    }
+
+    return true;
+  };
+
   // Handle form submission
-  function onSubmit(values: FormValuesType) {
+  async function onSubmit(values: FormValuesType) {
     setIsSubmitting(true);
+
+    // Validate that each module has at least one video and one material
+    const moduleErrors: Record<string, string[]> = {};
+
+    values.module.forEach((mod, index) => {
+      if (!mod.video || mod.video.length === 0) {
+        moduleErrors[`module.${index}.video`] = [
+          "The module video field is required.",
+        ];
+      }
+
+      if (!mod.material || mod.material.length === 0) {
+        moduleErrors[`module.${index}.material`] = [
+          "The module material field is required.",
+        ];
+      }
+    });
+
+    // If there are validation errors, display them and stop submission
+    if (Object.keys(moduleErrors).length > 0) {
+      toast({
+        title: "Validation Error",
+        description: (
+          <div className="mt-2 max-h-[200px] overflow-y-auto">
+            <ul className="list-disc pl-4 space-y-1">
+              {Object.entries(moduleErrors).map(([field, messages]) => {
+                // Make field names more readable
+                const readableField = field
+                  .replace(/module\.(\d+)\.video/g, "Module $1 Video")
+                  .replace(/module\.(\d+)\.material/g, "Module $1 Material");
+
+                return (
+                  <li key={field} className="text-sm">
+                    <span className="font-medium">{readableField}:</span>{" "}
+                    {Array.isArray(messages) ? messages[0] : messages}
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
+        ),
+        variant: "destructive",
+      });
+
+      setIsSubmitting(false);
+      setActiveTab("content");
+      return;
+    }
+
     console.log("Form submission payload:", values);
 
     // Format the data as needed for your API
@@ -249,6 +526,11 @@ export default function NewCoursePage() {
       ]);
     } catch (error) {
       console.error("Error uploading video:", error);
+      toast({
+        title: "Upload Error",
+        description: "Failed to upload video. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsVideoUploading((prev) => ({ ...prev, [moduleIndex]: false }));
     }
@@ -278,6 +560,11 @@ export default function NewCoursePage() {
       ]);
     } catch (error) {
       console.error("Error uploading material:", error);
+      toast({
+        title: "Upload Error",
+        description: "Failed to upload material. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsMaterialUploading((prev) => ({ ...prev, [moduleIndex]: false }));
     }
@@ -346,11 +633,6 @@ export default function NewCoursePage() {
     form.setValue(`module.${moduleIndex}.${type}`, updatedItems);
   };
 
-  // Handle tab navigation
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-  };
-
   // Create refs for file inputs
   const videoInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const materialInputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -397,7 +679,10 @@ export default function NewCoursePage() {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Course Title</FormLabel>
+                        <FormLabel>
+                          Course Title{" "}
+                          <span className="text-destructive">*</span>
+                        </FormLabel>
                         <FormControl>
                           <Input
                             placeholder="e.g., Introduction to Algebra"
@@ -418,7 +703,10 @@ export default function NewCoursePage() {
                     name="description"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Description</FormLabel>
+                        <FormLabel>
+                          Description{" "}
+                          <span className="text-destructive">*</span>
+                        </FormLabel>
                         <FormControl>
                           <Textarea
                             placeholder="Provide a brief description of the course"
@@ -439,7 +727,9 @@ export default function NewCoursePage() {
                     name="category"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Category</FormLabel>
+                        <FormLabel>
+                          Category <span className="text-destructive">*</span>
+                        </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -526,11 +816,16 @@ export default function NewCoursePage() {
                         </CardHeader>
                         <CardContent className="space-y-4">
                           <div>
-                            <h4 className="text-sm font-medium mb-2">Videos</h4>
+                            <h4 className="text-sm font-medium mb-2">
+                              Videos <span className="text-destructive">*</span>
+                            </h4>
                             <div
                               className={`border-2 border-dashed rounded-lg p-4 ${
                                 dragOver
                                   ? "border-primary bg-primary/5"
+                                  : form.formState.errors.module?.[moduleIndex]
+                                      ?.video
+                                  ? "border-destructive"
                                   : "border-border"
                               }`}
                               onDragOver={(e) =>
@@ -622,17 +917,28 @@ export default function NewCoursePage() {
                                   )}
                                 </Button>
                               </div>
+                              {form.formState.errors.module?.[moduleIndex]
+                                ?.video && (
+                                <p className="text-sm text-destructive mt-2">
+                                  Please upload at least one video for this
+                                  module
+                                </p>
+                              )}
                             </div>
                           </div>
 
                           <div>
                             <h4 className="text-sm font-medium mb-2">
-                              Materials
+                              Materials{" "}
+                              <span className="text-destructive">*</span>
                             </h4>
                             <div
                               className={`border-2 border-dashed rounded-lg p-4 ${
                                 dragOver
                                   ? "border-primary bg-primary/5"
+                                  : form.formState.errors.module?.[moduleIndex]
+                                      ?.material
+                                  ? "border-destructive"
                                   : "border-border"
                               }`}
                               onDragOver={(e) =>
@@ -725,6 +1031,13 @@ export default function NewCoursePage() {
                                 </Button>
                               </div>
                             </div>
+                            {form.formState.errors.module?.[moduleIndex]
+                              ?.material && (
+                              <p className="text-sm text-destructive mt-2">
+                                Please upload at least one material for this
+                                module
+                              </p>
+                            )}
                           </div>
                         </CardContent>
                       </Card>
@@ -808,7 +1121,55 @@ export default function NewCoursePage() {
                       type="button"
                       onClick={(e) => {
                         e.preventDefault(); // Explicitly prevent any form submission
-                        if (activeTab === "details") setActiveTab("content");
+                        if (activeTab === "details") {
+                          // Validate details fields before proceeding
+                          form.trigger(["title", "category"]).then((valid) => {
+                            if (valid) {
+                              setActiveTab("content");
+                            } else {
+                              // Show toast notification for validation errors
+                              const errors = form.formState.errors;
+                              const errorMessages = [];
+
+                              if (errors.title) {
+                                errorMessages.push(
+                                  `Title: ${errors.title.message}`
+                                );
+                              }
+                              if (
+                                errors.description &&
+                                errors.description.message
+                              ) {
+                                errorMessages.push(
+                                  `Description: ${errors.description.message}`
+                                );
+                              }
+                              if (errors.category) {
+                                errorMessages.push(
+                                  `Category: ${errors.category.message}`
+                                );
+                              }
+
+                              if (errorMessages.length > 0) {
+                                toast({
+                                  title: "Please fix the following errors:",
+                                  description: (
+                                    <div className="mt-2">
+                                      <ul className="list-disc pl-4 space-y-1">
+                                        {errorMessages.map((message, index) => (
+                                          <li key={index} className="text-sm">
+                                            {message}
+                                          </li>
+                                        ))}
+                                      </ul>
+                                    </div>
+                                  ),
+                                  variant: "destructive",
+                                });
+                              }
+                            }
+                          });
+                        }
                         if (activeTab === "content") setActiveTab("settings");
                       }}
                     >

@@ -28,14 +28,6 @@ export default function CoursesPage() {
     setSearchQuery(e.target.value);
   }
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader className="h-8 w-8 animate-spin" />
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
@@ -65,92 +57,91 @@ export default function CoursesPage() {
           <TabsTrigger value="published">Published</TabsTrigger>
           <TabsTrigger value="draft">Draft</TabsTrigger>
         </TabsList>
-        {["all", "published", "draft"].map((tabValue) => (
-          <TabsContent key={tabValue} value={tabValue} className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {courses
-                .filter((course: Course) => {
-                  const matchesTab =
-                    tabValue === "all" ||
-                    course.course_status.status === tabValue;
+        {loading ? (
+          <div className="flex items-center justify-center h-screen">
+            <Loader className="h-8 w-8 animate-spin" />
+          </div>
+        ) : (
+          ["all", "published", "draft"].map((tabValue) => (
+            <TabsContent key={tabValue} value={tabValue} className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {courses
+                  .filter((course: Course) => {
+                    const matchesTab =
+                      tabValue === "all" ||
+                      course.course_status.status === tabValue;
 
-                  // Then filter by search query
-                  const matchesSearch =
-                    searchQuery === "" ||
-                    course.title
-                      .toLowerCase()
-                      .includes(searchQuery.toLowerCase()) ||
-                    course.description
-                      .toLowerCase()
-                      .includes(searchQuery.toLowerCase());
+                    // Then filter by search query
+                    const matchesSearch =
+                      searchQuery === "" ||
+                      course.title
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase()) ||
+                      course.description
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase());
 
-                  return matchesTab && matchesSearch;
-                })
-                .map((course: Course) => (
-                  <Card key={course.id}>
-                    <CardHeader className="relative p-0">
-                      <div className="aspect-video relative overflow-hidden rounded-t-lg bg-muted">
-                        {/* Use a div with background color instead of an image */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <Video className="h-12 w-12 text-muted-foreground opacity-50" />
-                        </div>
-                        <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity">
-                          <Button variant="secondary" size="sm" asChild>
-                            <Link href={`/courses/${course.id}`}>
-                              <Eye className="mr-2 h-4 w-4" />
-                              Preview
-                            </Link>
-                          </Button>
-                        </div>
-                      </div>
-                      <div className="p-6 pb-2">
-                        <div className="flex items-start justify-between">
-                          <div>
-                            <CardTitle className="line-clamp-1">
-                              {course.title}
-                            </CardTitle>
-                            <CardDescription className="line-clamp-2 mt-1">
-                              {course.description}
-                            </CardDescription>
+                    return matchesTab && matchesSearch;
+                  })
+                  .map((course: Course) => (
+                    <Card key={course.id}>
+                      <CardHeader className="relative p-0">
+                        <div className="aspect-video relative overflow-hidden rounded-t-lg bg-muted">
+                          {/* Use a div with background color instead of an image */}
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <Video className="h-12 w-12 text-muted-foreground opacity-50" />
                           </div>
-                          <div
-                            className={`px-2 py-1 rounded-full text-xs ${
-                              course.course_status.status === "published"
-                                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
-                                : "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-100"
-                            }`}
-                          >
-                            {course.course_status.status === "published"
-                              ? "Published"
-                              : "Draft"}
+                          <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 hover:opacity-100 transition-opacity"></div>{" "}
+                        </div>
+                        <div className="p-6 pb-2">
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <CardTitle className="line-clamp-1">
+                                {course.title}
+                              </CardTitle>
+                              <CardDescription className="line-clamp-2 mt-1">
+                                {course.description}
+                              </CardDescription>
+                            </div>
+                            <div
+                              className={`px-2 py-1 rounded-full text-xs ${
+                                course.course_status.status === "published"
+                                  ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
+                                  : "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-100"
+                              }`}
+                            >
+                              {course.course_status.status === "published"
+                                ? "Published"
+                                : "Draft"}
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <div className="flex items-center text-sm">
-                          <Video className="mr-2 h-4 w-4 text-muted-foreground" />
-                          <span>
-                            {course.course_status.modules_count} modules
-                          </span>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="flex items-center text-sm">
+                            <Video className="mr-2 h-4 w-4 text-muted-foreground" />
+                            <span>
+                              {course.course_status.modules_count} modules
+                            </span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">
+                              {course.course_status.students_count} students
+                              enrolled
+                            </span>
+                            <Button variant="ghost" size="sm" asChild>
+                              <Link href={`/courses/${course.id}`}>Edit</Link>
+                            </Button>
+                          </div>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-muted-foreground">
-                            {course.course_status.students_count} students
-                            enrolled
-                          </span>
-                          <Button variant="ghost" size="sm" asChild>
-                            <Link href={`/courses/${course.id}`}>Edit</Link>
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-            </div>
-          </TabsContent>
-        ))}
+                      </CardContent>
+                    </Card>
+                  ))}
+              </div>
+            </TabsContent>
+          ))
+        )}
       </Tabs>
     </div>
   );
