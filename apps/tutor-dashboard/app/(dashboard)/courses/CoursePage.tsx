@@ -21,6 +21,7 @@ import { useState } from "react";
 export default function CoursesPage() {
   const { data, loading } = useGetAllRecordedCourses();
   const courses = data?.data || []; // Use the data from the query
+  console.log("courses", courses);
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -67,9 +68,10 @@ export default function CoursesPage() {
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {courses
                   .filter((course: Course) => {
+                    console.log("Filtering course:", course);
+
                     const matchesTab =
-                      tabValue === "all" ||
-                      course.course_status.status === tabValue;
+                      tabValue === "all" || course?.status === tabValue;
 
                     // Then filter by search query
                     const matchesSearch =
@@ -105,12 +107,12 @@ export default function CoursesPage() {
                             </div>
                             <div
                               className={`px-2 py-1 rounded-full text-xs ${
-                                course.course_status.status === "published"
+                                course.status === "published"
                                   ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
                                   : "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-100"
                               }`}
                             >
-                              {course.course_status.status === "published"
+                              {course.status === "published"
                                 ? "Published"
                                 : "Draft"}
                             </div>
@@ -121,14 +123,11 @@ export default function CoursesPage() {
                         <div className="space-y-2">
                           <div className="flex items-center text-sm">
                             <Video className="mr-2 h-4 w-4 text-muted-foreground" />
-                            <span>
-                              {course.course_status.modules_count} modules
-                            </span>
+                            <span>{course.modules_count} modules</span>
                           </div>
                           <div className="flex items-center justify-between">
                             <span className="text-sm text-muted-foreground">
-                              {course.course_status.students_count} students
-                              enrolled
+                              {course.students_count} students enrolled
                             </span>
                             <Button variant="ghost" size="sm" asChild>
                               <Link href={`/courses/${course.id}`}>Edit</Link>

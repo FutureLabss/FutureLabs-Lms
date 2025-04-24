@@ -187,6 +187,22 @@ export interface StudentsProgress {
 export interface Course {
   id: number;
   title: string;
+  status: "draft" | "published" | string;
+  branch: string;
+  description: string;
+  views: number;
+  completion: number;
+  image_url: string;
+  image_public_id: string;
+  created_by: string;
+  updated_by: string;
+  course: string;
+  students_count: number | null;
+  modules_count: number | null;
+}
+export interface DetailedCourse {
+  id: number;
+  title: string;
   branch: string;
   description: string;
   views: number;
