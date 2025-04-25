@@ -252,6 +252,8 @@ export default function ClassroomDetailPage({
         </Badge>
       </div>
 
+      {/* me */}
+
       <Tabs
         value={activeTab}
         onValueChange={setActiveTab}
