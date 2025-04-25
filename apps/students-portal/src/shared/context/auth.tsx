@@ -1,7 +1,18 @@
-import { ReactNode, createContext, useContext, useEffect, useState } from "react";
+import {
+  ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { AuthResponse } from "@/core/types/interface/auth";
 import {
-  login, logout, CreatePassword, VerifyEmail, SignUp, resendEmailVerification
+  login,
+  logout,
+  CreatePassword,
+  VerifyEmail,
+  SignUp,
+  resendEmailVerification,
 } from "../../core/services/auth";
 
 interface AuthContextType {
@@ -38,7 +49,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
     if (storedToken) {
       try {
         const tokens = JSON.parse(storedToken);
-        if (tokens?.data.token) {
+        if (tokens.data?.token) {
           setILoggedIn(true);
           setAuth(tokens.data);
         }
@@ -62,7 +73,13 @@ export default function AuthContext({ children }: { children: ReactNode }) {
   };
 
   return (
-    <>{loaded ? <usersContext.Provider value={value}>{children}</usersContext.Provider> : <></>}</>
+    <>
+      {loaded ? (
+        <usersContext.Provider value={value}>{children}</usersContext.Provider>
+      ) : (
+        <></>
+      )}
+    </>
   );
 }
 
