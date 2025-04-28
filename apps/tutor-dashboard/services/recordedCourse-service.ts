@@ -1,5 +1,7 @@
+import { ModuleSchemaType, ModuleTypeData } from "@/app/(dashboard)/courses/[id]/page";
+import { toast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api-client"
-import { CreateRecordedCourseRequest, CreateRecordedCourseResponse, GetRecordedCourse } from "@/lib/types/recorded-courses";
+import { Course, CreateRecordedCourseRequest, CreateRecordedCourseResponse, GetRecordedCourseData, GetSingleRecordedCourseResponse, ModuleResponseDTO, RecordedCourseData } from "@/lib/types/recorded-courses";
 export const createRecordedCourse = async (data: CreateRecordedCourseRequest): Promise<CreateRecordedCourseResponse> => {
   try {
     const response = await apiClient.post<CreateRecordedCourseResponse>('/recorded-courses', data);
@@ -15,9 +17,9 @@ export const createRecordedCourse = async (data: CreateRecordedCourseRequest): P
 }
 
 
-export const getRecordedCourses = async (): Promise<GetRecordedCourse[]> => {
+export const getRecordedCourses = async (): Promise<GetRecordedCourseData> => {
   try {
-    const response = await apiClient.get<GetRecordedCourse[]>('/recorded-courses');
+    const response = await apiClient.get<GetRecordedCourseData>('/recorded-courses');
     return response;
   } catch (error) {
     console.error("Error fetching recorded courses:", error);
@@ -26,4 +28,78 @@ export const getRecordedCourses = async (): Promise<GetRecordedCourse[]> => {
 }
 
 
+export const getRecordedCourseById = async (id: number): Promise<GetSingleRecordedCourseResponse> => {
+  try {
+    const response = await apiClient.get<GetSingleRecordedCourseResponse>(`/recorded-courses/${id}`);
+    console.log("getRecordedCourseById", response);
+
+    return response;
+  } catch (error) {
+    console.error("Error fetching recorded course:", error);
+    throw error;
+  }
+}
+
+
+export const DeleteRecordedCourse = async (id: number): Promise<{ message: string }> => {
+  try {
+    const response = await apiClient.delete<{ message: string }>(`/recorded-courses/${id}`);
+    return response;
+  } catch (error) {
+    console.error("Error deleting recorded course:", error);
+    throw error;
+  }
+}
+
+export const AddModule = async (data: ModuleTypeData): Promise<ModuleResponseDTO> => {
+  try {
+    const response = await apiClient.post<ModuleResponseDTO
+    >(`/recorded-courses/${data.id}/modules`, data);
+    toast({
+      title: "Success",
+      description: "Module added successfully",
+      variant: "default",
+    })
+
+    return response;
+
+  } catch (error) {
+    console.error("Error adding module:", error);
+    toast({
+      title: "Error",
+      description: "Error adding module",
+      variant: "destructive",
+    })
+    throw error;
+  }
+}
+
+export const DeleteModule = async (data: { id: number, moduleId: number }): Promise<{ message: string }> => {
+  try {
+    const response = await apiClient.delete<{ message: string }>(`/recorded-courses/${data.id}/modules/${data.moduleId}`);
+    toast({
+      title: "Success",
+      description: "Module deleted successfully",
+      variant: "default",
+    })
+    return response;
+  } catch (error) {
+    console.error("Error deleting module:", error);
+    toast({
+      title: "Error",
+      description: "Error deleting module",
+      variant: "destructive",
+    })
+    throw error;
+  }
+}
+
+
+
+
+
+
+
 // export const getRecordedCourseById = async (id: number): Promise<GetRecordedCourse> => {  
+
+

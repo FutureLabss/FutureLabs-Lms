@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { set, z } from "zod";
 import {
   ArrowLeft,
   Edit,
   Eye,
   File,
+  Loader,
   MoreHorizontal,
   Plus,
   Trash,
@@ -42,117 +44,175 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { useGetSingleRecordedCourse } from "@/hooks/query/recorded-course";
+import CourseDetailsSkeletonLoader from "../../../../components/SkeletonLoader";
+import {
+  useAddModule,
+  useDeleteModule,
+  useDeleteRecordedCourses,
+} from "@/hooks/mutate/recorded-courses";
+import { toast } from "@/components/ui/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-// Mock data for a specific course
-const courseData = {
-  id: "1",
-  title: "Introduction to Algebra",
-  description:
-    "Learn the fundamentals of algebra with this comprehensive course. Perfect for beginners and those looking to refresh their knowledge.",
-  category: "mathematics",
-  thumbnail: "/placeholder.svg",
-  status: "published",
-  tutorId: "1",
-  students: [
-    {
-      id: "1",
-      name: "Alice Johnson",
-      email: "alice@example.com",
-      avatar: "/placeholder.svg",
-    },
-    {
-      id: "2",
-      name: "Bob Smith",
-      email: "bob@example.com",
-      avatar: "/placeholder.svg",
-    },
-  ],
-  modules: [
-    {
-      id: "1",
-      title: "Basic Concepts",
-      videos: [
-        {
-          id: "1",
-          title: "Introduction to Variables",
-          description: "Understanding variables in algebra",
-          url: "#",
-          duration: 600,
-          thumbnail: "/placeholder.svg",
-        },
-        {
-          id: "2",
-          title: "Working with Equations",
-          description: "How to solve basic equations",
-          url: "#",
-          duration: 720,
-          thumbnail: "/placeholder.svg",
-        },
-      ],
-      materials: [
-        {
-          id: "1",
-          title: "Algebra Basics PDF",
-          description: "A comprehensive guide to algebra basics",
-          type: "pdf",
-          url: "#",
-          createdAt: "2023-08-15",
-        },
-      ],
-    },
-    {
-      id: "2",
-      title: "Intermediate Concepts",
-      videos: [
-        {
-          id: "3",
-          title: "Quadratic Equations",
-          description: "Solving quadratic equations",
-          url: "#",
-          duration: 840,
-          thumbnail: "/placeholder.svg",
-        },
-      ],
-      materials: [
-        {
-          id: "2",
-          title: "Practice Problems",
-          description: "Practice problems for intermediate algebra",
-          type: "pdf",
-          url: "#",
-          createdAt: "2023-08-20",
-        },
-      ],
-    },
-  ],
-  createdAt: "2023-08-01",
-  updatedAt: "2023-08-25",
-};
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Interface } from "readline";
+
+const moduleFormSchema = z.object({
+  title: z
+    .string()
+    .min(1, { message: "Module title is required" })
+    .nonempty("Course title is required"),
+  description: z.string().optional(),
+});
+
+export interface ModuleTypeData {
+  id: number | null;
+  title: string;
+  description?: string;
+}
+
+export type ModuleSchemaType = z.infer<typeof moduleFormSchema>;
 
 export default function CourseDetailsPage() {
   const params = useParams();
+  const courseId = params.id as string;
+
+  console.log(typeof courseId);
+
+  const { data: singleCourse, loading: isLoading } = useGetSingleRecordedCourse(
+    Number(courseId)
+  );
+
+  console.log("singleCourse", singleCourse?.data?.modules);
+
+  const { mutate: deleteModule } = useDeleteModule({
+    onSuccess: () => {
+      toast({
+        title: "Module deleted",
+        description: "The module has been successfully deleted.",
+        variant: "default",
+      });
+      setIsDeleteDialogOpen(false);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "An error occurred while deleting the module.",
+        variant: "destructive",
+      });
+      // Handle error
+    },
+  });
+  const { mutate: deleteRecordedCourse } = useDeleteRecordedCourses({
+    onSuccess: () => {
+      toast({
+        title: "Course deleted",
+        description: "The course has been successfully deleted.",
+        variant: "destructive",
+      });
+      setIsDeleteDialogOpen(false);
+      router.push("/courses");
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "An error occurred while deleting the course.",
+        variant: "destructive",
+      });
+      // Handle error
+    },
+  });
+
+  const { mutate: addModule } = useAddModule({
+    onSuccess: () => {
+      toast({
+        title: "Module added",
+        description: "The module has been successfully added.",
+        variant: "default",
+      });
+      form.reset();
+      setIsAddModuleDialogOpen(false);
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "An error occurred while adding the module.",
+        variant: "destructive",
+      });
+      // Handle error
+    },
+  });
+
   const router = useRouter();
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [isAddModuleDialogOpen, setIsAddModuleDialogOpen] = useState(false);
   const [isAddVideoDialogOpen, setIsAddVideoDialogOpen] = useState(false);
   const [isAddMaterialDialogOpen, setIsAddMaterialDialogOpen] = useState(false);
-  const [selectedModuleId, setSelectedModuleId] = useState<string | null>(null);
+  const [selectedModuleId, setSelectedModuleId] = useState<number | null>(null);
   const [isPublished, setIsPublished] = useState(
-    courseData.status === "published"
+    singleCourse?.data?.status === "published"
   );
 
-  // In a real application, you would fetch the course data based on the ID
-  const courseId = params.id as string;
+  const form = useForm<ModuleSchemaType>({
+    resolver: zodResolver(moduleFormSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+    },
+  });
 
-  const handleAddVideo = (moduleId: string) => {
+  console.log(form.formState);
+
+  async function onSubmit(data: ModuleSchemaType) {
+    const moduleData: ModuleTypeData = {
+      id: Number(courseId) || null,
+      title: data.title,
+      description: data.description,
+    };
+
+    try {
+      addModule(moduleData);
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  // In a real application, you would fetch the course data based on the ID
+
+  const handleAddVideo = (moduleId: number) => {
     setSelectedModuleId(moduleId);
     setIsAddVideoDialogOpen(true);
   };
 
-  const handleAddMaterial = (moduleId: string) => {
+  const handleAddMaterial = (moduleId: number) => {
     setSelectedModuleId(moduleId);
     setIsAddMaterialDialogOpen(true);
   };
+
+  function handleDeleteModule() {
+    if (selectedModuleId !== null) {
+      deleteModule({ id: Number(courseId), moduleId: selectedModuleId });
+    } else {
+      toast({
+        title: "Error",
+        description: "Module ID is missing.",
+        variant: "destructive",
+      });
+    }
+  }
+
+  if (isLoading) {
+    return <CourseDetailsSkeletonLoader />;
+  }
 
   return (
     <div className="flex flex-col gap-4">
@@ -164,9 +224,9 @@ export default function CourseDetailsPage() {
         </Button>
         <div className="flex-1">
           <h1 className="text-3xl font-bold tracking-tight">
-            {courseData.title}
+            {singleCourse?.data?.title}
           </h1>
-          <p className="text-muted-foreground">{courseData.category}</p>
+          <p className="text-muted-foreground">{singleCourse?.data?.course}</p>
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" asChild>
@@ -212,22 +272,28 @@ export default function CourseDetailsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-medium">Description</h3>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {courseData.description}
-                  </p>
-                </div>
+              {
+                <div className="space-y-4">
+                  <div>
+                    <h3 className="font-medium">Description</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {singleCourse?.data?.description}
+                    </p>
+                  </div>
 
-                <div className="aspect-video relative overflow-hidden rounded-lg border">
-                  <img
-                    src={courseData.thumbnail || "/placeholder.svg"}
-                    alt={courseData.title}
-                    className="object-cover w-full h-full"
-                  />
+                  <div className="aspect-video relative overflow-hidden rounded-lg border">
+                    <img
+                      src={
+                        singleCourse?.data?.image_url !== "N/A"
+                          ? singleCourse?.data?.image_url
+                          : "/placeholder.svg"
+                      }
+                      alt={singleCourse?.data?.title}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
                 </div>
-              </div>
+              }
             </CardContent>
           </Card>
 
@@ -248,7 +314,7 @@ export default function CourseDetailsPage() {
               </div>
 
               <div className="space-y-4">
-                {courseData.modules.map((module) => (
+                {singleCourse?.data?.modules?.map((module) => (
                   <Card key={module.id}>
                     <CardHeader className="pb-2">
                       <div className="flex items-center justify-between">
@@ -263,7 +329,13 @@ export default function CourseDetailsPage() {
                             <DropdownMenuItem>Edit Module</DropdownMenuItem>
                             <DropdownMenuItem>Reorder Module</DropdownMenuItem>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem className="text-destructive focus:text-destructive">
+                            <DropdownMenuItem
+                              className="text-destructive focus:text-destructive"
+                              onClick={() => {
+                                setIsDeleteDialogOpen(true),
+                                  setSelectedModuleId(module.id);
+                              }}
+                            >
                               Delete Module
                             </DropdownMenuItem>
                           </DropdownMenuContent>
@@ -296,8 +368,9 @@ export default function CourseDetailsPage() {
                                     {video.title}
                                   </p>
                                   <p className="text-xs text-muted-foreground">
-                                    {Math.floor(video.duration / 60)}:
-                                    {(video.duration % 60)
+                                    {Math.floor(video.duration_in_seconds / 60)}
+                                    :
+                                    {(video.duration_in_seconds % 60)
                                       .toString()
                                       .padStart(2, "0")}
                                   </p>
@@ -357,7 +430,7 @@ export default function CourseDetailsPage() {
                                   <p className="text-xs text-muted-foreground">
                                     {material.type.toUpperCase()} • Added on{" "}
                                     {new Date(
-                                      material.createdAt
+                                      material.created_at
                                     ).toLocaleDateString()}
                                   </p>
                                 </div>
@@ -406,7 +479,7 @@ export default function CourseDetailsPage() {
               <Card>
                 <CardContent className="p-0">
                   <div className="divide-y">
-                    {courseData.students.map((student) => (
+                    {singleCourse?.data?.students.map((student) => (
                       <div
                         key={student.id}
                         className="flex items-center justify-between p-4"
@@ -492,26 +565,30 @@ export default function CourseDetailsPage() {
                   <span className="text-sm font-medium">Status</span>
                   <span
                     className={`px-2 py-1 rounded-full text-xs ${
-                      isPublished
+                      singleCourse?.data?.status === "published"
                         ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
                         : "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-100"
                     }`}
                   >
-                    {isPublished ? "Published" : "Draft"}
+                    {singleCourse?.data?.status}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Students</span>
-                  <span className="text-sm">{courseData.students.length}</span>
+                  <span className="text-sm">
+                    {singleCourse?.data?.students.length}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Modules</span>
-                  <span className="text-sm">{courseData.modules.length}</span>
+                  <span className="text-sm">
+                    {singleCourse?.data?.modules.length}
+                  </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Videos</span>
                   <span className="text-sm">
-                    {courseData.modules.reduce(
+                    {singleCourse?.data?.modules.reduce(
                       (acc, module) => acc + module.videos.length,
                       0
                     )}
@@ -520,7 +597,7 @@ export default function CourseDetailsPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Materials</span>
                   <span className="text-sm">
-                    {courseData.modules.reduce(
+                    {singleCourse?.data?.modules.reduce(
                       (acc, module) => acc + module.materials.length,
                       0
                     )}
@@ -529,13 +606,13 @@ export default function CourseDetailsPage() {
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Created</span>
                   <span className="text-sm">
-                    {new Date(courseData.createdAt).toLocaleDateString()}
+                    {singleCourse?.data?.course_status?.created_at}
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Last Updated</span>
                   <span className="text-sm">
-                    {new Date(courseData.updatedAt).toLocaleDateString()}
+                    {singleCourse?.data?.course_status?.updated_at}
                   </span>
                 </div>
               </div>
@@ -551,12 +628,16 @@ export default function CourseDetailsPage() {
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
                     <span className="text-sm font-medium">Completion Rate</span>
-                    <span className="text-sm">75%</span>
+                    <span className="text-sm">
+                      {singleCourse?.data?.students_progress?.completion_rate}%
+                    </span>
                   </div>
                   <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary"
-                      style={{ width: "75%" }}
+                      style={{
+                        width: `${singleCourse?.data?.students_progress?.completion_rate}%`,
+                      }}
                     />
                   </div>
                 </div>
@@ -565,12 +646,16 @@ export default function CourseDetailsPage() {
                     <span className="text-sm font-medium">
                       Average Progress
                     </span>
-                    <span className="text-sm">60%</span>
+                    <span className="text-sm">
+                      {singleCourse?.data?.students_progress?.average_progress}%
+                    </span>
                   </div>
                   <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
                     <div
                       className="h-full bg-primary"
-                      style={{ width: "60%" }}
+                      style={{
+                        width: `${singleCourse?.data?.students_progress?.average_progress}%`,
+                      }}
                     />
                   </div>
                 </div>
@@ -599,9 +684,55 @@ export default function CourseDetailsPage() {
             </Button>
             <Button
               variant="destructive"
-              onClick={() => {
-                setIsDeleteDialogOpen(false);
-                router.push("/courses");
+              onClick={async () => {
+                if (singleCourse?.data?.id !== undefined) {
+                  deleteRecordedCourse({ id: singleCourse.data.id });
+                } else {
+                  toast({
+                    title: "Error",
+                    description: "Course ID is missing.",
+                    variant: "destructive",
+                  });
+                }
+              }}
+            >
+              <Trash className="mr-2 h-4 w-4" />
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Delete Module Dialogue */}
+
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Module</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this module? This action cannot be
+              undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={async () => {
+                if (singleCourse?.data?.id !== undefined) {
+                  handleDeleteModule();
+                } else {
+                  toast({
+                    title: "Error",
+                    description: "Course ID is missing.",
+                    variant: "destructive",
+                  });
+                }
               }}
             >
               <Trash className="mr-2 h-4 w-4" />
@@ -616,42 +747,77 @@ export default function CourseDetailsPage() {
         open={isAddModuleDialogOpen}
         onOpenChange={setIsAddModuleDialogOpen}
       >
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add Module</DialogTitle>
-            <DialogDescription>
-              Create a new module for this course.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="title">Module Title</Label>
-              <Input
-                id="title"
-                placeholder="e.g., Introduction to the Course"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="description">Description (Optional)</Label>
-              <Textarea
-                id="description"
-                placeholder="Provide a brief description of this module"
-                className="resize-none"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsAddModuleDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button onClick={() => setIsAddModuleDialogOpen(false)}>
-              Add Module
-            </Button>
-          </DialogFooter>
-        </DialogContent>
+        <Form {...form}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add Module</DialogTitle>
+              <DialogDescription>
+                Create a new module for this course.
+              </DialogDescription>
+            </DialogHeader>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <div className="space-y-4 py-4">
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Module Title <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="e.g., Introduction to Algebra"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        The title of your course as it will appear to students.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Description (Optional)</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          id="description"
+                          placeholder="Provide a brief description of this module"
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+              {/* </div> */}
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={() => setIsAddModuleDialogOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  // onClick={() => setIsAddModuleDialogOpen(false)}
+                  disabled={
+                    !form.formState.isDirty || form.formState.isSubmitting
+                  }
+                >
+                  Add Module
+                </Button>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Form>
       </Dialog>
 
       {/* Add Video Dialog */}
