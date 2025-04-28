@@ -253,6 +253,9 @@ importers:
       react-hook-form:
         specifier: latest
         version: 7.55.0(react@18.3.1)
+      react-query:
+        specifier: ^3.39.3
+        version: 3.39.3(react-dom@18.3.1)(react@18.3.1)
       react-resizable-panels:
         specifier: ^2.1.7
         version: 2.1.7(react-dom@18.3.1)(react@18.3.1)
@@ -274,6 +277,9 @@ importers:
       zod:
         specifier: latest
         version: 3.24.2
+      zustand:
+        specifier: ^5.0.2
+        version: 5.0.3(@types/react@19.1.2)(react@18.3.1)
     devDependencies:
       '@types/node':
         specifier: ^20
@@ -2867,6 +2873,7 @@ packages:
 
   /color-name@1.1.4:
     resolution: {integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==}
+    requiresBuild: true
 
   /color-string@1.9.1:
     resolution: {integrity: sha512-shrVawQFojnZv6xM40anx4CkoDP+fZsw/ZerEMsW/pyzsRbElpsL/DBVW7q3ExxwusdNXI3lXpuhEZkzs8p5Eg==}

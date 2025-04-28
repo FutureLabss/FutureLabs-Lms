@@ -51,7 +51,7 @@ type EditTopicModalProps = {
   onOpenChange: (open: boolean) => void;
   onTopicUpdated: (topic: any) => void;
   topic: any | null;
-  moduleId: string | null;
+  moduleId?: string | null;
 };
 
 export function EditTopicModal({

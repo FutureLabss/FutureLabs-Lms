@@ -20,6 +20,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { useCreateClassroom } from "@/hooks/mutate/classroom"
+import { ClassroomScheduleResponse } from "@/lib/types/classroom"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -40,17 +41,12 @@ const formSchema = z.object({
 type CreateClassModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onClassCreated: (newClass: any) => void
+  // onClassCreated: (newClass: any) => void
 }
 
-export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateClassModalProps) {
+export function CreateClassModal({ open, onOpenChange }: CreateClassModalProps) {
   const [activeTab, setActiveTab] = useState("details")
-  const {mutate: createclassroomdata}=useCreateClassroom({onSuccess(data) {
-        
-    },
-  onError(error) {
-      
-  },})
+  const { mutate: createclassroomdata } = useCreateClassroom({ onSuccess(data) { }, onError(error) { } })
   console.log(createclassroomdata)
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -69,29 +65,61 @@ export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateC
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const newClass = {
-      id: Math.floor(Math.random() * 1000), 
-      name: values.name,
-      program: values.course,
-      students: 0,
-      nextSession: "Not scheduled yet",
-      status: values.status,
-      description: values.description,
-      schedule: {
-        daysOfWeek: values.days_of_week.split(",").map((day) => day.trim()),
-        startTime: values.start_time,
-        endTime: values.end_time,
+    const newClass: ClassroomScheduleResponse = {
+      classroom: {
+        name: values.name,
+        course: values.course,
+        status: values.status,
+        description: values.description,
+        start_date: values.start_date,
+        end_date: values.end_date,
       },
-      startDate: values.start_date,
-      endDate: values.end_date,
-    }
-    onClassCreated(newClass)
-    // createclassroomdata(values)
-    console.log(newClass)
-    onOpenChange(false)
-    form.reset()
-    setActiveTab("details")
+      schedule: {
+        // days_of_week: values.days_of_week.split(",").map((day) => day.trim()()),
+        // days_of_week: values.days_of_week.split(",").map((day) => day.trim()),
+        days_of_week: values.days_of_week
+          .split(",")
+          .map((day) => {
+            const trimmed = day.trim().toLowerCase();
+            return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+          }),
+
+        start_time: values.start_time,
+        end_time: values.end_time,
+        start_date: values.start_date,
+        end_date: values.end_date,
+        status: values.status,
+      },
+    };
+    console.log(newClass);
+    createclassroomdata(newClass);
+    onOpenChange(false);
+    form.reset();
+    setActiveTab("details");
   }
+
+
+  // function onSubmit(values: z.infer<typeof formSchema>) {
+  //   const newClass = {
+  //     name: values.name,
+  //     program: values.course,
+  //     status: values.status,
+  //     description: values.description,
+  //     schedule: {
+  //       daysOfWeek: values.days_of_week.split(",").map((day) => day.trim()),
+  //       startTime: values.start_time,
+  //       endTime: values.end_time,
+  //     },
+  //     startDate: values.start_date,
+  //     endDate: values.end_date,
+  //   }   
+  //   // onClassCreated(newClass)
+  //   createclassroomdata(newClass)
+  //   console.log(newClass)
+  //   onOpenChange(false)
+  //   form.reset()
+  //   setActiveTab("details")
+  // }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -158,11 +186,9 @@ export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateC
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value="elementary">Elementary School</SelectItem>
-                            <SelectItem value="middle">Middle School</SelectItem>
-                            <SelectItem value="high">High School</SelectItem>
-                            <SelectItem value="college">College</SelectItem>
-                            <SelectItem value="adult">Adult Education</SelectItem>
+                            <SelectItem value=" Web development">Web Development</SelectItem>
+                            <SelectItem value="Marketing">Marketing</SelectItem>
+                            <SelectItem value="Data Analytics">Data Analytics</SelectItem>
                           </SelectContent>
                         </Select>
                         <FormDescription>The educational program this class belongs to.</FormDescription>
@@ -310,7 +336,8 @@ export function CreateClassModal({ open, onOpenChange, onClassCreated }: CreateC
                     {activeTab !== "settings" ? (
                       <Button
                         type="button"
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.preventDefault() // Prevent form submission
                           if (activeTab === "details") setActiveTab("schedule")
                           if (activeTab === "schedule") setActiveTab("settings")
                         }}

@@ -19,7 +19,7 @@ export function useCreateResources<IArg, IReturn, TError>({
 }: IMutationArgs<IArg, IReturn, TError>) {
   const queryClient = useQueryClient();
   const setNotification = useNotificationStore((state) => state.setDisplay);
-  const setLoading = useLoadingStore((state) => state.setLoading);
+  // const setLoading = useLoadingStore((state) => state.setLoading);
 
   const { displayLoader = true, ...loadingContents } = loadingConfig;
   const { displayError = true, ...errorContents } = errorConfig;
@@ -27,7 +27,7 @@ export function useCreateResources<IArg, IReturn, TError>({
 
   const mutation = useMutation(callback, {
     onMutate: () => {
-      if (displayLoader) setLoading(true, loadingContents);
+      // if (displayLoader) setLoading(true, loadingContents);
     },
 
     onSuccess: (data: IReturn) => {
@@ -35,33 +35,32 @@ export function useCreateResources<IArg, IReturn, TError>({
         queryClient.invalidateQueries([part]);
       });
       queryClient.invalidateQueries(key);
-      // if (displaySuccess) {
-      //   setNotification(true, {
-      //     type: NotificationType.success,
-      //     content: {
-      //       title: su ?? "Success",
-      //       text: successContent.text ?? "Your action was completed successfully",
-      //     },
-      //   });
-      // }
+      if (displaySuccess) {
+        setNotification(true, {
+          type: NotificationType.success,
+          content: {
+            title: successContent.title ?? "Success",
+            text: successContent.text ?? "Your action was completed successfully",
+          },
+        });
+      }
       if (onSuccess) onSuccess(data);
     },
-
     onError: (err: TError) => {
-      // if (displayError) {
-      //   setNotification(true, {
-      //     type: NotificationType.error,
-      //     content: {
-      //       title: errorContents.title ?? "Error",
-      //       text: errorContents.text ?? (err as Error).message,
-      //     },
-      //   });
-      // }
+      if (displayError) {
+        setNotification(true, {
+          type: NotificationType.error,
+          content: {
+            title: errorContents.title ?? "Error",
+            text: errorContents.text ?? (err as Error).message,
+          },
+        });
+      }
       if (onError) onError(err);
     },
 
     onSettled: () => {
-      if (displayLoader) setLoading(false, loadingContents);
+      // if (displayLoader) setLoading(false, loadingContents);
       if (onSettled) onSettled();
     },
     retry,
