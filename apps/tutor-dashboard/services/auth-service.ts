@@ -24,6 +24,11 @@ export interface UserData {
   roles: Role[];
   profile_id: number;
   email?: string;
+  avatar?: string;
+  bio?: string;
+  title?: string;
+  phone?: string;
+  image?: string;
 }
 
 export interface LoginResponse {

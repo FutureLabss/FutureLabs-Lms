@@ -34,7 +34,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { toast } from "@/components/ui/use-toast";
-import type { Class } from "@/lib/types";
+// import type { Class } from "@/lib/types";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -59,7 +59,7 @@ type EditClassModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onClassUpdated: (updatedClass: any) => void;
-  classData: Class;
+  classData: any;
 };
 
 export function EditClassModal({
@@ -71,7 +71,7 @@ export function EditClassModal({
   const [activeTab, setActiveTab] = useState("details");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: classData.name,
