@@ -22,13 +22,14 @@ export const AdminMenus: Menu[] = [
     id: "2",
     icon: SlGraduation,
     path: `${AdminRoutes.COURSES}`,
+    disabled: true,
   },
   {
     title: "Assignments",
     id: "3",
     icon: MdOutlineAssignment,
     path: `${AdminRoutes.PAYMENT}`,
-    disabled: false,
+    disabled: true,
   },
   {
     title: "Classrooms",

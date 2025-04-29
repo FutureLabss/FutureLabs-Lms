@@ -19,7 +19,7 @@ interface AuthContextType {
   auth?: AuthResponse;
   login: typeof login;
   logout: typeof logout;
-  islLoggedIn: boolean;
+  isLoggedIn: boolean;
   loaded: boolean;
   CreatePassword: typeof CreatePassword;
   VerifyEmail: typeof VerifyEmail;
@@ -31,7 +31,7 @@ const usersContext = createContext<AuthContextType>({
   auth: undefined,
   login,
   logout,
-  islLoggedIn: false,
+  isLoggedIn: false,
   loaded: false,
   CreatePassword,
   VerifyEmail,
@@ -40,24 +40,35 @@ const usersContext = createContext<AuthContextType>({
 });
 
 export default function AuthContext({ children }: { children: ReactNode }) {
-  const [islLoggedIn, setILoggedIn] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [auth, setAuth] = useState<AuthResponse>();
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    if (storedToken) {
-      try {
-        const tokens = JSON.parse(storedToken);
-        if (tokens.data?.token) {
-          setILoggedIn(true);
-          setAuth(tokens.data);
+    const checkAuth = () => {
+      const storedToken = localStorage.getItem("token");
+      if (storedToken) {
+        try {
+          const parsedToken = JSON.parse(storedToken);
+          if (parsedToken?.data?.token) {
+            setIsLoggedIn(true);
+            setAuth(parsedToken.data);
+          } else {
+            localStorage.removeItem("token");
+            setIsLoggedIn(false);
+            setAuth(undefined);
+          }
+        } catch (error) {
+          console.error("Error parsing token from localStorage:", error);
+          localStorage.removeItem("token");
+          setIsLoggedIn(false);
+          setAuth(undefined);
         }
-      } catch (error) {
-        console.error("Error parsing JSON from localStorage:", error);
       }
-    }
-    setLoaded(true);
+      setLoaded(true);
+    };
+
+    checkAuth();
   }, []);
 
   const value = {
@@ -65,7 +76,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
     login,
     logout,
     loaded,
-    islLoggedIn,
+    isLoggedIn,
     CreatePassword,
     VerifyEmail,
     SignUp,
@@ -77,7 +88,7 @@ export default function AuthContext({ children }: { children: ReactNode }) {
       {loaded ? (
         <usersContext.Provider value={value}>{children}</usersContext.Provider>
       ) : (
-        <></>
+        <div>Loading...</div>
       )}
     </>
   );
