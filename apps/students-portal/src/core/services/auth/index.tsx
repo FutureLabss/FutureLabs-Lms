@@ -98,14 +98,17 @@ export const CreatePassword = async (data: ICreatePassword) => {
   return axios
     .post("/auth/complete-registration", data)
     .then((res) => {
-      localStorage.setItem("token", JSON.stringify(res.data));
-      setToken(res.data?.token);
-      setNotification({
-        type: NotificationType.success,
-        content: { title: "Create Password Successful" },
-      });
-      // router.push("/user");
-      return res.data;
+      if (res.status === 201 && res.data?.data?.token) {
+        const token = res.data.data.token;
+        localStorage.setItem("token", JSON.stringify({ data: { token } }));
+        setToken(token);
+        setNotification({
+          type: NotificationType.success,
+          content: { title: "Create Password Successful" },
+        });
+        // router.push("/user");
+        return res.data;
+      }
     })
     .catch(handleError);
 };
