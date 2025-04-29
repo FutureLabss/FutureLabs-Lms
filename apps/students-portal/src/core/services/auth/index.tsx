@@ -9,7 +9,7 @@ import {
   verifymail,
 } from "@/core/types/interface/auth";
 import useNotificationStore from "@/stores/notificationState";
-import router from "next/router";
+// import { useRouter } from "next/router";
 import { handleError } from "@/shared/components/common/exception/catchErrors";
 
 const setNotification = useNotificationStore.getState().displayNotification;
@@ -18,9 +18,11 @@ export const login = async (data: ILogin) => {
   return axios
     .post<AuthResponse>("/auth/login", data)
     .then((res) => {
-      localStorage.setItem("token", JSON.stringify(res.data));
-      if (res.status === 200) {
-        setToken(res.data?.data.token);
+      // console.log(res);
+      if (res.status === 200 && res.data?.data?.token) {
+        const token = res.data.data.token;
+        localStorage.setItem("token", JSON.stringify({ data: { token } }));
+        setToken(token);
         setNotification({
           type: NotificationType.success,
           content: {
@@ -28,7 +30,7 @@ export const login = async (data: ILogin) => {
             text: "Login Successful: Welcome back!",
           },
         });
-        router.push("/user");
+        // Return the response data and let the component handle the navigation
         return res.data;
       }
     })
@@ -47,7 +49,6 @@ export const login = async (data: ILogin) => {
       }
       return Promise.reject(error);
     });
-  // .catch(handleError);
 };
 
 export const SignUp = async (userData: CreateUserProfile) => {
@@ -55,7 +56,7 @@ export const SignUp = async (userData: CreateUserProfile) => {
     .post("/auth/register", userData)
     .then((res) => {
       localStorage.setItem("token", JSON.stringify(res.data));
-      console.log(res.status, "SignUp Response");
+      // console.log(res.status, "SignUp Response");
       if (res.status === 200) {
         // setToken(res.data?.data.token);
         setNotification({
@@ -65,7 +66,7 @@ export const SignUp = async (userData: CreateUserProfile) => {
             text: "Account Created Successfully!",
           },
         });
-        router.push(`/signup/accountcreated?email=${userData?.email}`);
+        // router.push(`/signup/accountcreated?email=${userData?.email}`);
         return res.data;
       }
       // setNotification({
@@ -103,7 +104,7 @@ export const CreatePassword = async (data: ICreatePassword) => {
         type: NotificationType.success,
         content: { title: "Create Password Successful" },
       });
-      router.push("/user");
+      // router.push("/user");
       return res.data;
     })
     .catch(handleError);

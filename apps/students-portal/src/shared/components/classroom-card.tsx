@@ -1,4 +1,6 @@
-import { Calendar, Clock, User } from "lucide-react";
+import { User } from "lucide-react";
+// import { Calendar, Clock, User } from "lucide-react";
+
 import Link from "next/link";
 
 import { Badge } from "@/shared/components/ui/badge";
@@ -11,65 +13,73 @@ import {
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
+import { GetAllClassroom } from "@/core/types/interface/classroom.ts/getAllClassroom";
 
-interface ClassroomCardProps {
-  classroom: {
-    id: number;
-    name: string;
-    description: string;
-    status: string;
-    start_date: string;
-    end_date: string;
-    tutors: {
-      id: number;
-      fullname: string;
-      email: string;
-    }[];
-    schedules: {
-      days_of_week: string[];
-      start_time: string;
-      end_time: string;
-    };
-  };
+// interface ClassroomCardProps {
+//   classroom: {
+//     id: number;
+//     name: string;
+//     description: string;
+//     status: string;
+//     start_date: string;
+//     end_date: string;
+//     tutors: {
+//       id: number;
+//       fullname: string;
+//       email: string;
+//     }[];
+//     schedules: {
+//       days_of_week: string[];
+//       start_time: string;
+//       end_time: string;
+//     };
+//   };
+// }
+
+interface ClassroomCardComponentProps {
+  classroom: GetAllClassroom;
 }
 
-export function ClassroomCard({ classroom }: ClassroomCardProps) {
+export function ClassroomCard(classroom: ClassroomCardComponentProps) {
+  // console.log(classroom.classroom);
   // Format time to be more readable
-  const formatTime = (time: string) => {
-    const [hours, minutes] = time.split(":");
-    const hour = Number.parseInt(hours);
-    const ampm = hour >= 12 ? "PM" : "AM";
-    const hour12 = hour % 12 || 12;
-    return `${hour12}:${minutes} ${ampm}`;
-  };
+  // const formatTime = (time: string) => {
+  //   const [hours, minutes] = time.split(":");
+  //   const hour = Number.parseInt(hours);
+  //   const ampm = hour >= 12 ? "PM" : "AM";
+  //   const hour12 = hour % 12 || 12;
+  //   return `${hour12}:${minutes} ${ampm}`;
+  // };
 
   // Format date to be more readable
-  const formatDate = (date: string) => {
-    return new Date(date).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
+  // const formatDate = (date: string) => {
+  //   return new Date(date).toLocaleDateString("en-US", {
+  //     year: "numeric",
+  //     month: "short",
+  //     day: "numeric",
+  //   });
+  // };
 
   return (
     <Card className="overflow-hidden">
       <CardHeader className="bg-slate-50 pb-4">
         <div className="flex justify-between items-start">
           <div>
-            <CardTitle className="text-lg">{classroom.name}</CardTitle>
+            <CardTitle className="text-lg">
+              {classroom.classroom.course}
+            </CardTitle>
             <CardDescription className="mt-1">
-              {classroom.description}
+              {classroom.classroom.name}
             </CardDescription>
           </div>
           <Badge
             className={`badge ${
-              classroom.status === "active"
+              classroom.classroom.status === "active"
                 ? "badge-default"
                 : "badge-secondary"
             }`}
           >
-            {classroom.status}
+            {classroom.classroom.status}
           </Badge>
         </div>
       </CardHeader>
@@ -79,18 +89,18 @@ export function ClassroomCard({ classroom }: ClassroomCardProps) {
             <User className="mr-2 h-4 w-4 text-muted-foreground" />
             <span className="text-muted-foreground">Tutor:</span>
             <span className="ml-1 font-medium">
-              {classroom.tutors[0]?.fullname}
+              {classroom.classroom.created_by}
             </span>
           </div>
-          <div className="flex items-center text-sm">
+          {/* <div className="flex items-center text-sm">
             <Calendar className="mr-2 h-4 w-4 text-muted-foreground" />
             <span className="text-muted-foreground">Period:</span>
             <span className="ml-1 font-medium">
               {formatDate(classroom.start_date)} -{" "}
               {formatDate(classroom.end_date)}
             </span>
-          </div>
-          <div className="flex items-center text-sm">
+          </div> */}
+          {/* <div className="flex items-center text-sm">
             <Clock className="mr-2 h-4 w-4 text-muted-foreground" />
             <span className="text-muted-foreground">Schedule:</span>
             <span className="ml-1 font-medium">
@@ -98,12 +108,14 @@ export function ClassroomCard({ classroom }: ClassroomCardProps) {
               {formatTime(classroom.schedules.start_time)} -{" "}
               {formatTime(classroom.schedules.end_time)}
             </span>
-          </div>
+          </div> */}
         </div>
       </CardContent>
       <CardFooter className="border-t bg-slate-50 px-6 py-3">
         <Button asChild className="w-full">
-          <Link href={`/user/classrooms/${classroom.id}`}>View Classroom</Link>
+          <Link href={`/user/classrooms/${classroom.classroom.id}`}>
+            View Classroom
+          </Link>
         </Button>
       </CardFooter>
     </Card>
