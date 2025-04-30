@@ -42,7 +42,7 @@ export default function ProfilePage() {
   const { toast } = useToast();
 
   const defaultValues: Partial<ProfileFormValues> = {
-    name: user?.fullname || "",
+    name: user?.fullname || "", // Replace 'fullName' with the correct property name if it exists in the User type
     email: user?.email || "",
     bio: user?.bio || "",
     title: user?.title || "Tutor",
@@ -112,10 +112,10 @@ export default function ProfilePage() {
                   <Avatar className="h-24 w-24">
                     <AvatarImage
                       src={user?.image || ""}
-                      alt={user?.name || "User"}
+                      alt={user?.fullname || "User"}
                     />
                     <AvatarFallback className="text-2xl">
-                      {user?.name?.charAt(0) || "U"}
+                      {user?.fullname?.charAt(0) || "U"}
                     </AvatarFallback>
                   </Avatar>
                   <Button variant="outline" size="sm" className="gap-1">

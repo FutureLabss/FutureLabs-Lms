@@ -6,6 +6,8 @@ export interface LoadingConfig extends IPlaceholderContent {
 
 export interface ErrorConfig extends IPlaceholderContent {
   displayError?: boolean;
+  title?: string;
+  text?: string;
 }
 
 export interface SuccessConfig extends IPlaceholderContent {

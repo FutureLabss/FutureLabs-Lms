@@ -1,11 +1,17 @@
 // Shared types for the application
 
 // User types
+export interface Role {
+  id: number;
+  name: string;
+}
 export interface User {
-  id: string;
   fullname: string;
-  email: string;
-  role: "tutor" | "student" | "admin"
+  roles: Role[];
+  profile_id: number;
+  email?: string;
+  id?: string;
+  role?: "tutor" | "student" | "admin"
   avatar?: string;
   bio?: string;
   title?: string;
