@@ -1,7 +1,7 @@
 // import type { ClassroomResponse } from "@/lib/types";
 import { handleError } from "@/components/ui/exception/catchErrors";
 import { apiClient } from "@/lib/api-client";
-import { ClassroomScheduleResponse, IclassRoomMaterials, IclassRoomModules, IRetriveClassroomResponse, IsingleClassroomDetails, IsingleClassroomDetailsResponse, Itopic } from "@/lib/types/classroom";
+import { ClassroomResponse, ClassroomScheduleResponse, IclassRoomMaterials, IclassRoomModules, IRetriveClassroomResponse, IsingleClassroomDetails, IsingleClassroomDetailsResponse, Itopic } from "@/lib/types/classroom";
 
 // Get all classes
 export async function getAllClassRoom():Promise<IRetriveClassroomResponse>{
@@ -51,8 +51,8 @@ export async function createClasscroomModules(data: IclassRoomModules, classroom
 
 
 // get a classmodulus
-export async function getClasscroomModules(classroomId: string): Promise<IclassRoomModules> {
-  return apiClient.get<IclassRoomModules>(`classrooms/${classroomId}/modules`)
+export async function getClasscroomModules(classroomId: string): Promise<ClassroomResponse> {
+  return apiClient.get<ClassroomResponse>(`classrooms/${classroomId}/modules`)
     .then((response) => {
       return response;
     }).catch(handleError);

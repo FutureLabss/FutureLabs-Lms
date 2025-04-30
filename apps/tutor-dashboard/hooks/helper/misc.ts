@@ -1,5 +1,5 @@
-import { NotificationType } from "@/core/types/enum/notification";
-import { LoadingConfig, ErrorConfig } from "@/shared/components/loader/loader.interface";
+import { LoadingConfig, ErrorConfig } from "@/components/loader/loader.interface";
+import { NotificationType } from "@/lib/types/enum/notification";
 import useLoadingStore from "@/stores/loadingState";
 import useNotificationStore from "@/stores/notificationState";
 import { useEffect, useRef } from "react";
@@ -20,7 +20,7 @@ export const useManageLoadingState = (isLoading: boolean, loadingConfig: Loading
     if (isLoading != stateLoader && loadingConfig.displayLoader) {
       // setLoading(isLoading, loadingConfig);
     }
-  }, [prevLoading,isLoading, loadingConfig, setLoading, stateLoader]);
+  }, [prevLoading, isLoading, loadingConfig, stateLoader]);
 };
 
 export const useManageErrorNotifications = (error: Error, errorConfig: ErrorConfig) => {
