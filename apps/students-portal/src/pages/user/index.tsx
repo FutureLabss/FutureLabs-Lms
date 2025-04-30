@@ -10,7 +10,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const userId = router.query.userId as string;
   const { data: user } = useGetMeprofile();
-  
+
   return (
     <UserLayout
       title={`Welcome ${user?.data.fullname || "user"}👋🏻`}

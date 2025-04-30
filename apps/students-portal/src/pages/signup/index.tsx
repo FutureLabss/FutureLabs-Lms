@@ -1,13 +1,15 @@
-import { ToastContainer, } from 'react-toastify';
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Joinus from "@/shared/components/auth/joinus";
 import SignupCmponentFirstForm from "@/shared/components/auth/signup1";
-import SignupCmponentSecondForm from '@/shared/components/auth/signup2';
-import { ChangeEvent, SetStateAction, useState } from 'react';
-import { CreateUserProfile } from '@/core/types/interface/auth';
-import { useAuthContext } from '@/shared/context/auth';
+import SignupCmponentSecondForm from "@/shared/components/auth/signup2";
+import { ChangeEvent, SetStateAction, useState } from "react";
+import { CreateUserProfile } from "@/core/types/interface/auth";
+import { useAuthContext } from "@/shared/context/auth";
+import { useRouter } from "next/router";
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string[]>([]);
@@ -23,14 +25,16 @@ export default function SignUpPage() {
     gender: "male",
     experience: "beginner",
     skill: "web development",
-  })
-  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  });
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevData: SetStateAction<CreateUserProfile>) => ({
       ...prevData,
       [name]: value,
     }));
-    console.log(formData)
+    console.log(formData);
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -38,6 +42,7 @@ export default function SignUpPage() {
     try {
       if (formData) {
         await SignUp(formData);
+        router.push(`/signup/accountcreated?email=${formData?.email}`);
         console.log(formData, "Submitted Data");
       }
     } catch (e) {
@@ -77,5 +82,5 @@ export default function SignUpPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

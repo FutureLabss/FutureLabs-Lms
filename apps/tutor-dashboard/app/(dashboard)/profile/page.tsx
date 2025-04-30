@@ -23,6 +23,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
+import { apiClient } from "@/lib/api-client";
 
 const profileFormSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -41,7 +42,7 @@ export default function ProfilePage() {
   const { toast } = useToast();
 
   const defaultValues: Partial<ProfileFormValues> = {
-    name: user?.name || "",
+    name: user?.fullname || "", // Replace 'fullName' with the correct property name if it exists in the User type
     email: user?.email || "",
     bio: user?.bio || "",
     title: user?.title || "Tutor",
@@ -58,7 +59,8 @@ export default function ProfilePage() {
 
     try {
       // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const res = await apiClient.put('/me', data);
+      console.log(res)
 
       // Show success toast
       toast({
@@ -110,10 +112,10 @@ export default function ProfilePage() {
                   <Avatar className="h-24 w-24">
                     <AvatarImage
                       src={user?.image || ""}
-                      alt={user?.name || "User"}
+                      alt={user?.fullname || "User"}
                     />
                     <AvatarFallback className="text-2xl">
-                      {user?.name?.charAt(0) || "U"}
+                      {user?.fullname?.charAt(0) || "U"}
                     </AvatarFallback>
                   </Avatar>
                   <Button variant="outline" size="sm" className="gap-1">

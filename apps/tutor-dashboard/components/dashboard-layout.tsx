@@ -46,8 +46,8 @@ import { useAuth } from "@/hooks/use-auth";
 
 const navigationItems = [
   { name: "Dashboard", href: "/", icon: Home },
-  { name: "Classes", href: "/classes", icon: Calendar },
-  { name: "Courses", href: "/courses", icon: Video },
+  { name: "ClassRoom", href: "/classes", icon: Calendar },
+  { name: "Pre-ClassRoom", href: "/courses", icon: Video },
   // { name: "Students", href: "/students", icon: Users },
   // { name: "Assignments", href: "/assignments", icon: FileText },
   // { name: "Materials", href: "/materials", icon: BookOpen },
