@@ -18,6 +18,7 @@ export interface IMutationArgs<IArg, IReturn, TError = Error> {
 export interface IQueryArgs<IReturn> {
   key: [string, IAPIFilter?];
   callback: (arg?: unknown) => Promise<IReturn>;
+  suspense?: boolean;
 }
 
 export interface IPaginatedQueryArgs<IReturn> {
@@ -29,7 +30,7 @@ export interface IQueryOptions {
   enabled?: boolean;
   retry?: boolean;
   cacheTime?: number;
-  staleTime?:number;
+  staleTime?: number;
   loadingConfig?: LoadingConfig;
   errorConfig?: ErrorConfig;
   successConfig?: SuccessConfig;
