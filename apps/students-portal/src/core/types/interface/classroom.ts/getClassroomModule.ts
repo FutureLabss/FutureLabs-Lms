@@ -1,5 +1,5 @@
 // Represents a single module/item in the data array
-interface ModuleItem {
+export interface ModuleItem {
   id: number;
   title: string;
   description: string;
