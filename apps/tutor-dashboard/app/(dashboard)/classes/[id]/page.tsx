@@ -44,7 +44,7 @@ import { AddModuleModal } from "@/components/add-module-modal"
 import { EditModuleModal } from "@/components/edit-module-modal"
 import { AddTopicModal } from "@/components/add-topic-modal"
 import { EditTopicModal } from "@/components/edit-topic-modal"
-import { useGetAllClasscroomModules, useGetSingleClassroom } from "@/hooks/query/classroom"
+import { useGetAllClasscroomModules, useGetAllClasscroomModulesTopic, useGetSingleClassroom } from "@/hooks/query/classroom"
 import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
 import type { IsingleClassroomDetails, LocalClassData } from "@/lib/types/classroom"
@@ -75,6 +75,7 @@ export default function ClassDetailsPage() {
   const router = useRouter()
   const params = useParams()
   const classId = params?.id as string
+  // const moduleId = param?.id  as string
   const { data: classData } = useGetSingleClassroom(classId)
   console.log({classId, classData}, "id")
   // const [localClassData, setLocalClassData] = useState<LocalClassData>(
@@ -102,9 +103,13 @@ export default function ClassDetailsPage() {
   const [isDeleteTopicDialogOpen, setIsDeleteTopicDialogOpen] = useState(false)
   const [selectedTopic, setSelectedTopic] = useState<any | null>(null)
   const [selectedTopicModuleId, setSelectedTopicModuleId] = useState<string | null| undefined>(null)
-
   const { data: getmodules } = useGetAllClasscroomModules(classId)
   console.log(getmodules, "get modulues ")
+
+  // useGetAllClasscroomModulesTopic
+
+  const {data: getmodulesTopic } = useGetAllClasscroomModulesTopic(classId, moduleId );
+  console.log(getmodulesTopic, 'get modules data');
 
   useEffect(() => {
     if (classData) {
@@ -113,19 +118,14 @@ export default function ClassDetailsPage() {
     }
   }, [classData])
 
-  useEffect(() => {
-  if (getmodules) {
-    setLocalClassData((prev) => {
-      if (!prev) return null; // In case prev is null
-    
-      return {
-        ...prev,
-        modules: [...prev.modules], // newModule must have correct shape
-      };
-    });
-        
-  }
-}, [getmodules]);
+  // useEffect(() => {
+  //   if (getmodules?.data) {
+  //     setLocalClassData({
+  //       modules: getmodules.data,
+  //     });
+  //   }
+  // }, [getmodules]);
+  
 
   // // Add a useEffect to update localClassData when classData changes
   // useEffect(() => {
@@ -566,7 +566,7 @@ export default function ClassDetailsPage() {
                 <div>
                   <h2 className="text-xl font-semibold">Modules</h2>
                   <p className="text-sm text-muted-foreground">
-                    {localClassData?.modules.length || 0} modules in this class
+                    {getmodules && getmodules?.data.length || 0} modules in this class
                     {/* {localClassData?.modules.length || 0} modules in this class */}
                   </p>
                 </div>
@@ -575,8 +575,8 @@ export default function ClassDetailsPage() {
                   Add Module
                 </Button>
               </div>
-
-              {!localClassData?.modules || localClassData?.modules.length === 0 ? (
+              {!getmodules?.data || getmodules.data.length === 0 ? (
+              // {!localClassData?.modules || localClassData?.modules.length === 0 ? (
                 <Card>
                   <CardContent className="flex flex-col items-center justify-center p-6 text-center">
                     <Layers className="h-12 w-12 text-muted-foreground mb-4" />
@@ -592,137 +592,131 @@ export default function ClassDetailsPage() {
                 </Card>
               ) : (
                 <div className="space-y-4">
-                  {localClassData?.modules.map((module) => (
-                    <Card key={module.id}>
-                      <CardHeader className="pb-2">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <CardTitle>{module.title}</CardTitle>
-                            <CardDescription>{module.description}</CardDescription>
-                          </div>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem
-                                onClick={() => {
-                                  setSelectedModule(module)
-                                  setIsEditModuleDialogOpen(true)
-                                }}
-                              >
-                                Edit Module
-                              </DropdownMenuItem>
-                              <DropdownMenuItem>Reorder Module</DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem
-                                className="text-destructive focus:text-destructive"
-                                onClick={() => {
-                                  setSelectedModuleId(module.id)
-                                  setSelectedModule(module)
-                                  setIsDeleteModuleDialogOpen(true)
-                                }}
-                              >
-                                Delete Module
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
+                {getmodules.data.map((module) => (
+                  <Card key={module.id}>
+                    <CardHeader className="pb-2">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <CardTitle>{module.title}</CardTitle>
+                          <CardDescription>{module.description}</CardDescription>
                         </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-sm font-medium">Topics</h3>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => {
+                              setSelectedModule(module);
+                              setIsEditModuleDialogOpen(true);
+                            }}>
+                              Edit Module
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>Reorder Module</DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                            <DropdownMenuItem
+                              className="text-destructive focus:text-destructive"
+                              onClick={() => {
+                                setSelectedModuleId(module.id);
+                                setSelectedModule(module);
+                                setIsDeleteModuleDialogOpen(true);
+                              }}
+                            >
+                              Delete Module
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </CardHeader>
+            
+                    <CardContent className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-sm font-medium">Topics</h3>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedModuleId(module.id);
+                            setIsAddTopicDialogOpen(true);
+                          }}
+                        >
+                          <Plus className="mr-2 h-3 w-3" />
+                          Add Topic
+                        </Button>
+                      </div>
+            
+                      {!module.Itopic || module.Itopic.length === 0 ? (
+                        <div className="flex flex-col items-center justify-center p-4 text-center border rounded-lg">
+                          <p className="text-sm text-muted-foreground mb-2">No topics in this module yet</p>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                              setSelectedModuleId(module.id)
-                              setIsAddTopicDialogOpen(true)
+                              setSelectedModuleId(module.id);
+                              setIsAddTopicDialogOpen(true);
                             }}
                           >
                             <Plus className="mr-2 h-3 w-3" />
                             Add Topic
                           </Button>
                         </div>
-
-                        {!module.Itopic || module?.Itopic.length === 0 ? (
-                          <div className="flex flex-col items-center justify-center p-4 text-center border rounded-lg">
-                            <p className="text-sm text-muted-foreground mb-2">No topics in this module yet</p>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => {
-                                setSelectedModuleId(module.id)
-                                setIsAddTopicDialogOpen(true)
-                              }}
-                            >
-                              <Plus className="mr-2 h-3 w-3" />
-                              Add Topic
-                            </Button>
-                          </div>
-                        ) : (
-                          <div className="space-y-2">
-                            {module.Itopic.map((topic) => (
-                              <div key={topic.id} className="flex items-center justify-between p-3 bg-muted rounded-md">
-                                <div className="flex items-center gap-2">
-                                  {topic.title === "lesson" ? (
-                                    <BookOpen className="h-4 w-4 text-muted-foreground" />
-                                  ) : (
-                                    <FileText className="h-4 w-4 text-muted-foreground" />
-                                  )}
-                                  <div>
-                                    <p className="text-sm font-medium">{topic.title}</p>
-                                    <p className="text-xs text-muted-foreground">
-                                      {topic.duration} min •{" "}
-                                      {topic.title.charAt(0).toUpperCase() + topic.title.slice(1)}
-                                    </p>
-                                  </div>
-                                </div>
-                                <div className="flex items-center gap-2">
-                                  <Button variant="ghost" size="sm">
-                                    View
-                                  </Button>
-                                  <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                      <Button variant="ghost" size="icon">
-                                        <MoreHorizontal className="h-4 w-4" />
-                                      </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end">
-                                      <DropdownMenuItem
-                                        onClick={() => {
-                                          setSelectedTopic(topic)
-                                          setSelectedTopicModuleId(module.id)
-                                          setIsEditTopicDialogOpen(true)
-                                        }}
-                                      >
-                                        Edit
-                                      </DropdownMenuItem>
-                                      <DropdownMenuItem>Reorder</DropdownMenuItem>
-                                      <DropdownMenuSeparator />
-                                      <DropdownMenuItem
-                                        className="text-destructive focus:text-destructive"
-                                        onClick={() => {
-                                          setSelectedTopic(topic)
-                                          setSelectedTopicModuleId(module.id)
-                                          setIsDeleteTopicDialogOpen(true)
-                                        }}
-                                      >
-                                        Delete
-                                      </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                  </DropdownMenu>
+                      ) : (
+                        <div className="space-y-2">
+                          {module.Itopic.map((topic) => (
+                            <div key={topic.id} className="flex items-center justify-between p-3 bg-muted rounded-md">
+                              <div className="flex items-center gap-2">
+                                {topic.title === "lesson" ? (
+                                  <BookOpen className="h-4 w-4 text-muted-foreground" />
+                                ) : (
+                                  <FileText className="h-4 w-4 text-muted-foreground" />
+                                )}
+                                <div>
+                                  <p className="text-sm font-medium">{topic.title}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {topic.duration} min • {topic.title.charAt(0).toUpperCase() + topic.title.slice(1)}
+                                  </p>
                                 </div>
                               </div>
-                            ))}
-                          </div>
-                        )}
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
+                              <div className="flex items-center gap-2">
+                                <Button variant="ghost" size="sm">View</Button>
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="icon">
+                                      <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuItem onClick={() => {
+                                      setSelectedTopic(topic);
+                                      setSelectedTopicModuleId(module.id);
+                                      setIsEditTopicDialogOpen(true);
+                                    }}>
+                                      Edit
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>Reorder</DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem
+                                      className="text-destructive focus:text-destructive"
+                                      onClick={() => {
+                                        setSelectedTopic(topic);
+                                        setSelectedTopicModuleId(module.id);
+                                        setIsDeleteTopicDialogOpen(true);
+                                      }}
+                                    >
+                                      Delete
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
               )}
             </TabsContent>
 
@@ -1092,6 +1086,7 @@ export default function ClassDetailsPage() {
         onOpenChange={setIsAddTopicDialogOpen}
         onTopicAdded={handleAddTopic}
         moduleId={selectedModuleId}
+        classroomId={classId}
       />
       {/* Delete Topic Dialog */}
       <Dialog open={isDeleteTopicDialogOpen} onOpenChange={setIsDeleteTopicDialogOpen}>

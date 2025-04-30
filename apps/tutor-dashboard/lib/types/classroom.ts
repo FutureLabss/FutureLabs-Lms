@@ -94,9 +94,9 @@ interface Schedule {
     startDate: string
     endDate: string
     schedule: {
-      daysOfWeek: string[]
-      startTime: string
-      endTime: string
+    daysOfWeek: string[]
+        startTime: string
+        endTime: string
     }
     status: "active" | "inactive" | "completed"
     tutorId: string |number;
@@ -113,6 +113,37 @@ export interface IclassRoomModules{
     id?:string | null;
     Itopic?: Itopic[];
 }
+interface Module {
+  id?: string;
+  title: string;
+  description: string;
+  classroom: string;
+  created_by: string;
+  updated_by: string;
+}
+
+interface Links {
+  first: string;
+  last: string | null;
+  prev: string | null;
+  next: string | null;
+}
+
+interface Meta {
+  current_page: number;
+  from: number;
+  path: string;
+  per_page: number;
+  to: number;
+}
+
+export interface ClassroomResponse {
+  message: string;
+  data: Module[];
+  links: Links;
+  meta: Meta;
+}
+
 // materials
 export interface IclassRoomMaterials{
     title:string;
@@ -128,6 +159,24 @@ export interface Itopic{
     duration:number;
     id?:string
 }
+
+interface Topic {
+  id: number;
+  title: string;
+  description: string;
+  duration: number; // in minutes
+  created_by: string;
+  updated_by: string;
+  status: number; // typically 0 (inactive) or 1 (active)
+}
+
+export interface TopicResponse {
+  message: string;
+  data: Topic[];
+  links: Links;
+  meta: Meta;
+}
+
   
   
   

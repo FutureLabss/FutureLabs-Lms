@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, memo } from "react";
 import {
   Book,
   Calendar,
@@ -188,16 +188,10 @@ import { useGetClassroomModules } from "@/shared/hooks/query/classroom/getClassr
 //   },
 // ];
 
-function ClassroomModuleCom() {
+const ClassroomModuleCom = memo(function ClassroomModuleCom() {
   const paramsN = useParams<{ id: string }>();
-  const id = paramsN?.id;
+  const { id } = paramsN;
   const { data: classModules } = useGetClassroomModules(id as string);
-  if (!id) {
-    return <p>Invalid classroom ID. Please check the URL.</p>;
-  }
-  if (!classModules) {
-    return <p>Loading modules...</p>;
-  }
   return (
     <TabsContent value="modules" className="space-y-4">
       <Card>
@@ -210,9 +204,9 @@ function ClassroomModuleCom() {
           ) : null}
 
           {/* <CardTitle className="flex items-center">
-                <Book className="mr-2 h-5 w-5" />
-                Modules ({modules.length})
-              </CardTitle> */}
+                  <Book className="mr-2 h-5 w-5" />
+                  Modules ({modules.length})
+                </CardTitle> */}
           <CardDescription>
             Course content is organized into modules with specific topics
           </CardDescription>
@@ -239,25 +233,25 @@ function ClassroomModuleCom() {
                       </p>
                     </div>
                     {/* <Badge variant="outline">
-                          {module.topics.length} topics
-                        </Badge> */}
+                            {module.topics.length} topics
+                          </Badge> */}
                   </div>
                   {/* <div className="divide-y">
-                        {module.topics.map((topic) => (
-                          <div
-                            key={topic.id}
-                            className="p-4 flex items-center justify-between"
-                          >
-                            <div className="flex items-center">
-                              <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center mr-3">
-                                <FileText className="h-4 w-4 text-slate-600" />
+                          {module.topics.map((topic) => (
+                            <div
+                              key={topic.id}
+                              className="p-4 flex items-center justify-between"
+                            >
+                              <div className="flex items-center">
+                                <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center mr-3">
+                                  <FileText className="h-4 w-4 text-slate-600" />
+                                </div>
+                                <span>{topic.title}</span>
                               </div>
-                              <span>{topic.title}</span>
+                              <Badge variant="secondary">{topic.duration}</Badge>
                             </div>
-                            <Badge variant="secondary">{topic.duration}</Badge>
-                          </div>
-                        ))}
-                      </div> */}
+                          ))}
+                        </div> */}
                 </div>
               ))}
             </div>
@@ -266,11 +260,11 @@ function ClassroomModuleCom() {
       </Card>
     </TabsContent>
   );
-}
+});
 
 export default function ClassroomDetailPage() {
   const paramsN = useParams<{ id: string }>();
-  const  id  = paramsN?.id;
+  const { id } = paramsN;
   // const defaultV = id;
 
   const { data: singleClass } = useGetSingleClassroom(id as string);
@@ -310,13 +304,6 @@ export default function ClassroomDetailPage() {
   // if (!singleClass || !classModules) {
   //   return <div>Loading...</div>;
   // }
-
-  if (!id) {
-    return <p>Invalid classroom ID. Please check the URL.</p>;
-  }
-  if (!singleClass) {
-    return <p>Loading modules...</p>;
-  }
 
   return (
     <div className="container mx-auto py-6">
@@ -571,7 +558,7 @@ export default function ClassroomDetailPage() {
           </div>
         </TabsContent>
 
-        <ClassroomModuleCom />
+        {activeTab === "modules" && <ClassroomModuleCom />}
 
         {/* <TabsContent value="assignments" className="space-y-4">
           <Card>

@@ -1,7 +1,7 @@
 // import type { ClassroomResponse } from "@/lib/types";
 import { handleError } from "@/components/ui/exception/catchErrors";
 import { apiClient } from "@/lib/api-client";
-import { ClassroomScheduleResponse, IclassRoomMaterials, IclassRoomModules, IRetriveClassroomResponse, IsingleClassroomDetails, IsingleClassroomDetailsResponse, Itopic } from "@/lib/types/classroom";
+import { ClassroomResponse, ClassroomScheduleResponse, IclassRoomMaterials, IclassRoomModules, IRetriveClassroomResponse, IsingleClassroomDetails, IsingleClassroomDetailsResponse, Itopic, TopicResponse } from "@/lib/types/classroom";
 
 // Get all classes
 export async function getAllClassRoom():Promise<IRetriveClassroomResponse>{
@@ -51,8 +51,8 @@ export async function createClasscroomModules(data: IclassRoomModules, classroom
 
 
 // get a classmodulus
-export async function getClasscroomModules(classroomId: string): Promise<IclassRoomModules> {
-  return apiClient.get<IclassRoomModules>(`classrooms/${classroomId}/modules`)
+export async function getClasscroomModules(classroomId: string): Promise<ClassroomResponse> {
+  return apiClient.get<ClassroomResponse>(`classrooms/${classroomId}/modules`)
     .then((response) => {
       return response;
     }).catch(handleError);
@@ -77,8 +77,15 @@ export async function getClasscroomMaterials(classroomId: string): Promise<Iclas
 }
 
 // create a classmaterialsTopic
-export async function createClasscroomModulesTopic(data: Itopic, moduleId: string|undefined | null): Promise<Itopic> {
-  return apiClient.post<Itopic>(`modules/${moduleId}/topics`, data)
+export async function createClasscroomModulesTopic(data: Itopic, classroomId:string |undefined | null, moduleId: string|undefined | null): Promise<Itopic> {
+  return apiClient.post<Itopic>(`classrooms/${classroomId}/modules/${moduleId}}/topics`, data)
+  // return apiClient.post<Itopic>(`modules/${moduleId}/topics`, data)
+    .then((response) => {
+      return response;
+    }).catch(handleError);
+}
+export async function getClasscroomModulesTopic(moduleId: string, classroomId:string): Promise<TopicResponse> {
+  return apiClient.get<TopicResponse>(`classrooms/${classroomId}/modules/${moduleId}/topics`)
     .then((response) => {
       return response;
     }).catch(handleError);
