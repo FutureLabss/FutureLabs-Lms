@@ -77,9 +77,17 @@ export async function getClasscroomMaterials(classroomId: string): Promise<Iclas
 }
 
 // create a classmaterialsTopic
-export async function createClasscroomModulesTopic(data: Itopic, moduleId: string): Promise<Itopic> {
+export async function createClasscroomModulesTopic(data: Itopic, moduleId: string|undefined | null): Promise<Itopic> {
   return apiClient.post<Itopic>(`modules/${moduleId}/topics`, data)
     .then((response) => {
       return response;
     }).catch(handleError);
 }
+
+
+// export async function createStudent(data: Itopic, moduleId: string): Promise<Itopic> {
+//   return apiClient.post<Itopic>(`modules/${moduleId}/topics`, data)
+//     .then((response) => {
+//       return response;
+//     }).catch(handleError);
+// }

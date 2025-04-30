@@ -124,7 +124,7 @@ export interface IclassRoomMaterials{
 // topic
 export interface Itopic{
     title:string;
-    description:string;
+    description?:string;
     duration:number;
     id?:string
 }

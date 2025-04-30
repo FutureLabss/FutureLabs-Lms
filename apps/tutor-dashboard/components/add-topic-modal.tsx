@@ -32,6 +32,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { useCreateClassroomModulesTopic } from "@/hooks/mutate/classroom";
+import { log } from "console";
 
 const topicFormSchema = z.object({
   title: z.string().min(2, {
@@ -60,7 +62,12 @@ export function AddTopicModal({
   moduleId,
 }: AddTopicModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const { mutate: createTopics } = useCreateClassroomModulesTopic({
+    onSuccess(data) {},
+    onError(error) {},
+    moduleId: moduleId,
+  });
+  console.log(createTopics);
   const form = useForm<z.infer<typeof topicFormSchema>>({
     resolver: zodResolver(topicFormSchema),
     defaultValues: {
@@ -75,7 +82,32 @@ export function AddTopicModal({
     if (!moduleId) return;
 
     setIsSubmitting(true);
+    createTopics(
+      {
+        title: values.title,
+        description: values.description,
+        duration: values.duration,
+      },
+      {
+        onSuccess: (data) => {
+          console.log(data, 'for adding the topics ')
+          // Call the callback with the new module
+          onTopicAdded(data); // Assuming the API returns the created module
 
+          // Reset form and state
+          form.reset();
+          setIsSubmitting(false);
+
+          // Close the modal
+          onOpenChange(false);
+        },
+        onError: (error) => {
+          // Handle error (you might want to show a toast notification)
+          console.error("Error creating module:", error);
+          setIsSubmitting(false);
+        },
+      }
+    );
     // Simulate API call with a timeout
     setTimeout(() => {
       // Create a new topic object
