@@ -13,12 +13,12 @@ export const usePrevious = <T>(value: T): T | undefined => {
 };
 
 export const useManageLoadingState = (isLoading: boolean, loadingConfig: LoadingConfig) => {
-  const { setLoading, isLoading: stateLoader } = useLoadingStore((state) => state);
+  const {  isLoading: stateLoader } = useLoadingStore((state) => state);
   const prevLoading = usePrevious(isLoading);
 
   useEffect(() => {
     if (isLoading != stateLoader && loadingConfig.displayLoader) {
-      setLoading(isLoading, loadingConfig);
+      // setLoading(isLoading, loadingConfig);
     }
   }, [prevLoading,isLoading, loadingConfig, setLoading, stateLoader]);
 };

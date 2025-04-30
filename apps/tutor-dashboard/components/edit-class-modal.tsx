@@ -80,9 +80,9 @@ export function EditClassModal({
       maxStudents: classData.maxStudents,
       startDate: classData.startDate,
       endDate: classData.endDate,
-      startTime: classData.schedule.startTime,
-      endTime: classData.schedule.endTime,
-      daysOfWeek: classData.schedule.daysOfWeek.join(","),
+      startTime: classData.schedule?.startTime,
+      endTime: classData.schedule?.endTime,
+      daysOfWeek: classData.schedule?.daysOfWeek?.join(","),
       status: classData.status,
     },
   });

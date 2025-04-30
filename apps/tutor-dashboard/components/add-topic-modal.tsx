@@ -50,7 +50,7 @@ type AddTopicModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onTopicAdded: (topic: any) => void;
-  moduleId: string | null;
+  moduleId?: string | null;
 };
 
 export function AddTopicModal({

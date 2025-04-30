@@ -146,10 +146,6 @@ export default function Dashboard() {
       <CreateClassModal
         open={isCreateModalOpen}
         onOpenChange={setIsCreateModalOpen}
-        onClassCreated={() => {
-          // This is just for the dashboard - we don't need to update any state here
-          // The actual class list is managed in the classes page
-        }}
       />
     </div>
   )

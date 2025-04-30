@@ -1,5 +1,4 @@
 "use client"
-
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -8,67 +7,20 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CalendarDays, Plus, Search } from "lucide-react"
 import Link from "next/link"
 import { CreateClassModal } from "@/components/create-class-modal"
-
-// Mock data for classes
-const initialClasses = [
-  {
-    id: 1,
-    name: "Advanced Mathematics",
-    program: "High School",
-    students: 15,
-    nextSession: "Today, 4:00 PM",
-    status: "active",
-  },
-  {
-    id: 2,
-    name: "Introduction to Physics",
-    program: "Middle School",
-    students: 12,
-    nextSession: "Tomorrow, 2:30 PM",
-    status: "active",
-  },
-  {
-    id: 3,
-    name: "Chemistry Fundamentals",
-    program: "High School",
-    students: 10,
-    nextSession: "Wednesday, 3:15 PM",
-    status: "active",
-  },
-  {
-    id: 4,
-    name: "Biology 101",
-    program: "Middle School",
-    students: 18,
-    nextSession: "Friday, 1:00 PM",
-    status: "active",
-  },
-  {
-    id: 5,
-    name: "English Literature",
-    program: "High School",
-    students: 14,
-    nextSession: "Monday, 11:30 AM",
-    status: "inactive",
-  },
-]
+import { useGetAllClassroom } from "@/hooks/query/classroom"
 
 export default function ClassesPage() {
-  const [classes, setClasses] = useState(initialClasses)
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-
-  // Function to add a new class to the list
-  const handleClassCreated = (newClass: any) => {
-    setClasses([newClass, ...classes])
-  }
-
-  // Filter classes based on search query
-  const filteredClasses = classes.filter(
-    (cls) =>
-      cls.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      cls.program.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+  const {data:retrivedClassroom}=useGetAllClassroom()
+  const classroomData = retrivedClassroom?.data || retrivedClassroom?.data || retrivedClassroom || []
+  const filteredClasses = Array.isArray(classroomData)
+    ? classroomData.filter(
+        (cls) =>
+          cls.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          cls.course.toLowerCase().includes(searchQuery.toLowerCase()),
+      )
+    : []
 
   return (
     <div className="flex flex-col gap-4">
@@ -107,7 +59,7 @@ export default function ClassesPage() {
                     <CardHeader className="flex flex-row items-start justify-between space-y-0">
                       <div>
                         <CardTitle>{cls.name}</CardTitle>
-                        <CardDescription>{cls.program}</CardDescription>
+                        <CardDescription>{cls.course}</CardDescription>
                       </div>
                       <div
                         className={`px-2 py-1 rounded-full text-xs ${
@@ -123,12 +75,13 @@ export default function ClassesPage() {
                       <div className="space-y-2">
                         <div className="flex items-center text-sm">
                           <CalendarDays className="mr-2 h-4 w-4 text-muted-foreground" />
-                          <span>{cls.nextSession}</span>
+                          <span>{cls.started_in_months}</span>
                         </div>
                         <div className="flex items-center justify-between">
-                          <span className="text-sm text-muted-foreground">{cls.students} students</span>
+                          <span className="text-sm text-muted-foreground">{cls.students_count} students</span>
                           <Button variant="ghost" size="sm" asChild>
-                            <Link href={`/classes/${cls.id}`}>View</Link>
+                          <Link href={`/classes/${cls.id}`}>View</Link>
+                            {/* <Link href={`/classes/${cls.id}`}>View</Link> */}
                           </Button>
                         </div>
                       </div>
@@ -153,7 +106,6 @@ export default function ClassesPage() {
       <CreateClassModal
         open={isCreateModalOpen}
         onOpenChange={setIsCreateModalOpen}
-        onClassCreated={handleClassCreated}
       />
     </div>
   )
