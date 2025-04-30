@@ -1,4 +1,3 @@
-
 import { IPlaceholderContent } from "@/lib/types/generic/placeholder";
 
 export interface LoadingConfig extends IPlaceholderContent {

@@ -6,7 +6,7 @@ import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/get
 
 export function useGetClassroomModules(id: string) {
   const singleClassroom: IQueryArgs<ClassModulesApiResponse> = {
-    key: ["singleclassroommodules", id as unknown as IAPIFilter],
+    key: ["classroommodule", id as unknown as IAPIFilter],
     callback: () => getClassroomModules(id),
   };
   return useGetResourcesQuery(singleClassroom);

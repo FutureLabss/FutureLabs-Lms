@@ -23,7 +23,7 @@ importers:
     dependencies:
       '@auth/core':
         specifier: ^0.18.0
-        version: 0.18.6(nodemailer@6.10.1)
+        version: 0.18.6(nodemailer@6.10.0)
       '@hookform/resolvers':
         specifier: ^3.3.4
         version: 3.10.0(react-hook-form@7.56.1)
@@ -143,13 +143,13 @@ importers:
         version: 15.2.4(react-dom@18.3.1)(react@18.3.1)
       next-auth:
         specifier: ^4.24.5
-        version: 4.24.11(@auth/core@0.18.6)(next@15.2.4)(nodemailer@6.10.1)(react-dom@18.3.1)(react@18.3.1)
+        version: 4.24.11(@auth/core@0.18.6)(next@15.2.4)(nodemailer@6.10.0)(react-dom@18.3.1)(react@18.3.1)
       next-themes:
         specifier: ^0.2.1
         version: 0.2.1(next@15.2.4)(react-dom@18.3.1)(react@18.3.1)
       nodemailer:
         specifier: ^6.9.9
-        version: 6.10.1
+        version: 6.10.0
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -334,9 +334,15 @@ importers:
       react-dom:
         specifier: ^18.2.0
         version: 18.3.1(react@18.3.1)
+      react-error-boundary:
+        specifier: ^5.0.0
+        version: 5.0.0(react@18.3.1)
       react-hook-form:
         specifier: ^7.54.2
         version: 7.56.1(react@18.3.1)
+      react-hot-toast:
+        specifier: ^2.5.2
+        version: 2.5.2(react-dom@18.3.1)(react@18.3.1)
       react-icons:
         specifier: ^5.4.0
         version: 5.5.0(react@18.3.1)
@@ -409,7 +415,7 @@ importers:
     dependencies:
       '@auth/core':
         specifier: ^0.18.0
-        version: 0.18.6(nodemailer@6.10.1)
+        version: 0.18.6(nodemailer@6.10.0)
       '@hookform/resolvers':
         specifier: ^5.0.1
         version: 5.0.1(react-hook-form@7.56.1)
@@ -529,13 +535,13 @@ importers:
         version: 15.2.4(react-dom@18.3.1)(react@18.3.1)
       next-auth:
         specifier: ^4.24.5
-        version: 4.24.11(@auth/core@0.18.6)(next@15.2.4)(nodemailer@6.10.1)(react-dom@18.3.1)(react@18.3.1)
+        version: 4.24.11(@auth/core@0.18.6)(next@15.2.4)(nodemailer@6.10.0)(react-dom@18.3.1)(react@18.3.1)
       next-themes:
         specifier: ^0.2.1
         version: 0.2.1(next@15.2.4)(react-dom@18.3.1)(react@18.3.1)
       nodemailer:
         specifier: ^6.9.9
-        version: 6.10.1
+        version: 6.10.0
       react:
         specifier: ^18.2.0
         version: 18.3.1
@@ -601,7 +607,7 @@ packages:
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
 
-  /@auth/core@0.18.6(nodemailer@6.10.1):
+  /@auth/core@0.18.6(nodemailer@6.10.0):
     resolution: {integrity: sha512-AI7tnyNOg5zVS2elA44O03MWS6jyp69S8habJts63IyiCIoSkhqcZX4EcEJ0287m0hxzOltPCV9Zq2aqXbrNSA==}
     peerDependencies:
       nodemailer: ^6.8.0
@@ -613,7 +619,7 @@ packages:
       '@types/cookie': 0.6.0
       cookie: 0.6.0
       jose: 5.10.0
-      nodemailer: 6.10.1
+      nodemailer: 6.10.0
       oauth4webapi: 2.17.0
       preact: 10.11.3
       preact-render-to-string: 5.2.3(preact@10.11.3)
@@ -4211,6 +4217,14 @@ packages:
       gopd: 1.2.0
     dev: true
 
+  /goober@2.1.16(csstype@3.1.3):
+    resolution: {integrity: sha512-erjk19y1U33+XAMe1VTvIONHYoSqE4iS7BYUZfHaqeohLmnC0FdxEh7rQU+6MZ4OajItzjZFSRtVANrQwNq6/g==}
+    peerDependencies:
+      csstype: ^3.0.10
+    dependencies:
+      csstype: 3.1.3
+    dev: false
+
   /gopd@1.2.0:
     resolution: {integrity: sha512-ZUKRh6/kUFoAiTAtTYPZJ3hw9wNxx+BIBOijnlG9PnrJsCcSjs1wyyD6vJpaYtgnzDrKYRSqf3OO6Rfa93xsRg==}
     engines: {node: '>= 0.4'}
@@ -4766,7 +4780,7 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next-auth@4.24.11(@auth/core@0.18.6)(next@15.2.4)(nodemailer@6.10.1)(react-dom@18.3.1)(react@18.3.1):
+  /next-auth@4.24.11(@auth/core@0.18.6)(next@15.2.4)(nodemailer@6.10.0)(react-dom@18.3.1)(react@18.3.1):
     resolution: {integrity: sha512-pCFXzIDQX7xmHFs4KVH4luCjaCbuPRtZ9oBUjUhOk84mZ9WVPf94n87TxYI4rSRf9HmfHEF8Yep3JrYDVOo3Cw==}
     peerDependencies:
       '@auth/core': 0.34.2
@@ -4780,13 +4794,13 @@ packages:
       nodemailer:
         optional: true
     dependencies:
-      '@auth/core': 0.18.6(nodemailer@6.10.1)
+      '@auth/core': 0.18.6(nodemailer@6.10.0)
       '@babel/runtime': 7.27.0
       '@panva/hkdf': 1.2.1
       cookie: 0.7.2
       jose: 4.15.9
       next: 15.2.4(react-dom@18.3.1)(react@18.3.1)
-      nodemailer: 6.10.1
+      nodemailer: 6.10.0
       oauth: 0.9.15
       openid-client: 5.7.1
       preact: 10.26.5
@@ -4912,8 +4926,8 @@ packages:
     resolution: {integrity: sha512-xxOWJsBKtzAq7DY0J+DTzuz58K8e7sJbdgwkbMWQe8UYB6ekmsQ45q0M/tJDsGaZmbC+l7n57UV8Hl5tHxO9uw==}
     dev: false
 
-  /nodemailer@6.10.1:
-    resolution: {integrity: sha512-Z+iLaBGVaSjbIzQ4pX6XV41HrooLsQ10ZWPUehGmuantvzWoDVBnmsdUcOIDM1t+yPor5pDhVlDESgOMEGxhHA==}
+  /nodemailer@6.10.0:
+    resolution: {integrity: sha512-SQ3wZCExjeSatLE/HBaXS5vqUOQk6GtBdIIKxiFdmm01mOQZX/POJkO3SUX1wDiYcwUOJwT23scFSC9fY2H8IA==}
     engines: {node: '>=6.0.0'}
     dev: false
 
@@ -5284,6 +5298,15 @@ packages:
       scheduler: 0.23.2
     dev: false
 
+  /react-error-boundary@5.0.0(react@18.3.1):
+    resolution: {integrity: sha512-tnjAxG+IkpLephNcePNA7v6F/QpWLH8He65+DmedchDwg162JZqx4NmbXj0mlAYVVEd81OW7aFhmbsScYfiAFQ==}
+    peerDependencies:
+      react: '>=16.13.1'
+    dependencies:
+      '@babel/runtime': 7.27.0
+      react: 18.3.1
+    dev: false
+
   /react-hook-form@7.56.1(react@18.3.1):
     resolution: {integrity: sha512-qWAVokhSpshhcEuQDSANHx3jiAEFzu2HAaaQIzi/r9FNPm1ioAvuJSD4EuZzWd7Al7nTRKcKPnBKO7sRn+zavQ==}
     engines: {node: '>=18.0.0'}
@@ -5291,6 +5314,19 @@ packages:
       react: ^16.8.0 || ^17 || ^18 || ^19
     dependencies:
       react: 18.3.1
+    dev: false
+
+  /react-hot-toast@2.5.2(react-dom@18.3.1)(react@18.3.1):
+    resolution: {integrity: sha512-Tun3BbCxzmXXM7C+NI4qiv6lT0uwGh4oAfeJyNOjYUejTsm35mK9iCaYLGv8cBz9L5YxZLx/2ii7zsIwPtPUdw==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      csstype: 3.1.3
+      goober: 2.1.16(csstype@3.1.3)
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
     dev: false
 
   /react-icons@5.5.0(react@18.3.1):
