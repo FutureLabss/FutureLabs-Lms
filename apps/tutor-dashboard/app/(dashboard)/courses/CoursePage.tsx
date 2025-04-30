@@ -59,7 +59,7 @@ export default function CoursesPage() {
           <TabsTrigger value="draft">Draft</TabsTrigger>
         </TabsList>
         {isLoading ? (
-          <div className="flex items-center gap-4 flex-wrap ">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 ">
             <CourseCardSkeleton />
           </div>
         ) : (

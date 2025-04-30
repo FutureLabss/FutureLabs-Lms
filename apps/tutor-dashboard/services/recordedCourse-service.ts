@@ -1,7 +1,7 @@
-import { ModuleSchemaType, ModuleTypeData } from "@/app/(dashboard)/courses/[id]/page";
+import { MaterialTypeData, ModuleSchemaType, ModuleTypeData, VideoTypeData } from "@/app/(dashboard)/courses/[id]/page";
 import { toast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api-client"
-import { Course, CreateRecordedCourseRequest, CreateRecordedCourseResponse, GetRecordedCourseData, GetSingleRecordedCourseResponse, ModuleResponseDTO, RecordedCourseData } from "@/lib/types/recorded-courses";
+import { AddMaterialResponse, AddVideoResponse, Course, CreateRecordedCourseRequest, CreateRecordedCourseResponse, GetRecordedCourseData, GetSingleRecordedCourseResponse, Material, ModuleResponseDTO, RecordedCourseData } from "@/lib/types/recorded-courses";
 export const createRecordedCourse = async (data: CreateRecordedCourseRequest): Promise<CreateRecordedCourseResponse> => {
   try {
     const response = await apiClient.post<CreateRecordedCourseResponse>('/recorded-courses', data);
@@ -93,6 +93,48 @@ export const DeleteModule = async (data: { id: number, moduleId: number }): Prom
     throw error;
   }
 }
+
+export const AddVideo = async (data: VideoTypeData): Promise<AddVideoResponse> => {
+  try {
+    const response = await apiClient.post<AddVideoResponse>(`/recorded-modules/${data.moduleId}/videos`, data.data);
+    toast({
+      title: "Success",
+      description: "Video added successfully",
+      variant: "default",
+    })
+    return response;
+  } catch (error) {
+    console.error("Error adding video:", error);
+    toast({
+      title: "Error",
+      description: "Error adding video",
+      variant: "destructive",
+    })
+    throw error;
+  }
+}
+
+
+export const AddMaterial = async (data: MaterialTypeData): Promise<AddMaterialResponse> => {
+  try {
+    const response = await apiClient.post<AddMaterialResponse>(`recorded-modules/${data.moduleId}/materials`, data.data);
+    toast({
+      title: "Success",
+      description: "Material added successfully",
+      variant: "default",
+    })
+    return response;
+  } catch (error) {
+    console.error("Error adding material:", error);
+    toast({
+      title: "Error",
+      description: "Error adding material",
+      variant: "destructive",
+    })
+    throw error;
+  }
+}
+
 
 
 

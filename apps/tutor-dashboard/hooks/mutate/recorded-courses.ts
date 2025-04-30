@@ -1,8 +1,8 @@
 import { IMutationHook, IMutationArgs } from "@/lib/types/query";
 import { useCreateResources } from "../helper/mutation";
-import { CreateRecordedCourseRequest, CreateRecordedCourseResponse, ModuleResponseDTO } from "@/lib/types/recorded-courses";
-import { AddModule, createRecordedCourse, DeleteModule, DeleteRecordedCourse } from "@/services/recordedCourse-service";
-import { ModuleTypeData } from "@/app/(dashboard)/courses/[id]/page";
+import { AddMaterialResponse, AddVideoResponse, CreateRecordedCourseRequest, CreateRecordedCourseResponse, ModuleResponseDTO } from "@/lib/types/recorded-courses";
+import { AddMaterial, AddModule, AddVideo, createRecordedCourse, DeleteModule, DeleteRecordedCourse } from "@/services/recordedCourse-service";
+import { MaterialTypeData, ModuleTypeData, VideoTypeData } from "@/app/(dashboard)/courses/[id]/page";
 
 
 export function useCreateRecordedCourses({ onSuccess, onError, options }: IMutationHook) {
@@ -52,3 +52,26 @@ export function useDeleteModule({ onSuccess, onError, options }: IMutationHook) 
   };
   return useCreateResources(mutation);
 }
+
+
+export function useAddCourseVideo({ onSuccess, onError, options }: IMutationHook) {
+  const mutation: IMutationArgs<VideoTypeData, AddVideoResponse> = {
+    key: ["courses"],
+    callback: (data: VideoTypeData) => AddVideo(data),
+    onSuccess: onSuccess,
+    onError: onError,
+    options,
+  };
+  return useCreateResources(mutation);
+}
+
+export function useAddCourseMaterial({ onSuccess, onError, options }: IMutationHook) {
+  const mutation: IMutationArgs<MaterialTypeData, AddMaterialResponse> = {
+    key: ["courses"],
+    callback: (data: MaterialTypeData) => AddMaterial(data),
+    onSuccess: onSuccess,
+    onError: onError,
+    options,
+  };
+  return useCreateResources(mutation);
+}     

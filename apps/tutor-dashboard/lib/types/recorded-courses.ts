@@ -247,9 +247,42 @@ export interface ModuleResponseDTO {
 
 
 
+export interface ModuleVideo {
+  id: number;
+  title: string;
+  description: string;
+  url: string;
+  recorded_module_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ModuleMaterial {
+  id: number;
+  title: string;
+  description: string;
+  type: string; // e.g., 'PDF', 'DOC', etc.
+  url: string;
+  recorded_module_id: number;
+  created_at: string;
+  updated_at: string;
+}
 
 
 
+
+
+
+export interface AddVideoResponse {
+  message: string;
+  data: ModuleVideo;
+}
+
+
+export interface AddMaterialResponse {
+  message: string;
+  data: ModuleMaterial;
+}
 
 
 
