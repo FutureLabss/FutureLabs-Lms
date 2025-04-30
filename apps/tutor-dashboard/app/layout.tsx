@@ -8,7 +8,17 @@ import { AuthProvider } from "@/hooks/use-auth";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000,
+      cacheTime: 1000 * 60 * 60,
+      retry: 1,
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+    },}
+}
+);
 export default function RootLayout({
   children,
 }: Readonly<{
