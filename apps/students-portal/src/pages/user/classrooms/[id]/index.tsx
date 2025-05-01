@@ -190,8 +190,8 @@ import { useGetClassroomModules } from "@/shared/hooks/query/classroom/getClassr
 
 const ClassroomModuleCom = memo(function ClassroomModuleCom() {
   const paramsN = useParams<{ id: string }>();
-  const { id } = paramsN;
-  const { data: classModules } = useGetClassroomModules(id as string);
+  const id = paramsN?.id;
+  const { data: classModules } = useGetClassroomModules(id);
   return (
     <TabsContent value="modules" className="space-y-4">
       <Card>
@@ -264,7 +264,7 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
 
 export default function ClassroomDetailPage() {
   const paramsN = useParams<{ id: string }>();
-  const { id } = paramsN;
+  const id = paramsN?.id;
   // const defaultV = id;
 
   const { data: singleClass } = useGetSingleClassroom(id as string);
