@@ -50,10 +50,11 @@ export function useCreateClassroomMaterial({ onSuccess, onError, options, classr
   }
 
 //   use mutate for ClassroomModulesTopic
-export function useCreateClassroomModulesTopic({ onSuccess, onError, options, moduleId}: IMutationHook & { moduleId: string }) {
+export function useCreateClassroomModulesTopic({ onSuccess, onError, options, moduleId, classroomId}:
+   IMutationHook & { moduleId: string |undefined | null, classroomId:string |undefined | null, }) {
     const mutation: IMutationArgs<Itopic, Itopic> = {
         key: ["ClassroomModulesTopics"],
-        callback: (data:Itopic) => createClasscroomModulesTopic(data, moduleId),
+        callback: (data:Itopic) => createClasscroomModulesTopic(data, moduleId, classroomId),
         onSuccess: onSuccess,
         onError: onError,
         options,

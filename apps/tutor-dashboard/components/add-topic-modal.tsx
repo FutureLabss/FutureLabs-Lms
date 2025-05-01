@@ -32,15 +32,17 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { useCreateClassroomModulesTopic } from "@/hooks/mutate/classroom";
+import { log } from "console";
 
 const topicFormSchema = z.object({
   title: z.string().min(2, {
     message: "Topic title must be at least 2 characters.",
   }),
   description: z.string().optional(),
-  type: z.enum(["lesson", "quiz", "assignment", "resource"], {
-    required_error: "Please select a topic type.",
-  }),
+  // type: z.enum(["lesson", "quiz", "assignment", "resource"], {
+  //   required_error: "Please select a topic type.",
+  // }),
   duration: z.coerce.number().min(1, {
     message: "Duration must be at least 1 minute.",
   }),
@@ -51,6 +53,7 @@ type AddTopicModalProps = {
   onOpenChange: (open: boolean) => void;
   onTopicAdded: (topic: any) => void;
   moduleId?: string | null;
+  classroomId?: string | null;
 };
 
 export function AddTopicModal({
@@ -58,46 +61,55 @@ export function AddTopicModal({
   onOpenChange,
   onTopicAdded,
   moduleId,
+  classroomId,
 }: AddTopicModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-
+  const { mutate: createTopics } = useCreateClassroomModulesTopic({
+    onSuccess(data) {},
+    onError(error) {},
+    moduleId: moduleId,
+    classroomId: classroomId
+  });
+  console.log(createTopics);
   const form = useForm<z.infer<typeof topicFormSchema>>({
     resolver: zodResolver(topicFormSchema),
     defaultValues: {
       title: "",
       description: "",
-      type: "lesson",
+      // type: "lesson",
       duration: 60,
     },
   });
 
   function onSubmit(values: z.infer<typeof topicFormSchema>) {
     if (!moduleId) return;
-
     setIsSubmitting(true);
-
-    // Simulate API call with a timeout
-    setTimeout(() => {
-      // Create a new topic object
-      const newTopic = {
-        id: Math.floor(Math.random() * 1000).toString(), // Generate a random ID for demo purposes
+    createTopics(
+      {
         title: values.title,
-        description: values.description || "",
-        type: values.type,
+        description: values.description,
         duration: values.duration,
-        order: Date.now(), // Use timestamp for ordering
-      };
+      },
+      {
+        onSuccess: (data) => {
+          console.log(data, 'for adding the topics ')
+          // Call the callback with the new module
+          onTopicAdded(data); // Assuming the API returns the created module
 
-      // Call the callback with the new topic
-      onTopicAdded(newTopic);
+          // Reset form and state
+          form.reset();
+          setIsSubmitting(false);
 
-      // Reset form and state
-      form.reset();
-      setIsSubmitting(false);
-
-      // Close the modal
-      onOpenChange(false);
-    }, 1000);
+          // Close the modal
+          onOpenChange(false);
+        },
+        onError: (error) => {
+          // Handle error (you might want to show a toast notification)
+          console.error("Error creating module:", error);
+          setIsSubmitting(false);
+        },
+      }
+    );
   }
 
   return (
@@ -152,38 +164,7 @@ export function AddTopicModal({
                 </FormItem>
               )}
             />
-
             <div className="grid gap-4 md:grid-cols-2">
-              <FormField
-                control={form.control}
-                name="type"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Topic Type</FormLabel>
-                    <Select
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a type" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="lesson">Lesson</SelectItem>
-                        <SelectItem value="quiz">Quiz</SelectItem>
-                        <SelectItem value="assignment">Assignment</SelectItem>
-                        <SelectItem value="resource">Resource</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormDescription>
-                      The type of content for this topic.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
               <FormField
                 control={form.control}
                 name="duration"

@@ -156,10 +156,28 @@ export interface IclassRoomMaterials{
 // topic
 export interface Itopic{
     title:string;
-    description:string;
+    description?:string;
     duration:number;
     id?:string
 }
+
+interface Topic {
+  id: number;
+  title: string;
+  description: string;
+  duration: number; // in minutes
+  created_by: string;
+  updated_by: string;
+  status: number; // typically 0 (inactive) or 1 (active)
+}
+
+export interface TopicResponse {
+  message: string;
+  data: Topic[];
+  links: Links;
+  meta: Meta;
+}
+
   
   
   

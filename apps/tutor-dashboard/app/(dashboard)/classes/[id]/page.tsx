@@ -44,7 +44,7 @@ import { AddModuleModal } from "@/components/add-module-modal"
 import { EditModuleModal } from "@/components/edit-module-modal"
 import { AddTopicModal } from "@/components/add-topic-modal"
 import { EditTopicModal } from "@/components/edit-topic-modal"
-import { useGetAllClasscroomModules, useGetSingleClassroom } from "@/hooks/query/classroom"
+import { useGetAllClasscroomModules, useGetAllClasscroomModulesTopic, useGetSingleClassroom } from "@/hooks/query/classroom"
 import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
 import type { IsingleClassroomDetails, LocalClassData } from "@/lib/types/classroom"
@@ -75,6 +75,7 @@ export default function ClassDetailsPage() {
   const router = useRouter()
   const params = useParams()
   const classId = params?.id as string
+  // const moduleId = param?.id  as string
   const { data: classData } = useGetSingleClassroom(classId)
   console.log({classId, classData}, "id")
   // const [localClassData, setLocalClassData] = useState<LocalClassData>(
@@ -106,6 +107,11 @@ export default function ClassDetailsPage() {
   console.log(getmodules, "get modulues ")
 const moduleId = getmodules?.data
 console.log(moduleId, "module ID")
+
+  // useGetAllClasscroomModulesTopic
+
+  const {data: getmodulesTopic } = useGetAllClasscroomModulesTopic(classId, moduleId );
+  console.log(getmodulesTopic, 'get modules data');
 
   useEffect(() => {
     if (classData) {
@@ -1083,6 +1089,7 @@ console.log(moduleId, "module ID")
         onOpenChange={setIsAddTopicDialogOpen}
         onTopicAdded={handleAddTopic}
         moduleId={selectedModuleId}
+        classroomId={classId}
       />
       {/* Delete Topic Dialog */}
       <Dialog open={isDeleteTopicDialogOpen} onOpenChange={setIsDeleteTopicDialogOpen}>
