@@ -1,9 +1,12 @@
 import { ReactNode, useEffect, useState } from "react";
+// import { ReactNode, useEffect, useState } from "react";
+
 import { useAuthContext } from "../context/auth";
 import AppDrawer from "../components/layouts/sidebar";
 import PreAppBar from "../components/layouts/appbar";
 import { useRouter } from "next/navigation";
 import Modal from "../components/common/modal/modal";
+// import { useGetAllClassrooms } from "../hooks/query/classroom/getAllClassroom";
 
 export interface layoutInterface {
   children?: ReactNode | undefined;
@@ -13,17 +16,27 @@ export interface layoutInterface {
 }
 
 export default function UserLayout(props: layoutInterface) {
+  // const { data: classrooms } = useGetAllClassrooms();
   const { title, userId, description } = props;
   const [showDrawer, setShowDrawer] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false);
-  const { isLoggedIn, loaded, logout } = useAuthContext();
+  // const { isLoggedIn, loaded, logout } = useAuthContext();
+  const { logout } = useAuthContext();
+
   const router = useRouter();
 
   useEffect(() => {
-    if (loaded && !isLoggedIn) {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
       router.push("/login");
+      return;
     }
-  }, [loaded, isLoggedIn, router]);
+
+    // if (classrooms?.data.length === 0) {
+    //   router.push("/welcome");
+    // }
+  }, [router]);
 
   const toggleLogoutModal = () => {
     setLogoutModal((val) => !val);
@@ -40,13 +53,15 @@ export default function UserLayout(props: layoutInterface) {
     console.log("heloo");
   };
 
-  if (!loaded) {
-    return <div>Loading...</div>;
-  }
+  // console.log(classrooms?.data.length, "classrooms");
 
-  if (!isLoggedIn) {
-    return null;
-  }
+  // if (!loaded) {
+  //   return <div>Loading...</div>;
+  // }
+
+  // if (!isLoggedIn) {
+  //   return null;
+  // }
 
   return (
     <>

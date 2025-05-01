@@ -48,7 +48,7 @@ export default function LoginPage() {
       await login(data);
       reset();
       // Navigate to user dashboard after successful login
-      router.replace("/user");
+      router.replace("/welcome");
     } catch (e) {
       const loginError = e as Error;
       setError(loginError.message?.split("\n") ?? [loginError.message]);
