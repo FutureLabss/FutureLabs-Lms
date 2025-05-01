@@ -21,6 +21,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea"
 import { Loader2, Upload } from "lucide-react"
 import { toast } from "@/components/ui/use-toast"
+import { useCreateClassroomMaterial } from "@/hooks/mutate/classroom"
 
 const materialFormSchema = z.object({
   title: z.string().min(2, {
@@ -43,14 +44,21 @@ type AddMaterialModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   onMaterialAdded: (material: any) => void
-  classId: string | number
+  classId: string,
+  topicId:string
 }
 
-export function AddMaterialModal({ open, onOpenChange, onMaterialAdded, classId }: AddMaterialModalProps) {
+export function AddMaterialModal({ open, onOpenChange, onMaterialAdded, classId, topicId }: AddMaterialModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [isUploadMode, setIsUploadMode] = useState(true)
-
+  const{mutate: createMaterials}=useCreateClassroomMaterial({
+    onSuccess(data) {},
+    onError(error) {},
+    topicId: topicId,
+    classroomId: classId
+  })
+console.log(createMaterials)
   const form = useForm<z.infer<typeof materialFormSchema>>({
     resolver: zodResolver(materialFormSchema),
     defaultValues: {
@@ -63,67 +71,79 @@ export function AddMaterialModal({ open, onOpenChange, onMaterialAdded, classId 
   })
 
   const watchType = form.watch("type")
-
   function onSubmit(values: z.infer<typeof materialFormSchema>) {
     setIsSubmitting(true)
-
-    // Simulate file upload if a file is selected
-    if (selectedFile && isUploadMode) {
-      // In a real application, you would upload the file to a storage service
-      // and get back a URL to store in the database
-      setTimeout(() => {
-        const fileUrl = URL.createObjectURL(selectedFile) // This is just for demo purposes
-
-        const newMaterial = {
-          id: Math.floor(Math.random() * 1000), // Generate a random ID for demo purposes
-          title: values.title,
-          description: values.description || "",
-          type: values.type,
-          url: fileUrl,
-          createdAt: new Date().toISOString(),
-        }
-
-        // Call the callback with the new material
-        onMaterialAdded(newMaterial)
-
-        // Reset form and state
-        form.reset()
-        setSelectedFile(null)
+    const fileUrl = selectedFile ? URL.createObjectURL(selectedFile) : null
+    if (isUploadMode) {
+      if (selectedFile) {
+        // Handle file upload
+        setTimeout(() => {
+          const newMaterial = {
+            title: values.title,
+            description: values.description || "",
+            type: values.type,
+            url: fileUrl!,
+          }
+  
+          createMaterials(newMaterial, {
+            onSuccess: () => {
+              form.reset()
+              setSelectedFile(null)
+              setIsSubmitting(false)
+              onOpenChange(false)
+  
+              toast({
+                title: "Material added",
+                description: `${values.title} has been added to the class.`,
+              })
+            },
+            onError: (error) => {
+              setIsSubmitting(false)
+              toast({
+                title: "Error",
+                description: error.message || "Failed to add material.",
+                variant: "destructive",
+              })
+            }
+          })
+        }, 1500)
+      } else {
         setIsSubmitting(false)
-
-        // Close the modal
-        onOpenChange(false)
-
         toast({
-          title: "Material added",
-          description: `${values.title} has been added to the class.`,
+          title: "Error",
+          description: "You selected upload mode but did not select a file.",
+          variant: "destructive",
         })
-      }, 1500)
-    } else if (!isUploadMode && values.url) {
-      // Handle link-based material
+      }
+    } else if (values.url?.trim() !== "") {
+      // Handle URL-based material
       setTimeout(() => {
         const newMaterial = {
-          id: Math.floor(Math.random() * 1000), // Generate a random ID for demo purposes
           title: values.title,
           description: values.description || "",
           type: values.type,
           url: values.url,
-          createdAt: new Date().toISOString(),
         }
-
-        // Call the callback with the new material
-        onMaterialAdded(newMaterial)
-
-        // Reset form and state
-        form.reset()
-        setIsSubmitting(false)
-
-        // Close the modal
-        onOpenChange(false)
-
-        toast({
-          title: "Material added",
-          description: `${values.title} has been added to the class.`,
+  
+        createMaterials(newMaterial, {
+          onSuccess: () => {
+            form.reset()
+            setIsSubmitting(false)
+            onOpenChange(false)
+  
+            toast({
+              title: "Material added",
+              description: `${values.title} has been added to the class.`,
+            })
+          },
+          onError: (error) => {
+            setIsSubmitting(false)
+            toast({
+              title: "Error",
+              description: error.message || "Failed to add material.",
+              variant: "destructive",
+            })
+          }
         })
       }, 500)
     } else {
@@ -135,6 +155,77 @@ export function AddMaterialModal({ open, onOpenChange, onMaterialAdded, classId 
       })
     }
   }
+  
+
+  // function onSubmit(values: z.infer<typeof materialFormSchema>) {
+  //   setIsSubmitting(true)
+  //   // Simulate file upload if a file is selected
+  //   if (selectedFile && isUploadMode) {
+  //     // In a real application, you would upload the file to a storage service
+  //     // and get back a URL to store in the database
+  //     setTimeout(() => {
+  //       const fileUrl = URL.createObjectURL(selectedFile) 
+  //       const newMaterial = {
+  //         id: Math.floor(Math.random() * 1000),
+  //         title: values.title,
+  //         description: values.description || "",
+  //         type: values.type,
+  //         url: fileUrl,
+  //         createdAt: new Date().toISOString(),
+  //       }
+
+  //       // Call the callback with the new material
+  //       onMaterialAdded(newMaterial)
+
+  //       // Reset form and state
+  //       form.reset()
+  //       setSelectedFile(null)
+  //       setIsSubmitting(false)
+
+  //       // Close the modal
+  //       onOpenChange(false)
+
+  //       toast({
+  //         title: "Material added",
+  //         description: `${values.title} has been added to the class.`,
+  //       })
+  //     }, 1500)
+  //   } else if (!isUploadMode && values.url) {
+  //     // Handle link-based material
+  //     setTimeout(() => {
+  //       const newMaterial = {
+  //         id: Math.floor(Math.random() * 1000), // Generate a random ID for demo purposes
+  //         title: values.title,
+  //         description: values.description || "",
+  //         type: values.type,
+  //         url: values.url,
+  //         createdAt: new Date().toISOString(),
+  //       }
+
+  //       // Call the callback with the new material
+  //       onMaterialAdded(newMaterial)
+
+  //       // Reset form and state
+  //       form.reset()
+  //       setIsSubmitting(false)
+
+  //       // Close the modal
+  //       onOpenChange(false)
+
+  //       toast({
+  //         title: "Material added",
+  //         description: `${values.title} has been added to the class.`,
+  //       })
+  //     }, 500)
+  //   } else {
+  //     setIsSubmitting(false)
+  //     toast({
+  //       title: "Error",
+  //       description: "Please provide either a file or a URL for the material.",
+  //       variant: "destructive",
+  //     })
+  //   }
+  // }
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {

@@ -147,9 +147,10 @@ export interface ClassroomResponse {
 // materials
 export interface IclassRoomMaterials{
     title:string;
+    description?:string;
     type:string;
     url:string;
-    size:string;
+    size?:string;
     created_at?: string;
 }
 // topic

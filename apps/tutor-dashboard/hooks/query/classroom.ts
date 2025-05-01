@@ -30,10 +30,10 @@ export function  useGetAllClasscroomModules( id:string){
     }
 
     //   use query for getClassroomMaterials
-export function  useGetAllClasscroomMaterials( id:string, data:IclassRoomMaterials){
+export function  useGetAllClasscroomMaterials( data:IclassRoomMaterials, classroomId:string, topicId:string){
     const getClassroom:IQueryArgs<IclassRoomMaterials>={
         key:["ClassroomMaterials"],
-        callback:()=>createClasscroomMaterials(data, id)
+        callback:()=>createClasscroomMaterials(data, classroomId, topicId)
     }
     return useGetResourcesQuery(getClassroom)
     }

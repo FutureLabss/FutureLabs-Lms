@@ -60,8 +60,8 @@ export async function getClasscroomModules(classroomId: string): Promise<Classro
 
 
 // create a classmaterials
-export async function createClasscroomMaterials(data: IclassRoomMaterials, topicId: string): Promise<IclassRoomMaterials> {
-  return apiClient.post<IclassRoomMaterials>(`topics/${topicId}/material`, data)
+export async function createClasscroomMaterials(data: IclassRoomMaterials, classroomId:string, topicId: string): Promise<IclassRoomMaterials> {
+  return apiClient.post<IclassRoomMaterials>(`classrooms/${classroomId}/topics/${topicId}/materials`, data)
     .then((response) => {
       return response;
     }).catch(handleError);

@@ -104,6 +104,8 @@ export default function ClassDetailsPage() {
   const [selectedTopicModuleId, setSelectedTopicModuleId] = useState<string | null| undefined>(null)
   const { data: getmodules } = useGetAllClasscroomModules(classId)
   console.log(getmodules, "get modulues ")
+const moduleId = getmodules?.data
+console.log(moduleId, "module ID")
 
   useEffect(() => {
     if (classData) {
@@ -1045,7 +1047,8 @@ export default function ClassDetailsPage() {
         onOpenChange={setIsAddMaterialDialogOpen}
         onMaterialAdded={handleAddMaterial}
         classId={classId}
-      />
+        topicId={selectedTopic}
+          />
 
       {/* Edit Class Modal */}
       <EditClassModal

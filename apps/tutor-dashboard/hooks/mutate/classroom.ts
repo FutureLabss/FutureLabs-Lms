@@ -37,10 +37,11 @@ export function useCreateClassroomModules({ onSuccess, onError, options, classro
     return useCreateResources(mutation);
   }
 //   use mutate for CreateClassroomMaterial
-export function useCreateClassroomMaterial({ onSuccess, onError, options, topicId}: IMutationHook & { topicId: string }) {
+export function useCreateClassroomMaterial({ onSuccess, onError, options, classroomId, topicId}:
+   IMutationHook & { topicId: string, classroomId:string }) {
     const mutation: IMutationArgs<IclassRoomMaterials, IclassRoomMaterials> = {
         key: ["ClassroomMaterials"],
-        callback: (data:IclassRoomMaterials) => createClasscroomMaterials(data, topicId),
+        callback: (data:IclassRoomMaterials) => createClasscroomMaterials(data, classroomId, topicId),
         onSuccess: onSuccess,
         onError: onError,
         options,
