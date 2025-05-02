@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, memo } from "react";
+import { useState, useEffect, memo } from "react";
 import {
   Book,
   Calendar,
@@ -31,9 +31,12 @@ import { Toaster } from "@/shared/components/ui/toaster";
 // import { AssignmentSubmissionDialog } from "@/shared/components/assignment-submission-dialog";
 // import { MaterialDownload } from "@/shared/components/material-download";
 import UserLayout, { layoutInterface } from "@/shared/layouts/userLayout";
-import { useGetSingleClassroom } from "@/shared/hooks/query/classroom/getSingleClassroom";
+// import { useGetSingleClassroom } from "@/shared/hooks/query/classroom/getSingleClassroom";
 import { useParams } from "next/navigation";
-import { useGetClassroomModules } from "@/shared/hooks/query/classroom/getClassroomModules";
+// import { useGetClassroomModules } from "@/shared/hooks/query/classroom/getClassroomModules";
+import axios from "axios";
+import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
+import { SingleClassroomResponse } from "@/core/types/interface/classroom.ts/getSingleClassroom";
 
 // Mock classroom data
 // const classroom = {
@@ -189,54 +192,91 @@ import { useGetClassroomModules } from "@/shared/hooks/query/classroom/getClassr
 // ];
 
 const ClassroomModuleCom = memo(function ClassroomModuleCom() {
+  const [data, setData] = useState<ClassModulesApiResponse | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const paramsN = useParams<{ id: string }>();
-  const { id } = paramsN;
-  const { data: classModules } = useGetClassroomModules(id as string);
+  const id = paramsN?.id;
+  // const { data: classModules } = useGetClassroomModules(id);
+
+  useEffect(() => {
+    if (!id) {
+      setError("Classroom ID not found");
+      setIsLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(`classrooms/${id}/modules`);
+        setData(response.data);
+        setError(null);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
+        setData(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // Add a timeout to prevent immediate re-fetching
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [id]);
+
+  if (!id) return null;
+
+  if (isLoading) return <div>Loading modules...</div>;
+  if (error) return <div>Error loading modules</div>;
+
+  // console.log(data, "data");
   return (
     <TabsContent value="modules" className="space-y-4">
       <Card>
         <CardHeader>
-          {classModules ? (
+          {data ? (
             <CardTitle className="flex items-center">
               <Book className="mr-2 h-5 w-5" />
-              Modules ({classModules?.data?.length})
+              Modules ({data?.data?.length})
             </CardTitle>
           ) : null}
 
           {/* <CardTitle className="flex items-center">
-                  <Book className="mr-2 h-5 w-5" />
-                  Modules ({modules.length})
-                </CardTitle> */}
-          <CardDescription>
-            Course content is organized into modules with specific topics
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {classModules?.data?.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              No modules available yet
-            </p>
-          ) : (
-            <div className="space-y-6">
-              {classModules?.data.map((module, index) => (
-                <div
-                  key={module.id}
-                  className="border rounded-lg overflow-hidden"
-                >
-                  <div className="bg-slate-50 p-4 flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">
-                        Module {index + 1}: {module.title}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {module.description}
-                      </p>
-                    </div>
-                    {/* <Badge variant="outline">
+            <Book className="mr-2 h-5 w-5" />
+            Modules ({data?.data.length})
+          </CardTitle> */}
+          <CardContent>
+            {data?.data?.length === 0 ? (
+              <p className="text-sm text-muted-foreground">
+                No modules available yet
+              </p>
+            ) : (
+              <div className="space-y-6">
+                {data?.data.map((module, index) => (
+                  <div
+                    key={module.id}
+                    className="border rounded-lg overflow-hidden"
+                  >
+                    <div className="bg-slate-50 p-4 flex items-center justify-between">
+                      <div>
+                        <h3 className="font-medium">
+                          Module {index + 1}: {module.title}
+                        </h3>
+                        <p className="text-sm text-muted-foreground">
+                          {module.description}
+                        </p>
+                      </div>
+                      {/* <Badge variant="outline">
                             {module.topics.length} topics
                           </Badge> */}
-                  </div>
-                  {/* <div className="divide-y">
+                    </div>
+                    {/* <div className="divide-y">
                           {module.topics.map((topic) => (
                             <div
                               key={topic.id}
@@ -252,11 +292,15 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
                             </div>
                           ))}
                         </div> */}
-                </div>
-              ))}
-            </div>
-          )}
-        </CardContent>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+          <CardDescription>
+            Course content is organized into modules with specific topics
+          </CardDescription>
+        </CardHeader>
       </Card>
     </TabsContent>
   );
@@ -264,34 +308,74 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
 
 export default function ClassroomDetailPage() {
   const paramsN = useParams<{ id: string }>();
-  const { id } = paramsN;
+  const id = paramsN?.id;
   // const defaultV = id;
 
-  const { data: singleClass } = useGetSingleClassroom(id as string);
+  // const { data: singleClass } = useGetSingleClassroom(id as string);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [singleClass, setSingleClass] =
+    useState<SingleClassroomResponse | null>(null);
 
   const [activeTab, setActiveTab] = useState("overview");
+
+  useEffect(() => {
+    if (!id) {
+      setError("Classroom ID not found");
+      setIsLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(`classrooms/${id}`);
+        setSingleClass(response.data);
+        setError(null);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
+        setSingleClass(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // Add a timeout to prevent immediate re-fetching
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [id]);
+
+  if (!id) return null;
+
+  if (isLoading) return <div>Loading modules...</div>;
+  if (error) return <div>Error loading modules</div>;
   // const [selectedAssignment, setSelectedAssignment] = useState<
   //   (typeof assignments)[0] | null
   // >(null);
   // const [isAssignmentDialogOpen, setIsAssignmentDialogOpen] = useState(false);
 
   // Format time to be more readable
-  const formatTime = useCallback((time: string) => {
+  const formatTime = (time: string) => {
     const [hours, minutes] = time.split(":");
     const hour = Number.parseInt(hours);
     const ampm = hour >= 12 ? "PM" : "AM";
     const hour12 = hour % 12 || 12;
     return `${hour12}:${minutes} ${ampm}`;
-  }, []);
+  };
 
   // Format date to be more readable
-  const formatDate = useCallback((date: string) => {
+  const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
     });
-  }, []);
+  };
 
   // Function to open the assignment dialog
   // const openAssignmentDialog = useCallback((assignment: (typeof assignments)[0]) => {

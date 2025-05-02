@@ -1,42 +1,42 @@
-    interface ClassroomDetails {
-    name: string;
-    description?: string;
-    start_date: string; 
-    end_date: string;
-    course: string;
-    status: "active" | "inactive";
-  }
-  
-  interface ScheduleDetails {
-    days_of_week: string[]; 
-    start_date: string;
-    end_date: string;
-    start_time: string;
-    end_time: string;
-    status: "active" | "inactive"; 
-  }
-  
-  export interface ClassroomScheduleResponse {
-    classroom: ClassroomDetails;
-    schedule: ScheduleDetails;
-  }
+interface ClassroomDetails {
+  name: string;
+  description?: string;
+  start_date: string;
+  end_date: string;
+  course: string;
+  status: "active" | "inactive";
+}
 
-  interface IgetClassroom {
-    id: number;
-    name: string;
-    course: string;
-    students_count: number;
-    started_in_months: number;
-    materials_count: number;
-    status: "active" | "inactive";
-    created_by: string;
-  }
-  
-  export interface IRetriveClassroomResponse {
-    success: boolean;
-    message: string;
-    data: IgetClassroom[];
-  }
+interface ScheduleDetails {
+  days_of_week: string[];
+  start_date: string;
+  end_date: string;
+  start_time: string;
+  end_time: string;
+  status: "active" | "inactive";
+}
+
+export interface ClassroomScheduleResponse {
+  classroom: ClassroomDetails;
+  schedule: ScheduleDetails;
+}
+
+interface IgetClassroom {
+  id: number;
+  name: string;
+  course: string;
+  students_count: number;
+  started_in_months: number;
+  materials_count: number;
+  status: "active" | "inactive";
+  created_by: string;
+}
+
+export interface IRetriveClassroomResponse {
+  success: boolean;
+  message: string;
+  data: IgetClassroom[];
+}
 
 //   get single interface
 interface Schedule {
@@ -107,14 +107,14 @@ interface Schedule {
   }
   
 //   classroommodules
-export interface IclassRoomModules{
-    title:string;
-    description:string;
-    id?:string | null;
-    Itopic?: Itopic[];
+export interface IclassRoomModules {
+  title: string;
+  description: string;
+  id?: string | null;
+  Itopic?: Itopic[];
 }
 interface Module {
-  id?: string;
+  id: string;
   title: string;
   description: string;
   classroom: string;
@@ -147,9 +147,10 @@ export interface ClassroomResponse {
 // materials
 export interface IclassRoomMaterials{
     title:string;
+    description?:string;
     type:string;
     url:string;
-    size:string;
+    size?:string;
     created_at?: string;
 }
 // topic
@@ -164,10 +165,10 @@ interface Topic {
   id: number;
   title: string;
   description: string;
-  duration: number; // in minutes
+  duration: number; 
   created_by: string;
   updated_by: string;
-  status: number; // typically 0 (inactive) or 1 (active)
+  status: number;
 }
 
 export interface TopicResponse {

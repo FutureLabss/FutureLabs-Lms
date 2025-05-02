@@ -60,17 +60,17 @@ export function AddTopicModal({
   open,
   onOpenChange,
   onTopicAdded,
-  moduleId,
   classroomId,
+  moduleId,
 }: AddTopicModalProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { mutate: createTopics } = useCreateClassroomModulesTopic({
     onSuccess(data) {},
     onError(error) {},
+    classroomId: classroomId,
     moduleId: moduleId,
-    classroomId: classroomId
   });
-  console.log(createTopics);
+  // console.log(createTopics);
   const form = useForm<z.infer<typeof topicFormSchema>>({
     resolver: zodResolver(topicFormSchema),
     defaultValues: {
@@ -92,7 +92,6 @@ export function AddTopicModal({
       },
       {
         onSuccess: (data) => {
-          console.log(data, 'for adding the topics ')
           // Call the callback with the new module
           onTopicAdded(data); // Assuming the API returns the created module
 

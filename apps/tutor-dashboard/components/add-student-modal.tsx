@@ -1,12 +1,20 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import {
   Dialog,
   DialogContent,
@@ -14,10 +22,19 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Loader2 } from "lucide-react"
-import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Loader2 } from "lucide-react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { useGetAllStudentsClasses } from "@/hooks/query/get-students";
+import { AddStudent } from "@/lib/types/get-student";
+import { useAddStudentToClassroom } from "@/hooks/mutate/classroom";
 
 const studentFormSchema = z.object({
   name: z.string().min(2, {
@@ -37,22 +54,40 @@ const studentFormSchema = z.object({
   level: z.string({
     required_error: "Please select a student level.",
   }),
-})
+});
 
 type AddStudentModalProps = {
-  open: boolean
-  onOpenChange: (open: boolean) => void
-  onStudentAdded: (student: any) => void
-  classId: string | number
-}
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  onStudentAdded: (student: any) => void;
+  classId: string | number;
+};
 
-export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }: AddStudentModalProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [searchResults, setSearchResults] = useState<any[]>([])
-  const [searchQuery, setSearchQuery] = useState("")
-  const [isSearching, setIsSearching] = useState(false)
-  const [selectedExistingStudent, setSelectedExistingStudent] = useState<any | null>(null)
-  const [addNewStudent, setAddNewStudent] = useState(false)
+export function AddStudentModal({
+  open,
+  onOpenChange,
+  onStudentAdded,
+  classId,
+}: AddStudentModalProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchResults, setSearchResults] = useState<AddStudent[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
+  const [selectedExistingStudent, setSelectedExistingStudent] = useState<
+    any | null
+  >(null);
+  const [addNewStudent, setAddNewStudent] = useState(false);
+  const { data: studentsData, loading: studentsDataLoading } =
+    useGetAllStudentsClasses();
+  const { mutate: addStudentToClassroom } = useAddStudentToClassroom({
+    onSuccess: () => {
+      console.log("Student added successfully");
+    },
+    onError: (error) => {
+      console.error("Error adding student:", error);
+    },
+  });
+  // console.log("Students Data:", studentsData);
 
   const form = useForm<z.infer<typeof studentFormSchema>>({
     resolver: zodResolver(studentFormSchema),
@@ -64,31 +99,48 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
       guardianEmail: "",
       level: "",
     },
-  })
+  });
 
   // Mock function to search for existing students
   const searchStudents = (query: string) => {
-    setIsSearching(true)
+    setIsSearching(true);
     // Simulate API call delay
-    setTimeout(() => {
-      // Mock results
-      const results = [
-        { id: 101, name: "Alice Johnson", email: "alice@example.com", level: "Intermediate" },
-        { id: 102, name: "Bob Smith", email: "bob@example.com", level: "Beginner" },
-        { id: 103, name: "Charlie Brown", email: "charlie@example.com", level: "Advanced" },
-      ].filter(
+    // const results = [
+    //   {
+    //     id: 101,
+    //     name: "Alice Johnson",
+    //     email: "alice@example.com",
+    //     level: "Intermediate",
+    //   },
+    //   {
+    //     id: 102,
+    //     name: "Bob Smith",
+    //     email: "bob@example.com",
+    //     level: "Beginner",
+    //   },
+    //   {
+    //     id: 103,
+    //     name: "Charlie Brown",
+    //     email: "charlie@example.com",
+    //     level: "Advanced",
+    //   },
+    // ];
+    let results =
+      studentsData?.data?.filter(
         (student) =>
-          student.name.toLowerCase().includes(query.toLowerCase()) ||
-          student.email.toLowerCase().includes(query.toLowerCase()),
-      )
+          student.fullname.toLowerCase().includes(query.toLowerCase()) ||
+          student.fullname.toLowerCase().includes(query.toLowerCase())
+      ) || [];
 
-      setSearchResults(results)
-      setIsSearching(false)
-    }, 500)
-  }
+    setSearchResults(results);
+    setIsSearching(false);
+    // setTimeout(() => {
+    //   // Mock results
+    // }, 500);
+  };
 
   function onSubmit(values: z.infer<typeof studentFormSchema>) {
-    setIsSubmitting(true)
+    setIsSubmitting(true);
 
     // Simulate API call
     setTimeout(() => {
@@ -103,58 +155,71 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
         level: values.level,
         avatar: "/placeholder.svg",
         enrollmentDate: new Date().toISOString(),
-      }
+      };
 
       // Call the callback with the new student
-      onStudentAdded(newStudent)
+      onStudentAdded(newStudent);
 
       // Reset form and state
-      form.reset()
-      setIsSubmitting(false)
-      setAddNewStudent(false)
-      setSelectedExistingStudent(null)
-      setSearchQuery("")
-      setSearchResults([])
+      form.reset();
+      setIsSubmitting(false);
+      setAddNewStudent(false);
+      setSelectedExistingStudent(null);
+      setSearchQuery("");
+      setSearchResults([]);
 
       // Close the modal
-      onOpenChange(false)
-    }, 1000)
+      onOpenChange(false);
+    }, 1000);
   }
 
   function handleExistingStudentSubmit() {
-    setIsSubmitting(true)
+    // console.log(selectedExistingStudent, "exisiting");
 
-    // Simulate API call
-    setTimeout(() => {
-      if (selectedExistingStudent) {
-        // Add enrollment date to the selected student
-        const studentWithEnrollment = {
-          ...selectedExistingStudent,
-          enrollmentDate: new Date().toISOString(),
-        }
+    setIsSubmitting(true);
 
-        // Call the callback with the selected student
-        onStudentAdded(studentWithEnrollment)
-      }
+    if (selectedExistingStudent) {
+      // Add enrollment date to the selected student
+      const studentWithEnrollment = {
+        ...selectedExistingStudent,
+        enrollmentDate: new Date().toISOString(),
+      };
+      addStudentToClassroom({
+        classroomId: String(classId),
+        userId: selectedExistingStudent?.id,
+      });
 
-      // Reset state
-      setIsSubmitting(false)
-      setSelectedExistingStudent(null)
-      setSearchQuery("")
-      setSearchResults([])
+      // Call the callback with the selected student
+      onStudentAdded(studentWithEnrollment);
+    }
 
-      // Close the modal
-      onOpenChange(false)
-    }, 1000)
+    // Reset state
+    setIsSubmitting(false);
+    setSelectedExistingStudent(null);
+    setSearchQuery("");
+    setSearchResults([]);
+
+    // Close the modal
+    onOpenChange(false);
+    // setTimeout(() => {
+    // }, 1000);
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
-        <DialogHeader>
-          <DialogTitle>Add Student to Class</DialogTitle>
-          <DialogDescription>Search for an existing student or add a new one to this class.</DialogDescription>
-        </DialogHeader>
+        {studentsDataLoading ? (
+          <div className="flex justify-center py-4">
+            <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          </div>
+        ) : (
+          <DialogHeader>
+            <DialogTitle>Add Student to Class</DialogTitle>
+            <DialogDescription>
+              Search for an existing student or add a new one to this class.
+            </DialogDescription>
+          </DialogHeader>
+        )}
 
         {!addNewStudent ? (
           <div className="space-y-4">
@@ -165,16 +230,20 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
                   placeholder="Search students by name or email..."
                   value={searchQuery}
                   onChange={(e) => {
-                    setSearchQuery(e.target.value)
+                    setSearchQuery(e.target.value);
                     if (e.target.value.length > 2) {
-                      searchStudents(e.target.value)
+                      searchStudents(e.target.value);
                     } else {
-                      setSearchResults([])
+                      setSearchResults([]);
                     }
                   }}
                 />
               </div>
-              <Button variant="outline" onClick={() => searchStudents(searchQuery)} disabled={searchQuery.length < 3}>
+              <Button
+                variant="outline"
+                onClick={() => searchStudents(searchQuery)}
+                disabled={searchQuery.length < 3}
+              >
                 Search
               </Button>
             </div>
@@ -191,30 +260,40 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
                   <div
                     key={student.id}
                     className={`flex items-center justify-between p-3 cursor-pointer hover:bg-muted ${
-                      selectedExistingStudent?.id === student.id ? "bg-muted" : ""
+                      selectedExistingStudent?.id === student.id
+                        ? "bg-muted"
+                        : ""
                     }`}
                     onClick={() => setSelectedExistingStudent(student)}
                   >
                     <div className="flex items-center gap-3">
                       <Avatar>
-                        <AvatarFallback>{student.name.charAt(0)}</AvatarFallback>
+                        <AvatarFallback>
+                          {student.fullname.charAt(0)}
+                        </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="font-medium">{student.name}</p>
-                        <p className="text-sm text-muted-foreground">{student.email}</p>
+                        <p className="font-medium">{student.fullname}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {student.email}
+                        </p>
                       </div>
                     </div>
-                    <div className="text-sm text-muted-foreground">Level: {student.level}</div>
+                    {/* <div className="text-sm text-muted-foreground">
+                      Level: {student.level}
+                    </div> */}
                   </div>
                 ))}
               </div>
             )}
 
-            {!isSearching && searchQuery.length > 2 && searchResults.length === 0 && (
-              <div className="text-center py-4 border rounded-md">
-                <p className="text-muted-foreground">No students found</p>
-              </div>
-            )}
+            {!isSearching &&
+              searchQuery.length > 2 &&
+              searchResults.length === 0 && (
+                <div className="text-center py-4 border rounded-md">
+                  <p className="text-muted-foreground">No students found</p>
+                </div>
+              )}
 
             <div className="flex justify-between pt-4">
               <Button variant="outline" onClick={() => setAddNewStudent(true)}>
@@ -224,8 +303,13 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
                 <Button variant="outline" onClick={() => onOpenChange(false)}>
                   Cancel
                 </Button>
-                <Button onClick={handleExistingStudentSubmit} disabled={!selectedExistingStudent || isSubmitting}>
-                  {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                <Button
+                  onClick={handleExistingStudentSubmit}
+                  disabled={!selectedExistingStudent || isSubmitting}
+                >
+                  {isSubmitting && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   Add to Class
                 </Button>
               </div>
@@ -255,9 +339,15 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="student@example.com" {...field} />
+                      <Input
+                        type="email"
+                        placeholder="student@example.com"
+                        {...field}
+                      />
                     </FormControl>
-                    <FormDescription>This will be used for login and communications.</FormDescription>
+                    <FormDescription>
+                      This will be used for login and communications.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -284,7 +374,10 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Student Level</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
                             <SelectValue placeholder="Select level" />
@@ -292,7 +385,9 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
                         </FormControl>
                         <SelectContent>
                           <SelectItem value="beginner">Beginner</SelectItem>
-                          <SelectItem value="intermediate">Intermediate</SelectItem>
+                          <SelectItem value="intermediate">
+                            Intermediate
+                          </SelectItem>
                           <SelectItem value="advanced">Advanced</SelectItem>
                         </SelectContent>
                       </Select>
@@ -303,7 +398,9 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
               </div>
 
               <div className="space-y-2">
-                <h3 className="text-sm font-medium">Guardian Information (Optional)</h3>
+                <h3 className="text-sm font-medium">
+                  Guardian Information (Optional)
+                </h3>
                 <div className="grid gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
@@ -312,7 +409,10 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
                       <FormItem>
                         <FormLabel>Guardian Name</FormLabel>
                         <FormControl>
-                          <Input placeholder="Guardian's full name" {...field} />
+                          <Input
+                            placeholder="Guardian's full name"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -326,7 +426,11 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
                       <FormItem>
                         <FormLabel>Guardian Email</FormLabel>
                         <FormControl>
-                          <Input type="email" placeholder="guardian@example.com" {...field} />
+                          <Input
+                            type="email"
+                            placeholder="guardian@example.com"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -336,14 +440,25 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
               </div>
 
               <DialogFooter className="pt-4">
-                <Button type="button" variant="outline" onClick={() => setAddNewStudent(false)} className="mr-auto">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => setAddNewStudent(false)}
+                  className="mr-auto"
+                >
                   Back to Search
                 </Button>
-                <Button variant="outline" onClick={() => onOpenChange(false)} className="ml-auto mr-2">
+                <Button
+                  variant="outline"
+                  onClick={() => onOpenChange(false)}
+                  className="ml-auto mr-2"
+                >
                   Cancel
                 </Button>
                 <Button type="submit" disabled={isSubmitting}>
-                  {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  {isSubmitting && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   Add Student
                 </Button>
               </DialogFooter>
@@ -352,5 +467,5 @@ export function AddStudentModal({ open, onOpenChange, onStudentAdded, classId }:
         )}
       </DialogContent>
     </Dialog>
-  )
+  );
 }

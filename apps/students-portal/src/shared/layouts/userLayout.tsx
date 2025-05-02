@@ -1,9 +1,13 @@
 import { ReactNode, useEffect, useState } from "react";
+// import { ReactNode, useEffect, useState } from "react";
+
 import { useAuthContext } from "../context/auth";
 import AppDrawer from "../components/layouts/sidebar";
 import PreAppBar from "../components/layouts/appbar";
 import { useRouter } from "next/navigation";
 import Modal from "../components/common/modal/modal";
+import { NotAssignedClassAlert } from "../components/not-assigned-class";
+import { useGetAllClassrooms } from "../hooks/query/classroom/getAllClassroom";
 
 export interface layoutInterface {
   children?: ReactNode | undefined;
@@ -13,17 +17,35 @@ export interface layoutInterface {
 }
 
 export default function UserLayout(props: layoutInterface) {
+  const { data: classrooms, loading: isLoading } = useGetAllClassrooms();
   const { title, userId, description } = props;
   const [showDrawer, setShowDrawer] = useState(false);
   const [logoutModal, setLogoutModal] = useState(false);
-  const { isLoggedIn, loaded, logout } = useAuthContext();
+  const { logout } = useAuthContext();
+
   const router = useRouter();
 
+  const [isAssignedToClass, setIsAssignedToClass] = useState<boolean>(true);
+
   useEffect(() => {
-    if (loaded && !isLoggedIn) {
+    const checkClassAssigned = async () => {
+      if ((classrooms?.data ?? []).length > 0) {
+        setIsAssignedToClass(true);
+        return;
+      } else {
+        setIsAssignedToClass(false);
+      }
+    };
+    checkClassAssigned();
+  }, [classrooms]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
       router.push("/login");
+      return;
     }
-  }, [loaded, isLoggedIn, router]);
+  }, [router]);
 
   const toggleLogoutModal = () => {
     setLogoutModal((val) => !val);
@@ -40,16 +62,20 @@ export default function UserLayout(props: layoutInterface) {
     console.log("heloo");
   };
 
-  if (!loaded) {
-    return <div>Loading...</div>;
-  }
+  // console.log(classrooms?.data.length, "classrooms");
 
-  if (!isLoggedIn) {
-    return null;
-  }
+  // if (!loaded) {
+  //   return <div>Loading...</div>;
+  // }
+
+  // if (!isLoggedIn) {
+  //   return null;
+  // }
 
   return (
     <>
+      {!isLoading && <NotAssignedClassAlert isAssigned={isAssignedToClass} />}
+      {/* <NotAssignedClassAlert /> */}
       <div className="h-screen bg-[#f1f1f1]">
         <div className="md:max-w-[1440px] 2xl:max-w-[2440px]  mx-auto w-full flex ">
           <div className="">

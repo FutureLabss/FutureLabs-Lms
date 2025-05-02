@@ -11,17 +11,17 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useGetAllRecordedCourses } from "@/hooks/query/recorded-course";
-import { Course } from "@/lib/types/recorded-courses";
+import { Course, RecordedCourseData } from "@/lib/types/recorded-courses";
 import { Eye, Loader, Plus, Search, Video } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import CourseCardSkeleton from "./loading-course-skeleton";
 
 // TypeScript interfaces for the API response
 
 export default function CoursesPage() {
-  const { data, loading } = useGetAllRecordedCourses();
+  const { data, loading: isLoading } = useGetAllRecordedCourses();
   const courses = data?.data || []; // Use the data from the query
-  console.log("courses", courses);
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -58,9 +58,9 @@ export default function CoursesPage() {
           <TabsTrigger value="published">Published</TabsTrigger>
           <TabsTrigger value="draft">Draft</TabsTrigger>
         </TabsList>
-        {loading ? (
-          <div className="flex items-center justify-center h-screen">
-            <Loader className="h-8 w-8 animate-spin" />
+        {isLoading ? (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 ">
+            <CourseCardSkeleton />
           </div>
         ) : (
           ["all", "published", "draft"].map((tabValue) => (
