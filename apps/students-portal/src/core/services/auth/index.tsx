@@ -106,6 +106,7 @@ export const CreatePassword = async (data: ICreatePassword) => {
       if (res.status === 201 && res.data?.data?.token) {
         const token = res.data.data.token;
         localStorage.setItem("token", JSON.stringify({ data: { token } }));
+        localStorage.setItem("studentProfile", JSON.stringify(res.data.data));
         setToken(token);
         setNotification({
           type: NotificationType.success,
