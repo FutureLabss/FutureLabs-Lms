@@ -108,7 +108,7 @@ export default function ClassDetailsPage() {
 
   // useGetAllClasscroomModulesTopic
 
-  const {data: getmodulesTopic } = useGetAllClasscroomModulesTopic(classId, moduleId );
+  const {data: getmodulesTopic } = useGetAllClasscroomModulesTopic(classId );
   console.log(getmodulesTopic, 'get modules data');
 
   useEffect(() => {
