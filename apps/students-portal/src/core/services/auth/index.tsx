@@ -11,6 +11,9 @@ import {
 import useNotificationStore from "@/stores/notificationState";
 // import { useRouter } from "next/router";
 import { handleError } from "@/shared/components/common/exception/catchErrors";
+import { QueryClient } from "@tanstack/react-query";
+
+export const queryClient = new QueryClient();
 
 const setNotification = useNotificationStore.getState().displayNotification;
 
@@ -22,6 +25,8 @@ export const login = async (data: ILogin) => {
       if (res.status === 200 && res.data?.data?.token) {
         const token = res.data.data.token;
         localStorage.setItem("token", JSON.stringify({ data: { token } }));
+        localStorage.setItem("studentProfile", JSON.stringify(res.data.data));
+
         setToken(token);
         setNotification({
           type: NotificationType.success,
@@ -146,5 +151,7 @@ export const resendEmailVerification = async (profileId: string) => {
 
 export const logout = (callback?: () => void) => {
   localStorage.removeItem("token");
+  localStorage.removeItem("studentProfile");
+  queryClient.removeQueries();
   if (callback) callback();
 };
