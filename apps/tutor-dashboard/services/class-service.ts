@@ -58,6 +58,14 @@ export async function getClasscroomModules(classroomId: string): Promise<Classro
     }).catch(handleError);
 }
 
+// get a single module
+export async function getClasscroomSingleModules(classroomId: string, moduleId:string): Promise<ClassroomResponse> {
+  return apiClient.get<ClassroomResponse>(`classrooms/${classroomId}/modules/${moduleId}`)
+    .then((response) => {
+      return response;
+    }).catch(handleError);
+}
+
 
 // create a classmaterials
 export async function createClasscroomMaterials(data: IclassRoomMaterials, classroomId:string, topicId: string): Promise<IclassRoomMaterials> {
@@ -84,7 +92,7 @@ export async function createClasscroomModulesTopic(data: Itopic, classroomId:str
       return response;
     }).catch(handleError);
 }
-export async function getClasscroomModulesTopic(moduleId: string, classroomId:string): Promise<TopicResponse> {
+export async function getClasscroomModulesTopic(classroomId:string, moduleId: string | null | undefined, ): Promise<TopicResponse> {
   return apiClient.get<TopicResponse>(`classrooms/${classroomId}/modules/${moduleId}/topics`)
     .then((response) => {
       return response;

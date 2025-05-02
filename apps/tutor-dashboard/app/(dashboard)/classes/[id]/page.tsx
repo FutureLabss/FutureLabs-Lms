@@ -1,19 +1,7 @@
 "use client"
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import {
-  ArrowLeft,
-  Calendar,
-  Clock,
-  Edit,
-  MoreHorizontal,
-  Plus,
-  Trash,
-  Users,
-  BookOpen,
-  FileText,
-  Layers,
-} from "lucide-react"
+import { ArrowLeft, Calendar, Clock, Edit, MoreHorizontal, Plus, Trash, Users, BookOpen, FileText, Layers } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -48,6 +36,8 @@ import { useGetAllClasscroomModules, useGetAllClasscroomModulesTopic, useGetSing
 import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
 import type { IsingleClassroomDetails, LocalClassData } from "@/lib/types/classroom"
+import DisplayTopicDetails from "@/components/displaytopicdetails"
+import { ViewSingleModuleModal } from "@/components/viewsinglemodule"
 
 const createDefaultClassData = (apiData: IsingleClassroomDetails): LocalClassData => {
   return {
@@ -77,7 +67,7 @@ export default function ClassDetailsPage() {
   const classId = params?.id as string
   // const moduleId = param?.id  as string
   const { data: classData } = useGetSingleClassroom(classId)
-  console.log({classId, classData}, "id")
+  // console.log({classId, classData}, "id")
   // const [localClassData, setLocalClassData] = useState<LocalClassData>(
   //   createDefaultClassData(classData!));
   const [localClassData, setLocalClassData] = useState<LocalClassData | null>(null)
@@ -93,10 +83,11 @@ export default function ClassDetailsPage() {
   const [isEditClassDialogOpen, setIsEditClassDialogOpen] = useState(false)
   // Add states for module management
   const [isAddModuleDialogOpen, setIsAddModuleDialogOpen] = useState(false)
+  const [isViewModuleDialogOpen, setIsViewModuleDialogOpen] = useState(false);
+  const [selectedModuleId, setSelectedModuleId] = useState<string | null | undefined>(null)
   const [isEditModuleDialogOpen, setIsEditModuleDialogOpen] = useState(false)
   const [isDeleteModuleDialogOpen, setIsDeleteModuleDialogOpen] = useState(false)
   const [isAddTopicDialogOpen, setIsAddTopicDialogOpen] = useState(false)
-  const [selectedModuleId, setSelectedModuleId] = useState<string | null | undefined>(null)
   const [selectedModule, setSelectedModule] = useState<any | null>(null)
   // Add these state variables in the component after the other state variables
   const [isEditTopicDialogOpen, setIsEditTopicDialogOpen] = useState(false)
@@ -104,14 +95,16 @@ export default function ClassDetailsPage() {
   const [selectedTopic, setSelectedTopic] = useState<any | null>(null)
   const [selectedTopicModuleId, setSelectedTopicModuleId] = useState<string | null| undefined>(null)
   const { data: getmodules } = useGetAllClasscroomModules(classId)
-  console.log(getmodules, "get modulues ")
-const moduleId = getmodules?.data
-console.log(moduleId, "module ID")
-
+  // console.log(getmodules, "get modulues ")
+  // console.log(moduleId, "module ID")
+  
   // useGetAllClasscroomModulesTopic
-
+  
+  const moduleId = params.selectedModuleId as string
   const {data: getmodulesTopic } = useGetAllClasscroomModulesTopic(classId, moduleId );
   console.log(getmodulesTopic, 'get modules data');
+  console.log(moduleId, 'moduleId IDSSS');
+  console.log(selectedModuleId, 'selectedModuleId ID');
 
   useEffect(() => {
     if (classData) {
@@ -610,6 +603,12 @@ console.log(moduleId, "module ID")
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={() => {
+                              setSelectedModuleId(module.id); 
+                              setIsViewModuleDialogOpen(true);  
+                            }}>
+                              View
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => {
                               setSelectedModule(module);
                               setIsEditModuleDialogOpen(true);
                             }}>
@@ -631,7 +630,6 @@ console.log(moduleId, "module ID")
                         </DropdownMenu>
                       </div>
                     </CardHeader>
-            
                     <CardContent className="space-y-4">
                       <div className="flex items-center justify-between">
                         <h3 className="text-sm font-medium">Topics</h3>
@@ -647,76 +645,19 @@ console.log(moduleId, "module ID")
                           Add Topic
                         </Button>
                       </div>
-            
-                      {!module.Itopic || module.Itopic.length === 0 ? (
-                        <div className="flex flex-col items-center justify-center p-4 text-center border rounded-lg">
-                          <p className="text-sm text-muted-foreground mb-2">No topics in this module yet</p>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedModuleId(module.id);
-                              setIsAddTopicDialogOpen(true);
-                            }}
-                          >
-                            <Plus className="mr-2 h-3 w-3" />
-                            Add Topic
-                          </Button>
-                        </div>
-                      ) : (
-                        <div className="space-y-2">
-                          {module.Itopic.map((topic) => (
-                            <div key={topic.id} className="flex items-center justify-between p-3 bg-muted rounded-md">
-                              <div className="flex items-center gap-2">
-                                {topic.title === "lesson" ? (
-                                  <BookOpen className="h-4 w-4 text-muted-foreground" />
-                                ) : (
-                                  <FileText className="h-4 w-4 text-muted-foreground" />
-                                )}
-                                <div>
-                                  <p className="text-sm font-medium">{topic.title}</p>
-                                  <p className="text-xs text-muted-foreground">
-                                    {topic.duration} min • {topic.title.charAt(0).toUpperCase() + topic.title.slice(1)}
-                                  </p>
-                                </div>
-                              </div>
-                              <div className="flex items-center gap-2">
-                                <Button variant="ghost" size="sm">View</Button>
-                                <DropdownMenu>
-                                  <DropdownMenuTrigger asChild>
-                                    <Button variant="ghost" size="icon">
-                                      <MoreHorizontal className="h-4 w-4" />
-                                    </Button>
-                                  </DropdownMenuTrigger>
-                                  <DropdownMenuContent align="end">
-                                    <DropdownMenuItem onClick={() => {
-                                      setSelectedTopic(topic);
-                                      setSelectedTopicModuleId(module.id);
-                                      setIsEditTopicDialogOpen(true);
-                                    }}>
-                                      Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem>Reorder</DropdownMenuItem>
-                                    <DropdownMenuSeparator />
-                                    <DropdownMenuItem
-                                      className="text-destructive focus:text-destructive"
-                                      onClick={() => {
-                                        setSelectedTopic(topic);
-                                        setSelectedTopicModuleId(module.id);
-                                        setIsDeleteTopicDialogOpen(true);
-                                      }}
-                                    >
-                                      Delete
-                                    </DropdownMenuItem>
-                                  </DropdownMenuContent>
-                                </DropdownMenu>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
+                        <DisplayTopicDetails
+                        setSelectedModuleId={setSelectedModuleId}
+                        setIsAddTopicDialogOpen={setIsAddTopicDialogOpen}
+                        setSelectedTopic={setSelectedTopic}
+                        setIsDeleteTopicDialogOpen={setIsDeleteTopicDialogOpen}
+                        classId={classId}
+                        moduleId={module?.id}
+                        setIsEditTopicDialogOpen={setIsEditTopicDialogOpen}  
+                        setSelectedTopicModuleId={setSelectedTopicModuleId}
+                        
+                                       />
+              </CardContent>
+            </Card>
                 ))}
               </div>
               )}
@@ -1120,6 +1061,14 @@ console.log(moduleId, "module ID")
         topic={selectedTopic}
         moduleId={selectedTopicModuleId}
       />
-    </div>
+      {/* view single module modal */}
+      {selectedModuleId && (
+      <ViewSingleModuleModal 
+        open={isViewModuleDialogOpen}
+        onOpenChange={setIsViewModuleDialogOpen}
+        classroomId={classId} 
+        moduleId={selectedModuleId}
+      />
+)}</div>
   )
 }

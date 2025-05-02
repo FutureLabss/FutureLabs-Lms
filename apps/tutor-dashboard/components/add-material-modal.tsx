@@ -58,7 +58,7 @@ export function AddMaterialModal({ open, onOpenChange, onMaterialAdded, classId,
     topicId: topicId,
     classroomId: classId
   })
-console.log(createMaterials)
+// console.log(createMaterials)
   const form = useForm<z.infer<typeof materialFormSchema>>({
     resolver: zodResolver(materialFormSchema),
     defaultValues: {
