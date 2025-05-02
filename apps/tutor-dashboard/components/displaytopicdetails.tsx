@@ -10,7 +10,7 @@ interface TopicProps{
     setSelectedTopic:Dispatch<any>,
     setIsDeleteTopicDialogOpen:Dispatch<SetStateAction<boolean>>,
     classId: string,
-    moduleId?:string,
+    moduleId:string,
     setSelectedTopicModuleId:Dispatch<SetStateAction<string | null | undefined>>,
     setIsEditTopicDialogOpen:Dispatch<SetStateAction<boolean>>,
 }

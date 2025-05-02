@@ -96,6 +96,7 @@ export interface RecordedCourseData {
   title: string;
   branch: string;
   description: string;
+  status: string;
   views: string;
   completion: string;
   image_url: string;
@@ -111,25 +112,32 @@ export interface RecordedCourseData {
 
 export interface CreateRecordedCourseResponse {
   message: string;
+  data: RecordedCourseData[];
+}
+
+
+export interface GetSingleRecordedCourseResponse {
+  message: string;
   data: RecordedCourseData;
 }
 
-export interface GetRecordedCourse {
-  id: number;
-  title: string;
-  branch: string;
-  description: string;
-  views: number;
-  completion: number;
-  image_url: string;
-  image_public_id: string;
-  created_by: string;
-  updated_by: string;
-  course: string;
-  course_status: CourseStatus;
-  // students_progress: StudentsProgress;
-  modules: ModuleRecordedRequest[];
-}
+// export interface GetRecordedCourse {
+//   id: number;
+//   title: string;
+//   branch: string;
+//   description: string;
+//   views: number;
+//   completion: number;
+//   image_url: string;
+//   image_public_id: string;
+//   created_by: string;
+//   updated_by: string;
+//   course: string;
+//   course_status: CourseStatus;
+//   students_progress: StudentsProgress;
+//   students: any[];
+//   modules: ModuleRecordedRequest[];
+// }
 
 
 //? ====================? Main Response ====================
@@ -200,20 +208,81 @@ export interface Course {
   students_count: number | null;
   modules_count: number | null;
 }
-export interface DetailedCourse {
+// export interface DetailedCourse {
+//   id: number;
+//   title: string;
+//   branch: string;
+//   description: string;
+//   views: number;
+//   completion: number;
+//   image_url: string;
+//   image_public_id: string;
+//   created_by: string;
+//   updated_by: string;
+//   course: string;
+//   course_status: CourseStatus;
+//   students_progress: StudentsProgress;
+//   students: any[]; // Could be more specific if needed
+//   modules: Module[];
+// }
+
+export interface GetRecordedCourseData {
+  message: string;
+  data: Course[];
+}
+
+export interface ModuleData {
+  title: string;
+  description: string;
+  recorded_course_id: number;
+  updated_at: string;
+  created_at: string;
+  id: number;
+}
+
+export interface ModuleResponseDTO {
+  message: string;
+  data: ModuleData;
+}
+
+
+
+export interface ModuleVideo {
   id: number;
   title: string;
-  branch: string;
   description: string;
-  views: number;
-  completion: number;
-  image_url: string;
-  image_public_id: string;
-  created_by: string;
-  updated_by: string;
-  course: string;
-  course_status: CourseStatus;
-  students_progress: StudentsProgress;
-  students: any[]; // Could be more specific if needed
-  modules: Module[];
+  url: string;
+  recorded_module_id: number;
+  created_at: string;
+  updated_at: string;
 }
+
+export interface ModuleMaterial {
+  id: number;
+  title: string;
+  description: string;
+  type: string; // e.g., 'PDF', 'DOC', etc.
+  url: string;
+  recorded_module_id: number;
+  created_at: string;
+  updated_at: string;
+}
+
+
+
+
+
+
+export interface AddVideoResponse {
+  message: string;
+  data: ModuleVideo;
+}
+
+
+export interface AddMaterialResponse {
+  message: string;
+  data: ModuleMaterial;
+}
+
+
+

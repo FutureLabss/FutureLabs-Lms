@@ -31,7 +31,7 @@ export function  useGetAllClasscroomModules( id:string){
         // get single module
 export function  useGetSingleClasscroomModules(classroomId: string, moduleId:string){
     const getClassroom:IQueryArgs<ClassroomResponse>={
-        key:["ClassroomModules"],
+        key:["ClassroomModules", {classroomId, moduleId}],
         callback:()=>getClasscroomSingleModules(classroomId, moduleId)
     }
     return useGetResourcesQuery(getClassroom)
@@ -47,9 +47,9 @@ export function  useGetAllClasscroomMaterials( data:IclassRoomMaterials, classro
     }
 
     // getClasscroomModulesTopic
-    export function  useGetAllClasscroomModulesTopic( classroomId:string, modulesId:string | null | undefined){
+    export function  useGetAllClasscroomModulesTopic( classroomId:string, modulesId:string){
         const getClassroomModulesTopic:IQueryArgs<TopicResponse>={
-            key:["ClassroomModulesTopics"],
+            key:["ClassroomModulesTopics", {classroomId, modulesId}],
             callback:()=>getClasscroomModulesTopic(classroomId, modulesId)
         }
         return useGetResourcesQuery(getClassroomModulesTopic)

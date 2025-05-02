@@ -16,7 +16,7 @@ export function useGetResourcesQuery<IReturn>({ callback, key }: IQueryArgs<IRet
   return { data, status, loading: isLoading, error, isFetching };
 }
 
-export function usePaginationQuery<IReturn>({ callback, key }: IPaginatedQueryArgs<IReturn>, options?: IQueryOptions){
+export function usePaginationQuery<IReturn>({ callback, key }: IPaginatedQueryArgs<IReturn>, options?: IQueryOptions) {
   const { status, data, isLoading, isFetching, error } = useQuery(
     key,
     (arg) => {
