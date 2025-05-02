@@ -9,7 +9,7 @@ import { useAuthContext } from "@/shared/context/auth";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { GoDotFill } from "react-icons/go";
+// import { GoDotFill } from "react-icons/go";
 import Link from "next/link";
 
 const schema = z.object({
@@ -25,7 +25,7 @@ export default function LoginPage() {
   const { login } = useAuthContext();
   const [loading, setLoading] = useState(false);
   const [hidePassword, setHidePassword] = useState(false);
-  const [error, setError] = useState<string[]>([]);
+  // const [error, setError] = useState<string[]>([]);
 
   const {
     register,
@@ -48,10 +48,11 @@ export default function LoginPage() {
       await login(data);
       reset();
       // Navigate to user dashboard after successful login
-      router.replace("/welcome");
+      router.replace("/user");
     } catch (e) {
       const loginError = e as Error;
-      setError(loginError.message?.split("\n") ?? [loginError.message]);
+      console.error("Login error:", loginError.message);
+      // setError(loginError.message?.split("\n") ?? [loginError.message]);
     } finally {
       setLoading(false);
     }
@@ -100,7 +101,7 @@ export default function LoginPage() {
         <div className="pt-[30px]  pb-[20px] xsm:px-5 flex items-end justify-end">
           <Image src={logo} alt="Logo" />
         </div>
-        {error.length > 0 && (
+        {/* {error.length > 0 && (
           <div className="mt-2 text-red-500 px-3">
             {error.map((e, index) => (
               <p key={index} className="flex items-center">
@@ -109,7 +110,7 @@ export default function LoginPage() {
               </p>
             ))}
           </div>
-        )}
+        )} */}
         <div className="p-5 mx-auto md:mt-[2.3rem] 2xl:mt-[10rem]">
           <h2 className="text-2xl font-semibold mb-6 text-black">
             Nice to have you back!
