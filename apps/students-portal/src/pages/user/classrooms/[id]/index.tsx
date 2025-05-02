@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect, memo } from "react";
+import { useState, useEffect, memo } from "react";
 import {
   Book,
   Calendar,
@@ -31,11 +31,12 @@ import { Toaster } from "@/shared/components/ui/toaster";
 // import { AssignmentSubmissionDialog } from "@/shared/components/assignment-submission-dialog";
 // import { MaterialDownload } from "@/shared/components/material-download";
 import UserLayout, { layoutInterface } from "@/shared/layouts/userLayout";
-import { useGetSingleClassroom } from "@/shared/hooks/query/classroom/getSingleClassroom";
+// import { useGetSingleClassroom } from "@/shared/hooks/query/classroom/getSingleClassroom";
 import { useParams } from "next/navigation";
 // import { useGetClassroomModules } from "@/shared/hooks/query/classroom/getClassroomModules";
 import axios from "axios";
 import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
+import { SingleClassroomResponse } from "@/core/types/interface/classroom.ts/getSingleClassroom";
 
 // Mock classroom data
 // const classroom = {
@@ -199,24 +200,34 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
   // const { data: classModules } = useGetClassroomModules(id);
 
   useEffect(() => {
-    if (!id) return;
+    if (!id) {
+      setError("Classroom ID not found");
+      setIsLoading(false);
+      return;
+    }
 
     const fetchData = async () => {
-      setIsLoading(true);
       try {
+        setIsLoading(true);
         const response = await axios.get(`classrooms/${id}/modules`);
         setData(response.data);
+        setError(null);
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "An unknown error occurred"
         );
-        console.error(err);
+        setData(null);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
+    // Add a timeout to prevent immediate re-fetching
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [id]);
 
   if (!id) return null;
@@ -224,7 +235,7 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
   if (isLoading) return <div>Loading modules...</div>;
   if (error) return <div>Error loading modules</div>;
 
-  console.log(data, "data");
+  // console.log(data, "data");
   return (
     <TabsContent value="modules" className="space-y-4">
       <Card>
@@ -300,31 +311,71 @@ export default function ClassroomDetailPage() {
   const id = paramsN?.id;
   // const defaultV = id;
 
-  const { data: singleClass } = useGetSingleClassroom(id as string);
+  // const { data: singleClass } = useGetSingleClassroom(id as string);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [singleClass, setSingleClass] =
+    useState<SingleClassroomResponse | null>(null);
 
   const [activeTab, setActiveTab] = useState("overview");
+
+  useEffect(() => {
+    if (!id) {
+      setError("Classroom ID not found");
+      setIsLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
+      try {
+        setIsLoading(true);
+        const response = await axios.get(`classrooms/${id}`);
+        setSingleClass(response.data);
+        setError(null);
+      } catch (err) {
+        setError(
+          err instanceof Error ? err.message : "An unknown error occurred"
+        );
+        setSingleClass(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    // Add a timeout to prevent immediate re-fetching
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 100);
+
+    return () => clearTimeout(timer);
+  }, [id]);
+
+  if (!id) return null;
+
+  if (isLoading) return <div>Loading modules...</div>;
+  if (error) return <div>Error loading modules</div>;
   // const [selectedAssignment, setSelectedAssignment] = useState<
   //   (typeof assignments)[0] | null
   // >(null);
   // const [isAssignmentDialogOpen, setIsAssignmentDialogOpen] = useState(false);
 
   // Format time to be more readable
-  const formatTime = useCallback((time: string) => {
+  const formatTime = (time: string) => {
     const [hours, minutes] = time.split(":");
     const hour = Number.parseInt(hours);
     const ampm = hour >= 12 ? "PM" : "AM";
     const hour12 = hour % 12 || 12;
     return `${hour12}:${minutes} ${ampm}`;
-  }, []);
+  };
 
   // Format date to be more readable
-  const formatDate = useCallback((date: string) => {
+  const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
       day: "numeric",
     });
-  }, []);
+  };
 
   // Function to open the assignment dialog
   // const openAssignmentDialog = useCallback((assignment: (typeof assignments)[0]) => {
