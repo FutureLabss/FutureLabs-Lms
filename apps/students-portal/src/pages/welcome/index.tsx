@@ -22,6 +22,11 @@ export default function WelcomePage() {
   const { data: classroomsData } = useGetAllClassrooms();
   const { data: user } = useGetMeprofile();
   const userName = user?.data.fullname || "Student";
+
+  if ((classroomsData?.data ?? []).length > 0) {
+    router.push("/user");
+    return null;
+  }
   //   const [loading, setLoading] = useState(true);
   //   const [hasClass, setHasClass] = useState<boolean | null>(null);
   //   const [userName, setUserName] = useState("Student");
