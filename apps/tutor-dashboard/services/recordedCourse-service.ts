@@ -135,6 +135,46 @@ export const AddMaterial = async (data: MaterialTypeData): Promise<AddMaterialRe
   }
 }
 
+export const DeleteModuleVideo = async (data: { moduleId: number, videoId: number }): Promise<{ message: string }> => {
+  try {
+    const response = await apiClient.delete<{ message: string }>(`/recorded-modules/${data.moduleId}/videos/${data.videoId}`);
+    toast({
+      title: "Success",
+      description: "Video deleted successfully",
+      variant: "default",
+    })
+    return response;
+  } catch (error) {
+    console.error("Error deleting video:", error);
+    toast({
+      title: "Error",
+      description: "Error deleting video",
+      variant: "destructive",
+    })
+    throw error;
+  }
+}
+
+export const DeleteModuleMaterial = async (data: { moduleId: number, materialId: number }): Promise<{ message: string }> => {
+  try {
+    const response = await apiClient.delete<{ message: string }>(`/recorded-modules/${data.moduleId}/materials/${data.materialId}`);
+    toast({
+      title: "Success",
+      description: "Material deleted successfully",
+      variant: "default",
+    })
+    return response;
+  } catch (error) {
+    console.error("Error deleting material:", error);
+    toast({
+      title: "Error",
+      description: "Error deleting material",
+      variant: "destructive",
+    })
+    throw error;
+  }
+}
+
 
 
 
