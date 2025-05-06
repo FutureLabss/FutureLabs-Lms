@@ -50,63 +50,60 @@ export default function ClassesPage() {
           <TabsTrigger value="active">Active</TabsTrigger>
           <TabsTrigger value="inactive">Inactive</TabsTrigger>
         </TabsList>
-        {["all", "active", "inactive"].map((tabValue) => (
-          <>
-          {loading ? (
-            <CourseCardSkeleton />
-          ):(
-          <TabsContent key={tabValue} value={tabValue} className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {filteredClasses
-                .filter((cls) => tabValue === "all" || cls.status === tabValue)
-                .map((cls) => (
-                  <Card key={cls.id}>
-                    <CardHeader className="flex flex-row items-start justify-between space-y-0">
-                      <div>
-                        <CardTitle>{cls.name}</CardTitle>
-                        <CardDescription>{cls.course}</CardDescription>
-                      </div>
-                      <div
-                        className={`px-2 py-1 rounded-full text-xs ${
-                          cls.status === "active"
-                            ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
-                            : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100"
-                        }`}
-                      >
-                        {cls.status === "active" ? "Active" : "Inactive"}
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-2">
-                        <div className="flex items-center text-sm">
-                          <CalendarDays className="mr-2 h-4 w-4 text-muted-foreground" />
-                          <span>{cls.started_in_months}</span>
+          {["all", "active", "inactive"].map((tabValue) =>
+          loading ? (
+            <CourseCardSkeleton key={tabValue} />
+          ) : (
+            <TabsContent key={tabValue} value={tabValue} className="space-y-4">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {filteredClasses
+                  .filter((cls) => tabValue === "all" || cls.status === tabValue)
+                  .map((cls) => (
+                    <Card key={cls.id}>
+                      <CardHeader className="flex flex-row items-start justify-between space-y-0">
+                        <div>
+                          <CardTitle>{cls.name}</CardTitle>
+                          <CardDescription>{cls.course}</CardDescription>
                         </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-sm text-muted-foreground">{cls.students_count} students</span>
-                          <Button variant="ghost" size="sm" asChild>
-                          <Link href={`/classes/${cls.id}`}>View</Link>
-                            {/* <Link href={`/classes/${cls.id}`}>View</Link> */}
-                          </Button>
+                        <div
+                          className={`px-2 py-1 rounded-full text-xs ${
+                            cls.status === "active"
+                              ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100"
+                              : "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100"
+                          }`}
+                        >
+                          {cls.status === "active" ? "Active" : "Inactive"}
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-            </div>
-            {filteredClasses.filter((cls) => tabValue === "all" || cls.status === tabValue).length === 0 && (
-              <div className="flex flex-col items-center justify-center p-8 text-center">
-                <p className="text-muted-foreground">No classes found</p>
-                <Button variant="outline" className="mt-4" onClick={() => setIsCreateModalOpen(true)}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Create a Class
-                </Button>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-2">
+                          <div className="flex items-center text-sm">
+                            <CalendarDays className="mr-2 h-4 w-4 text-muted-foreground" />
+                            <span>{cls.started_in_months}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm text-muted-foreground">{cls.students_count} students</span>
+                            <Button variant="ghost" size="sm" asChild>
+                              <Link href={`/classes/${cls.id}`}>View</Link>
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
               </div>
-            )}
-          </TabsContent>
-        )}
-          </>
-        ))}
+              {filteredClasses.filter((cls) => tabValue === "all" || cls.status === tabValue).length === 0 && (
+                <div className="flex flex-col items-center justify-center p-8 text-center">
+                  <p className="text-muted-foreground">No classes found</p>
+                  <Button variant="outline" className="mt-4" onClick={() => setIsCreateModalOpen(true)}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create a Class
+                  </Button>
+                </div>
+              )}
+            </TabsContent>
+          )
+          )}
       </Tabs>
 
       {/* Create Class Modal */}
