@@ -8,11 +8,12 @@ import { CalendarDays, Plus, Search } from "lucide-react"
 import Link from "next/link"
 import { CreateClassModal } from "@/components/create-class-modal"
 import { useGetAllClassroom } from "@/hooks/query/classroom"
+import CourseCardSkeleton from "./loading"
 
 export default function ClassesPage() {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState("")
-  const {data:retrivedClassroom}=useGetAllClassroom()
+  const {data:retrivedClassroom, loading}=useGetAllClassroom()
   const classroomData = retrivedClassroom?.data || retrivedClassroom?.data || retrivedClassroom || []
   const filteredClasses = Array.isArray(classroomData)
     ? classroomData.filter(
@@ -50,6 +51,10 @@ export default function ClassesPage() {
           <TabsTrigger value="inactive">Inactive</TabsTrigger>
         </TabsList>
         {["all", "active", "inactive"].map((tabValue) => (
+          <>
+          {loading ? (
+            <CourseCardSkeleton />
+          ):(
           <TabsContent key={tabValue} value={tabValue} className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {filteredClasses
@@ -99,6 +104,8 @@ export default function ClassesPage() {
               </div>
             )}
           </TabsContent>
+        )}
+          </>
         ))}
       </Tabs>
 

@@ -6,6 +6,7 @@ import {
   createClasscroomMaterials,
   createClasscroomModules,
   createClasscroomModulesTopic,
+  deleteClasscroom,
 } from "@/services/class-service";
 import {
   ClassroomScheduleResponse,
@@ -25,7 +26,7 @@ export function useCreateClassroom({
     ClassroomScheduleResponse,
     ClassroomScheduleResponse
   > = {
-    key: ["classroom"],
+    key: ["ClassRoom"],
     callback: (data: ClassroomScheduleResponse) => createClasscroom(data),
     onSuccess: onSuccess,
     onError: onError,
@@ -38,13 +39,11 @@ export function useDeleteClassroom({
   onSuccess,
   onError,
   options,
-}: IMutationHook) {
-  const mutation: IMutationArgs<
-    ClassroomScheduleResponse,
-    ClassroomScheduleResponse
-  > = {
+  classroomId,
+}: IMutationHook & { classroomId: string }) {
+  const mutation: IMutationArgs<string, string> = {
     key: ["classroom"],
-    callback: (data: ClassroomScheduleResponse) => createClasscroom(data),
+    callback: () => deleteClasscroom(classroomId),
     onSuccess: onSuccess,
     onError: onError,
     options,
@@ -69,33 +68,28 @@ export function useCreateClassroomModules({
   return useCreateResources(mutation);
 }
 //   use mutate for CreateClassroomMaterial
-export function useCreateClassroomMaterial({
-  onSuccess,
-  onError,
-  options,
-  topicId,
-}: IMutationHook & { topicId: string }) {
-  const mutation: IMutationArgs<IclassRoomMaterials, IclassRoomMaterials> = {
-    key: ["ClassroomMaterials"],
-    callback: (data: IclassRoomMaterials) =>
-      createClasscroomMaterials(data, topicId),
-    onSuccess: onSuccess,
-    onError: onError,
-    options,
-  };
-  return useCreateResources(mutation);
-}
+export function useCreateClassroomMaterial({ onSuccess, onError, options, topicId, classroomId}: IMutationHook & { topicId: string, classroomId:string }) {
+    const mutation: IMutationArgs<IclassRoomMaterials, IclassRoomMaterials> = {
+        key: ["ClassroomMaterials"],
+        callback: (data:IclassRoomMaterials) => createClasscroomMaterials(data, classroomId, topicId),
+        onSuccess: onSuccess,
+        onError: onError,
+        options,
+    };
+    return useCreateResources(mutation);
+  }
 
 //   use mutate for ClassroomModulesTopic
 export function useCreateClassroomModulesTopic({
   onSuccess,
   onError,
-  options,
+  options, classroomId,
   moduleId,
-}: IMutationHook & { moduleId: string }) {
+}:
+   IMutationHook & { classroomId: string |undefined | null, moduleId:string |undefined | null, }) {
   const mutation: IMutationArgs<Itopic, Itopic> = {
     key: ["ClassroomModulesTopics"],
-    callback: (data: Itopic) => createClasscroomModulesTopic(data, moduleId),
+    callback: (data: Itopic) => createClasscroomModulesTopic(data, classroomId, moduleId ),
     onSuccess: onSuccess,
     onError: onError,
     options,
