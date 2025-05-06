@@ -39,7 +39,7 @@ import {
 } from "@/hooks/query/classroom"
 import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
-import type { IsingleClassroomDetails, LocalClassData } from "@/lib/types/classroom"
+import type { IclassRoomModules, IsingleClassroomDetails, Itopic, LocalClassData } from "@/lib/types/classroom"
 import DisplayTopicDetails from "@/components/displaytopicdetails"
 import { ViewSingleModuleModal } from "@/components/viewsinglemodule"
 import CourseCardSkeleton from "./loading"
@@ -246,23 +246,22 @@ export default function ClassDetailsPage() {
   }
 
   // Add a handler function for adding a module
-  const handleAddModule = (module: any) => {
-    // Add module to the class
+  const handleAddModule = (module: IclassRoomModules) => {
     if (!localClassData) return
     const updatedClassData = {
       ...localClassData,
       modules: [...(localClassData.modules || []), module],
     }
-    console.log(updatedClassData)
+    // console.log(updatedClassData)
     setLocalClassData(updatedClassData)
-    console.log(setLocalClassData)
-    console.log(localClassData?.modules)
+    // console.log(setLocalClassData)
+    // console.log(localClassData?.modules)
     toast({
       title: "Module added",
-      description: `${module.title} has been added to ${localClassData.name}.`,
+      description: `${module.title} has been added to ${updatedClassData.name}.`,
     })
   }
-
+  
   // Add a handler function for editing a module
   const handleEditModule = (updatedModule: any) => {
     // Update the module in the class
@@ -306,7 +305,7 @@ export default function ClassDetailsPage() {
   }
 
   // Add a handler function for adding a topic to a module
-  const handleAddTopic = (topic: any) => {
+  const handleAddTopic = (topic: Itopic) => {
     if (!selectedModuleId) return
     if (!localClassData) return
     const updatedModules = localClassData.modules.map((module) => {
