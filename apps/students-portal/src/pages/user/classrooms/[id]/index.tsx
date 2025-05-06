@@ -235,7 +235,7 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
   if (isLoading) return <div>Loading modules...</div>;
   if (error) return <div>Error loading modules</div>;
 
-  // console.log(data, "data");
+  // console.log(classModules, "data");
   return (
     <TabsContent value="modules" className="space-y-4">
       <Card>
