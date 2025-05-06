@@ -44,6 +44,8 @@ import DisplayTopicDetails from "@/components/displaytopicdetails"
 import { ViewSingleModuleModal } from "@/components/viewsinglemodule"
 import CourseCardSkeleton from "./loading"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useDeleteClassroom } from "@/hooks/mutate/classroom"
+import DeleteClassRoomModal from "@/components/delete-class-modal"
 
 const createDefaultClassData = (apiData: IsingleClassroomDetails): LocalClassData => {
   return {
@@ -93,6 +95,26 @@ export default function ClassDetailsPage() {
   const [isEditTopicDialogOpen, setIsEditTopicDialogOpen] = useState(false)
   const [isDeleteTopicDialogOpen, setIsDeleteTopicDialogOpen] = useState(false)
   const [selectedTopic, setSelectedTopic] = useState<any | null>(null)
+  const { mutate: deleteSingleClassroom } = useDeleteClassroom({
+      onSuccess: () => {
+        toast({
+          title: "Classroom deleted",
+          description: "The Classroom has been successfully deleted.",
+          variant: "destructive",
+        });
+        setIsDeleteDialogOpen(false);
+        router.push("/classes");
+      },
+      onError: () => {
+        toast({
+          title: "Error",
+          description: "An error occurred while deleting the classroom.",
+          variant: "destructive",
+        });
+      },
+      classroomId: classId
+    });
+    console.log(deleteSingleClassroom, "delete classroom")
   const [selectedTopicModuleId, setSelectedTopicModuleId] = useState<string | null | undefined>(null)
   const { data: getmodules } = useGetAllClasscroomModules(classId)
   console.log(getmodules, "modules")
@@ -103,14 +125,12 @@ export default function ClassDetailsPage() {
   }, [getmodules])
   const moduleId = params.selectedModuleId as string
   const { data: getmodulesTopic } = useGetAllClasscroomModulesTopic(classId, moduleId)
-
   useEffect(() => {
     if (classData) {
       const defaultData = createDefaultClassData(classData)
       setLocalClassData(defaultData)
     }
   }, [classData])
-
   // Add a separate useEffect to update modules in localClassData when getmodules changes
   useEffect(() => {
     if (getmodules?.data && localClassData) {
@@ -888,31 +908,11 @@ export default function ClassDetailsPage() {
         </div>
       </div>
       {/* Delete Class Dialog */}
-      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Class</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this class? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={() => {
-                setIsDeleteDialogOpen(false)
-                router.push("/classes")
-              }}
-            >
-              <Trash className="mr-2 h-4 w-4" />
-              Delete
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <DeleteClassRoomModal
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        onDelete={() => deleteSingleClassroom(classId)}
+      />
       {/* Delete Module Dialog */}
       <Dialog open={isDeleteModuleDialogOpen} onOpenChange={setIsDeleteModuleDialogOpen}>
         <DialogContent>

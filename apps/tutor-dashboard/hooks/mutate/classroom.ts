@@ -6,6 +6,7 @@ import {
   createClasscroomMaterials,
   createClasscroomModules,
   createClasscroomModulesTopic,
+  deleteClasscroom,
 } from "@/services/class-service";
 import {
   ClassroomScheduleResponse,
@@ -25,7 +26,7 @@ export function useCreateClassroom({
     ClassroomScheduleResponse,
     ClassroomScheduleResponse
   > = {
-    key: ["classroom"],
+    key: ["ClassRoom"],
     callback: (data: ClassroomScheduleResponse) => createClasscroom(data),
     onSuccess: onSuccess,
     onError: onError,
@@ -38,13 +39,11 @@ export function useDeleteClassroom({
   onSuccess,
   onError,
   options,
-}: IMutationHook) {
-  const mutation: IMutationArgs<
-    ClassroomScheduleResponse,
-    ClassroomScheduleResponse
-  > = {
+  classroomId,
+}: IMutationHook & { classroomId: string }) {
+  const mutation: IMutationArgs<string, string> = {
     key: ["classroom"],
-    callback: (data: ClassroomScheduleResponse) => createClasscroom(data),
+    callback: () => deleteClasscroom(classroomId),
     onSuccess: onSuccess,
     onError: onError,
     options,
