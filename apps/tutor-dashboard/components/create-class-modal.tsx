@@ -91,7 +91,6 @@ export function CreateClassModal({ open, onOpenChange }: CreateClassModalProps) 
         status: values.status,
       },
     };
-    console.log(newClass);
     createclassroomdata(newClass);
     onOpenChange(false);
     form.reset();

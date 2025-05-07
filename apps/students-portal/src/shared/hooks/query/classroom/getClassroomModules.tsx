@@ -4,10 +4,12 @@ import { useGetResourcesQuery } from "@/shared/hooks/helper/query";
 import { getClassroomModules } from "@/core/services/classroom/getClassroomModule";
 import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
 
-export function useGetClassroomModules(id: string) {
+export function useGetClassroomModules(id: string | undefined) {
   const singleClassroom: IQueryArgs<ClassModulesApiResponse> = {
     key: ["classroommodule", id as unknown as IAPIFilter],
-    callback: () => getClassroomModules(id),
+    callback: () => getClassroomModules(id!),
   };
-  return useGetResourcesQuery(singleClassroom);
+  return useGetResourcesQuery(singleClassroom, {
+    enabled: !!id,
+  });
 }

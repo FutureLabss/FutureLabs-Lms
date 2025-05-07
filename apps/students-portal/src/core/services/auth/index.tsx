@@ -10,7 +10,7 @@ import {
 } from "@/core/types/interface/auth";
 import useNotificationStore from "@/stores/notificationState";
 // import { useRouter } from "next/router";
-import { handleError } from "@/shared/components/common/exception/catchErrors";
+// import { handleError } from "@/shared/components/common/exception/catchErrors";
 import { QueryClient } from "@tanstack/react-query";
 
 export const queryClient = new QueryClient();
@@ -116,7 +116,21 @@ export const CreatePassword = async (data: ICreatePassword) => {
         return res.data;
       }
     })
-    .catch(handleError);
+    .catch((error) => {
+      const errorMessage = error?.response?.data?.message;
+      if (errorMessage) {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: errorMessage },
+        });
+      } else {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: "An unknown error occurred." },
+        });
+      }
+      return Promise.reject(error);
+    });
 };
 
 export const VerifyEmail = async (data: verifymail) => {
@@ -131,7 +145,21 @@ export const VerifyEmail = async (data: verifymail) => {
       });
       return res.data;
     })
-    .catch(handleError);
+    .catch((error) => {
+      const errorMessage = error?.response?.data?.message;
+      if (errorMessage) {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: errorMessage },
+        });
+      } else {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: "An unknown error occurred." },
+        });
+      }
+      return Promise.reject(error);
+    });
 };
 
 export const resendEmailVerification = async (profileId: string) => {
@@ -147,7 +175,21 @@ export const resendEmailVerification = async (profileId: string) => {
       });
       return res.data;
     })
-    .catch(handleError);
+    .catch((error) => {
+      const errorMessage = error?.response?.data?.message;
+      if (errorMessage) {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: errorMessage },
+        });
+      } else {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: "An unknown error occurred." },
+        });
+      }
+      return Promise.reject(error);
+    });
 };
 
 export const logout = (callback?: () => void) => {

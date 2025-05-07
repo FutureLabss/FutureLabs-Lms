@@ -45,9 +45,20 @@ export async function createClasscroom(
 // Delete a class
 export async function deleteClasscroom(
   classroomId: string
-): Promise<ClassroomScheduleResponse> {
+): Promise<string> {
   return apiClient
-    .delete<ClassroomScheduleResponse>(`classrooms/${classroomId}`)
+    .delete<string>(`classrooms/${classroomId}`)
+    .then((response) => {
+      return response;
+    })
+    .catch(handleError);
+}
+// delete a module
+export async function deleteClasscroomModule(
+  classroomId: string, moduleId:string
+): Promise<string> {
+  return apiClient
+    .delete<string>(`classrooms/${classroomId}/modules/${moduleId}`)
     .then((response) => {
       return response;
     })

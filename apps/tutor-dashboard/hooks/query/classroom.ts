@@ -6,7 +6,7 @@ import { useGetResourcesQuery } from "../helper/query";
 //   use query for getClassroom
 // export function  useGetAllClassroom(){
 // const getClassroom:IQueryArgs<IRetriveClassroomResponse>={
-//     key:["classroom"],
+//     key:["ClassRoom"],
 //     callback:()=>getAllClassRoom()
 // }
 // return useGetResourcesQuery(getClassroom)
@@ -23,7 +23,7 @@ export function useGetAllClassroom() {
 //   use query for singleClassroom
 export function  useGetSingleClassroom(classroomId:string){
 const getClassroom:IQueryArgs<IsingleClassroomDetails>={
-    key:["classroom"],
+    key:["SingleClassroom", {classroomId}],
     callback:()=>getSingleClassRoom(classroomId)
 }
 return useGetResourcesQuery(getClassroom)
@@ -31,7 +31,7 @@ return useGetResourcesQuery(getClassroom)
 //   use query for getClassroomModules
 export function  useGetAllClasscroomModules( id:string){
     const getClassroom:IQueryArgs<ClassroomResponse>={
-        key:["ClassroomModules"],
+        key:["ClassroomModules", {id}],
         callback:()=>getClasscroomModules(id)
     }
     return useGetResourcesQuery(getClassroom)

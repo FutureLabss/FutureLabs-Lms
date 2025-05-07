@@ -40,7 +40,6 @@ export default function NewClassPage() {
 onError(error) {
     
 },})
-console.log(createclassroomdata)
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,7 +55,6 @@ console.log(createclassroomdata)
   })
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
     // createclassroomdata(values)
     router.push("/classes")
   }
