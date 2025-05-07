@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, memo } from "react";
+import { useState } from "react";
 import {
   Book,
   Calendar,
+  FileText,
   // FileText,
   // Folder,
   // GraduationCap,
@@ -31,12 +32,13 @@ import { Toaster } from "@/shared/components/ui/toaster";
 // import { AssignmentSubmissionDialog } from "@/shared/components/assignment-submission-dialog";
 // import { MaterialDownload } from "@/shared/components/material-download";
 import UserLayout, { layoutInterface } from "@/shared/layouts/userLayout";
-// import { useGetSingleClassroom } from "@/shared/hooks/query/classroom/getSingleClassroom";
+import { useGetSingleClassroom } from "@/shared/hooks/query/classroom/getSingleClassroom";
 import { useParams } from "next/navigation";
-// import { useGetClassroomModules } from "@/shared/hooks/query/classroom/getClassroomModules";
-import axios from "axios";
-import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
-import { SingleClassroomResponse } from "@/core/types/interface/classroom.ts/getSingleClassroom";
+import { useGetClassroomModules } from "@/shared/hooks/query/classroom/getClassroomModules";
+// import axios from "axios";
+// import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
+// import { SingleClassroomResponse } from "@/core/types/interface/classroom.ts/getSingleClassroom";
+// import { useGetSingleModuleTopic } from "@/shared/hooks/query/classroom/moduleTopicQuery";
 
 // Mock classroom data
 // const classroom = {
@@ -191,44 +193,28 @@ import { SingleClassroomResponse } from "@/core/types/interface/classroom.ts/get
 //   },
 // ];
 
-const ClassroomModuleCom = memo(function ClassroomModuleCom() {
-  const [data, setData] = useState<ClassModulesApiResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+function ClassroomModuleCom() {
+  // const [isModuleId, setIsModuleId] = useState<number | null>(null);
   const paramsN = useParams<{ id: string }>();
   const id = paramsN?.id;
-  // const { data: classModules } = useGetClassroomModules(id);
+  console.log(id, "paramsN");
 
-  useEffect(() => {
-    if (!id) {
-      setError("Classroom ID not found");
-      setIsLoading(false);
-      return;
-    }
+  console.log(id, "classroom id");
 
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.get(`classrooms/${id}/modules`);
-        setData(response.data);
-        setError(null);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
-        setData(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // const classroomId = Number(id);
+  const {
+    data: classModules,
+    loading: isLoading,
+    error,
+  } = useGetClassroomModules(id);
 
-    // Add a timeout to prevent immediate re-fetching
-    const timer = setTimeout(() => {
-      fetchData();
-    }, 100);
+  console.log(classModules, "classroom modules");
 
-    return () => clearTimeout(timer);
-  }, [id]);
+  // const { data: singleModuleTopic } = useGetSingleModuleTopic(
+  //   1, // classroomId
+  //   15, // moduleId
+  //   14 // topicId
+  // );
 
   if (!id) return null;
 
@@ -240,10 +226,10 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
     <TabsContent value="modules" className="space-y-4">
       <Card>
         <CardHeader>
-          {data ? (
+          {classModules ? (
             <CardTitle className="flex items-center">
               <Book className="mr-2 h-5 w-5" />
-              Modules ({data?.data?.length})
+              Modules ({classModules?.data?.length})
             </CardTitle>
           ) : null}
 
@@ -252,13 +238,13 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
             Modules ({data?.data.length})
           </CardTitle> */}
           <CardContent>
-            {data?.data?.length === 0 ? (
+            {classModules?.data?.length === 0 ? (
               <p className="text-sm text-muted-foreground">
                 No modules available yet
               </p>
             ) : (
               <div className="space-y-6">
-                {data?.data.map((module, index) => (
+                {classModules?.data.map((module, index) => (
                   <div
                     key={module.id}
                     className="border rounded-lg overflow-hidden"
@@ -276,22 +262,23 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
                             {module.topics.length} topics
                           </Badge> */}
                     </div>
-                    {/* <div className="divide-y">
-                          {module.topics.map((topic) => (
-                            <div
-                              key={topic.id}
-                              className="p-4 flex items-center justify-between"
-                            >
-                              <div className="flex items-center">
-                                <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center mr-3">
-                                  <FileText className="h-4 w-4 text-slate-600" />
-                                </div>
-                                <span>{topic.title}</span>
-                              </div>
-                              <Badge variant="secondary">{topic.duration}</Badge>
-                            </div>
-                          ))}
-                        </div> */}
+                    <div className="divide-y">
+                      {/* { */}
+                      {/* // module.topics.map((topic) => ( */}
+                      <div
+                        // key={topic.id}
+                        className="p-4 flex items-center justify-between"
+                      >
+                        <div className="flex items-center">
+                          <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center mr-3">
+                            <FileText className="h-4 w-4 text-slate-600" />
+                          </div>
+                          <span>title</span>
+                        </div>
+                        <Badge variant="secondary">duration</Badge>
+                      </div>
+                      {/* // ))} */}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -304,56 +291,22 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
       </Card>
     </TabsContent>
   );
-});
+}
 
 export default function ClassroomDetailPage() {
   const paramsN = useParams<{ id: string }>();
   const id = paramsN?.id;
-  // const defaultV = id;
-
-  // const { data: singleClass } = useGetSingleClassroom(id as string);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [singleClass, setSingleClass] =
-    useState<SingleClassroomResponse | null>(null);
-
   const [activeTab, setActiveTab] = useState("overview");
+  const myId = id ? id : null;
 
-  useEffect(() => {
-    if (!id) {
-      setError("Classroom ID not found");
-      setIsLoading(false);
-      return;
-    }
+  const {
+    data: singleClassroom,
+    loading: singleClassroomLoading,
+    error: singleClassroomError,
+  } = useGetSingleClassroom(myId || ""); // Pass an empty string or default value if id is not available
 
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.get(`classrooms/${id}`);
-        setSingleClass(response.data);
-        setError(null);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
-        setSingleClass(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Add a timeout to prevent immediate re-fetching
-    const timer = setTimeout(() => {
-      fetchData();
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [id]);
-
-  if (!id) return null;
-
-  if (isLoading) return <div>Loading modules...</div>;
-  if (error) return <div>Error loading modules</div>;
+  if (singleClassroomLoading) return <div>Loading modules...</div>;
+  if (singleClassroomError) return <div>Error loading modules</div>;
   // const [selectedAssignment, setSelectedAssignment] = useState<
   //   (typeof assignments)[0] | null
   // >(null);
@@ -408,24 +361,28 @@ export default function ClassroomDetailPage() {
           >
             ← Back to Classrooms
           </Link>
-          {singleClass ? (
-            <h1 className="text-3xl font-bold">{singleClass.name}</h1>
+          {singleClassroom ? (
+            <h1 className="text-3xl font-bold">{singleClassroom.name}</h1>
           ) : (
             <h1 className="text-3xl font-bold">Nil</h1>
           )}
-          {singleClass ? (
-            <p className="text-sm text-gray-500">{singleClass.description}</p>
+          {singleClassroom ? (
+            <p className="text-sm text-gray-500">
+              {singleClassroom.description}
+            </p>
           ) : (
             <p className="text-sm text-gray-500">Nil</p>
           )}
-          {/* <p className="text-muted-foreground mt-1">{singleClass.description}</p> */}
+          {/* <p className="text-muted-foreground mt-1">{singleClassroom.description}</p> */}
         </div>
-        {singleClass ? (
+        {singleClassroom ? (
           <Badge
-            variant={singleClass.status === "active" ? "default" : "secondary"}
+            variant={
+              singleClassroom.status === "active" ? "default" : "secondary"
+            }
             className="text-sm px-3 py-1"
           >
-            {singleClass.status}
+            {singleClassroom.status}
           </Badge>
         ) : null}
       </div>
@@ -463,9 +420,9 @@ export default function ClassroomDetailPage() {
                     <h3 className="text-sm font-medium text-muted-foreground">
                       Days
                     </h3>
-                    {singleClass ? (
+                    {singleClassroom ? (
                       <p>
-                        {singleClass?.schedules?.days_of_week?.join(", ") ||
+                        {singleClassroom?.schedules?.days_of_week?.join(", ") ||
                           "No schedule set"}
                       </p>
                     ) : (
@@ -477,10 +434,10 @@ export default function ClassroomDetailPage() {
                     <h3 className="text-sm font-medium text-muted-foreground">
                       Time
                     </h3>
-                    {singleClass ? (
+                    {singleClassroom ? (
                       <p>
-                        {formatTime(singleClass.schedules.start_time)} -{" "}
-                        {formatTime(singleClass.schedules.end_time)}
+                        {formatTime(singleClassroom.schedules.start_time)} -{" "}
+                        {formatTime(singleClassroom.schedules.end_time)}
                       </p>
                     ) : (
                       <p>Nil</p>
@@ -495,8 +452,8 @@ export default function ClassroomDetailPage() {
                     <h3 className="text-sm font-medium text-muted-foreground">
                       Start Date
                     </h3>
-                    {singleClass ? (
-                      <p>{formatDate(singleClass.schedules.start_date)}</p>
+                    {singleClassroom ? (
+                      <p>{formatDate(singleClassroom.schedules.start_date)}</p>
                     ) : (
                       <p>Nil</p>
                     )}
@@ -507,8 +464,8 @@ export default function ClassroomDetailPage() {
                     <h3 className="text-sm font-medium text-muted-foreground">
                       End Date
                     </h3>
-                    {singleClass ? (
-                      <p>{formatDate(singleClass.schedules.end_date)}</p>
+                    {singleClassroom ? (
+                      <p>{formatDate(singleClassroom.schedules.end_date)}</p>
                     ) : (
                       <p>Nil</p>
                     )}
@@ -532,13 +489,13 @@ export default function ClassroomDetailPage() {
                   <h3 className="text-sm font-medium text-muted-foreground mb-2">
                     Tutors
                   </h3>
-                  {singleClass?.tutors.length === 0 ? (
+                  {singleClassroom?.tutors.length === 0 ? (
                     <p className="text-sm text-muted-foreground">
                       No tutors assigned yet
                     </p>
                   ) : (
                     <div>
-                      {singleClass?.tutors.map((tutor) => (
+                      {singleClassroom?.tutors.map((tutor) => (
                         <div key={tutor.id} className="flex items-center mb-3">
                           <Avatar className="h-8 w-8 mr-2">
                             <AvatarFallback>
@@ -581,7 +538,7 @@ export default function ClassroomDetailPage() {
                   ))} */}
                 </div>
                 <div>
-                  {singleClass?.students.length === 0 ? (
+                  {singleClassroom?.students.length === 0 ? (
                     <p className="text-sm text-muted-foreground">
                       No students enrolled yet
                     </p>
@@ -590,7 +547,7 @@ export default function ClassroomDetailPage() {
                       <h3 className="text-sm font-medium text-muted-foreground mb-2">
                         Students
                       </h3>
-                      {singleClass?.students.map((student) => (
+                      {singleClassroom?.students.map((student) => (
                         <div
                           key={student.id}
                           className="flex items-center mb-3"
