@@ -95,15 +95,15 @@ export default function ClassDetailsPage() {
   const [selectedTopicModuleId, setSelectedTopicModuleId] = useState<string | null| undefined>(null)
   const { data: getmodules } = useGetAllClasscroomModules(classId)
   
-  // const moduleId = params.selectedModuleId as string
-  // const {data: getmodulesTopic } = useGetAllClasscroomModulesTopic(classId, moduleId );
+  const moduleId = params.selectedModuleId as string
+  const {data: getmodulesTopic } = useGetAllClasscroomModulesTopic(classId, moduleId );
 
-  // useEffect(() => {
-  //   if (classData) {
-  //     const defaultData = createDefaultClassData(classData);
-  //     setLocalClassData(defaultData);
-  //   }
-  // }, [classData]);
+  useEffect(() => {
+    if (classData) {
+      const defaultData = createDefaultClassData(classData);
+      setLocalClassData(defaultData);
+    }
+  }, [classData]);
 
   // useEffect(() => {
   //   if (getmodules?.data) {

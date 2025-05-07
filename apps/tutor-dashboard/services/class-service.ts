@@ -1,30 +1,15 @@
 // import type { ClassroomResponse } from "@/lib/types";
 import { handleError } from "@/components/ui/exception/catchErrors";
 import { apiClient } from "@/lib/api-client";
-<<<<<<< HEAD
-import {
-  ClassroomResponse,
-  ClassroomScheduleResponse,
-  IclassRoomMaterials,
-  IclassRoomModules,
-  IRetriveClassroomResponse,
-  IsingleClassroomDetails,
-  IsingleClassroomDetailsResponse,
-  Itopic,
-  TopicResponse,
-} from "@/lib/types/classroom";
-=======
 import { ClassroomResponse, ClassroomScheduleResponse, IclassRoomMaterials,
    IclassRoomModules, IRetriveClassroomResponse, IsingleClassroomDetails, 
 Itopic, TopicResponse } from "@/lib/types/classroom";
 import { AddStudentResponse } from "@/lib/types/get-student";
->>>>>>> 5b260cfb07f97b16c86de117651543ae4c3ffda9
 
 // Get all classes
 export async function getAllClassRoom(): Promise<IRetriveClassroomResponse> {
   const Promise = apiClient
     .get<IRetriveClassroomResponse>("classrooms")
-<<<<<<< HEAD
     .then((response) => {
       return response;
     });
@@ -82,65 +67,6 @@ export async function createClasscroomModules(
     .catch(handleError);
 }
 
-=======
-    .then((response) => {
-      return response;
-    });
-  return Promise;
-}
-
-// Get a class by ID
-export async function getSingleClassRoom(
-  classroomId: string
-): Promise<IsingleClassroomDetails> {
-  const Promise = apiClient
-    .get<IsingleClassroomDetails>(`classrooms/${classroomId}`)
-    .then((response) => {
-      return response;
-    });
-  return Promise;
-}
-
-// Create a new class
-export async function createClasscroom(
-  formData: ClassroomScheduleResponse
-): Promise<ClassroomScheduleResponse> {
-  return apiClient
-    .post<ClassroomScheduleResponse>("classrooms/", formData)
-    .then((response) => {
-      return response;
-    })
-    .catch(handleError);
-}
-
-// Update a class
-
-// Delete a class
-export async function deleteClasscroom(
-  classroomId: string
-): Promise<ClassroomScheduleResponse> {
-  return apiClient
-    .delete<ClassroomScheduleResponse>(`classrooms/${classroomId}`)
-    .then((response) => {
-      return response;
-    })
-    .catch(handleError);
-}
-
-// create a classmodulus
-export async function createClasscroomModules(
-  data: IclassRoomModules,
-  classroomId: string
-): Promise<IclassRoomModules> {
-  return apiClient
-    .post<IclassRoomModules>(`classrooms/${classroomId}/modules`, data)
-    .then((response) => {
-      return response;
-    })
-    .catch(handleError);
-}
-
->>>>>>> 5b260cfb07f97b16c86de117651543ae4c3ffda9
 // get a classmodulus
 export async function getClasscroomModules(
   classroomId: string
@@ -153,43 +79,22 @@ export async function getClasscroomModules(
     .catch(handleError);
 }
 
-<<<<<<< HEAD
-// create a classmaterials
-export async function createClasscroomMaterials(
-  data: IclassRoomMaterials,
-  topicId: string
-): Promise<IclassRoomMaterials> {
-  return apiClient
-    .post<IclassRoomMaterials>(`topics/${topicId}/material`, data)
-=======
 // get a single module
 export async function getClasscroomSingleModules(classroomId: string, moduleId:string): Promise<ClassroomResponse> {
   return apiClient.get<ClassroomResponse>(`classrooms/${classroomId}/modules/${moduleId}`)
->>>>>>> 5b260cfb07f97b16c86de117651543ae4c3ffda9
     .then((response) => {
       return response;
     })
     .catch(handleError);
 }
 
-<<<<<<< HEAD
-// get a classmaterials
-export async function getClasscroomMaterials(
-  classroomId: string
-): Promise<IclassRoomMaterials> {
-  return apiClient
-    .post<IclassRoomMaterials>(`classrooms/${classroomId}/materials`)
-=======
 // create a classmaterials
 export async function createClasscroomMaterials(data: IclassRoomMaterials, classroomId:string, topicId: string): Promise<IclassRoomMaterials> {
   return apiClient.post<IclassRoomMaterials>(`classrooms/${classroomId}/topics/${topicId}/materials`, data)
->>>>>>> 5b260cfb07f97b16c86de117651543ae4c3ffda9
     .then((response) => {
       return response;
     })
     .catch(handleError);
-<<<<<<< HEAD
-=======
 }
 
 // get a classmaterials
@@ -202,7 +107,6 @@ export async function getClasscroomMaterials(
       return response;
     })
     .catch(handleError);
->>>>>>> 5b260cfb07f97b16c86de117651543ae4c3ffda9
 }
 
 // create a classmaterialsTopic
@@ -235,16 +139,6 @@ export async function getClasscroomModulesTopic(
     })
     .catch(handleError);
 }
-<<<<<<< HEAD
-=======
-export async function getClasscroomModulesTopic(classroomId:string, moduleId: string | null | undefined, ): Promise<TopicResponse> {
-  return apiClient.get<TopicResponse>(`classrooms/${classroomId}/modules/${moduleId}/topics`)
-    .then((response) => {
-      return response;
-    }).catch(handleError);
-}
-
->>>>>>> 5b260cfb07f97b16c86de117651543ae4c3ffda9
 
 // export async function createStudent(data: Itopic, moduleId: string): Promise<Itopic> {
 //   return apiClient.post<Itopic>(`modules/${moduleId}/topics`, data)
@@ -252,8 +146,6 @@ export async function getClasscroomModulesTopic(classroomId:string, moduleId: st
 //       return response;
 //     }).catch(handleError);
 // }
-<<<<<<< HEAD
-=======
 // export async function createClasscroomModulesTopic(
 //   data: Itopic,
 //   moduleId: string
@@ -274,4 +166,3 @@ export async function addStudentToClass(
     user_ids: [userid],
   });
 }
->>>>>>> 5b260cfb07f97b16c86de117651543ae4c3ffda9
