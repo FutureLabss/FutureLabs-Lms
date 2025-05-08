@@ -1339,7 +1339,10 @@ export default function CourseDetailsPage() {
                 <Button
                   type="submit"
                   disabled={
-                    isAddingVideo || !videoFile || !videoForm.formState.isDirty
+                    isAddingVideo ||
+                    !videoFile ||
+                    !videoForm.formState.isDirty ||
+                    isUploadingVideo
                   }
                 >
                   {isAddingVideo || isUploadingVideo ? (
@@ -1490,7 +1493,8 @@ export default function CourseDetailsPage() {
                   disabled={
                     isAddingMaterial ||
                     !materialFile ||
-                    !materialForm.formState.isDirty
+                    !materialForm.formState.isDirty ||
+                    isUploadingMaterial
                   }
                 >
                   {isAddingMaterial || isUploadingMaterial ? (

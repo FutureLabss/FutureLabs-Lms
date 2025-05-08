@@ -29,6 +29,10 @@ export default function CoursesPage() {
   } = useGetAllRecordedCourses();
   const courses = data?.data || []; // Use the data from the query
 
+  if (isError instanceof Error) {
+    console.log("error", isError.message);
+  }
+
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   function handleSearchQuery(e: React.ChangeEvent<HTMLInputElement>) {
