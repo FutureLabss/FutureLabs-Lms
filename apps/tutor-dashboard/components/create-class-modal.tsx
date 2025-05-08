@@ -47,8 +47,6 @@ type CreateClassModalProps = {
 export function CreateClassModal({ open, onOpenChange }: CreateClassModalProps) {
   const [activeTab, setActiveTab] = useState("details")
   const { mutate: createclassroomdata } = useCreateClassroom({ onSuccess(data) { }, onError(error) { } })
-  console.log(createclassroomdata)
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -96,29 +94,6 @@ export function CreateClassModal({ open, onOpenChange }: CreateClassModalProps) 
     form.reset();
     setActiveTab("details");
   }
-
-
-  // function onSubmit(values: z.infer<typeof formSchema>) {
-  //   const newClass = {
-  //     name: values.name,
-  //     program: values.course,
-  //     status: values.status,
-  //     description: values.description,
-  //     schedule: {
-  //       daysOfWeek: values.days_of_week.split(",").map((day) => day.trim()),
-  //       startTime: values.start_time,
-  //       endTime: values.end_time,
-  //     },
-  //     startDate: values.start_date,
-  //     endDate: values.end_date,
-  //   }   
-  //   // onClassCreated(newClass)
-  //   createclassroomdata(newClass)
-  //   console.log(newClass)
-  //   onOpenChange(false)
-  //   form.reset()
-  //   setActiveTab("details")
-  // }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

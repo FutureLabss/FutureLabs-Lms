@@ -52,18 +52,30 @@ export function useDeleteClassroom({
   return useCreateResources(mutation);
 }
 //   use mutate for DeleteClassroomModule
+// export function useDeleteClassroomModule({
+//   onSuccess,
+//   onError,
+//   options,
+// }: IMutationHook) {
+//   const mutation: IMutationArgs<{ classroomId: string; moduleId: string }, string> = {
+//     key: ["classroom", "deleteModule"],
+//     callback: ({ classroomId, moduleId }) => deleteClasscroomModule(classroomId, moduleId),
+//     onSuccess,
+//     onError,
+//     options,
+//   };
+//   return useCreateResources(mutation);
+// }
 export function useDeleteClassroomModule({
   onSuccess,
   onError,
   options,
-  classroomId,
-  moduleId,
-}: IMutationHook & { classroomId: string,  moduleId:string}) {
-  const mutation: IMutationArgs<string, string> = {
-    key: ["classroom"],
-    callback: () => deleteClasscroomModule(classroomId, moduleId),
-    onSuccess: onSuccess,
-    onError: onError,
+}: IMutationHook & { classroomId: string, moduleId: string }) {
+  const mutation: IMutationArgs<{ classroomId: string; moduleId: string }, string> = {
+    key: ["classroom", "deleteModule"],
+    callback: ({ classroomId, moduleId }) => deleteClasscroomModule(classroomId, moduleId),
+    onSuccess,
+    onError,
     options,
   };
   return useCreateResources(mutation);
@@ -88,7 +100,7 @@ export function useCreateClassroomModules({
 //   use mutate for CreateClassroomMaterial
 export function useCreateClassroomMaterial({ onSuccess, onError, options, topicId, classroomId}: IMutationHook & { topicId: string, classroomId:string }) {
     const mutation: IMutationArgs<IclassRoomMaterials, IclassRoomMaterials> = {
-        key: ["ClassroomMaterials"],
+        key: ["ClassroomMaterials", classroomId, topicId],
         callback: (data:IclassRoomMaterials) => createClasscroomMaterials(data, classroomId, topicId),
         onSuccess: onSuccess,
         onError: onError,

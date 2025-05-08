@@ -177,6 +177,12 @@ export interface TopicResponse {
   links: Links;
   meta: Meta;
 }
+export interface MaterialsResponse {
+  message: string;
+  data: IclassRoomMaterials[];
+  links: Links;
+  meta: Meta;
+}
 
   
   
