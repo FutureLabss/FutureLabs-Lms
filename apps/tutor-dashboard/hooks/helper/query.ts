@@ -5,7 +5,7 @@ import { IPaginatedQueryArgs, IQueryArgs, IQueryOptions } from "@/lib/types/quer
 export function useGetResourcesQuery<IReturn>({ callback, key }: IQueryArgs<IReturn>, options: IQueryOptions = {}) {
   const { loadingConfig = { displayLoader: true }, errorConfig = { displayError: false }, ...queryOptions } = options;
 
-  const { status, data, isLoading, isFetching, error, } = useQuery(
+  const { status, data, isLoading, isFetching, error, refetch } = useQuery(
     key,
     (arg) => callback && callback(arg),
     queryOptions
@@ -13,7 +13,7 @@ export function useGetResourcesQuery<IReturn>({ callback, key }: IQueryArgs<IRet
 
   useManageLoadingState(isLoading, loadingConfig);
   useManageErrorNotifications(error as Error, errorConfig);
-  return { data, status, loading: isLoading, error, isFetching };
+  return { data, status, loading: isLoading, error, isFetching, refetch };
 }
 
 export function usePaginationQuery<IReturn>({ callback, key }: IPaginatedQueryArgs<IReturn>, options?: IQueryOptions) {
