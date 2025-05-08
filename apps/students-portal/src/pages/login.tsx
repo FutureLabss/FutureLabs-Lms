@@ -23,14 +23,14 @@ type FormData = z.infer<typeof schema>;
 export default function LoginPage() {
   const router = useRouter();
   const { login } = useAuthContext();
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [hidePassword, setHidePassword] = useState(false);
   // const [error, setError] = useState<string[]>([]);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting, isValid },
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -43,7 +43,7 @@ export default function LoginPage() {
   });
 
   const onSubmit = async (data: FormData) => {
-    setLoading(true);
+    // setLoading(true);
     try {
       await login(data);
       reset();
@@ -53,20 +53,22 @@ export default function LoginPage() {
       const loginError = e as Error;
       console.error("Login error:", loginError.message);
       // setError(loginError.message?.split("\n") ?? [loginError.message]);
-    } finally {
-      setLoading(false);
     }
+
+    // finally {
+    //   setLoading(false);
+    // }
   };
 
   const togglePasswordVisibility = () => setHidePassword(!hidePassword);
 
   return (
     // <div className="bg-white grid grid-cols-1 md:grid-cols-2">
-    <div className="bg-white grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 ">
+    <div className="bg-white grid grid-cols-1 lg:grid-cols-2 h-dvh">
       {/* Left Section */}
       <div className="hidden lg:flex">
-        <div className="bg-background text-white md:px-[75px] 2xl:h-screen ">
-          <div className="md:pt-[10.25rem] p-[3rem] 2xl:pt-[15.25rem]">
+        <div className="bg-background text-white md:px-[75px]  ">
+          <div className="md:pt-[10.25rem] p-[3rem]">
             <h2 className="md:text-[2rem] text-[1.5rem] 2xl:text-[3rem] font-bold">
               Join Futurelabs and Start Your Tech Journey!
             </h2>
@@ -75,7 +77,7 @@ export default function LoginPage() {
               best.
             </p>
           </div>
-          <div className="md:pt-[8rem] 2xl:mt-[17rem] p-[3rem]">
+          <div className=" p-[3rem]">
             <p className="mb-2 text-sm w-[100%] max-w-[290px] md:leading-5">
               My journey as a designer isn&apos;t complete without Futurelabs.
               To anyone out there, take on the opportunity. Best wishes.
@@ -111,13 +113,13 @@ export default function LoginPage() {
             ))}
           </div>
         )} */}
-        <div className="p-5 mx-auto md:mt-[2.3rem] 2xl:mt-[10rem]">
+        <div className="p-5 mx-auto md:mt-[2.3rem] ">
           <h2 className="text-2xl font-semibold mb-6 text-black">
             Nice to have you back!
           </h2>
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col gap-4 xsm:gap-6"
+            className="flex flex-col gap-4 md:space-y-4"
             // className="flex flex-col gap-[5px] md:gap-1 2xl:gap-[3rem]"
           >
             <div>
@@ -125,23 +127,23 @@ export default function LoginPage() {
                 type="text"
                 {...register("email")}
                 placeholder="Email or phone number"
-                className="w-full rounded-md py-2 px-3 2xl:mb-4 bg-white border focus:outline-none focus:border-background"
+                className="w-full rounded-md py-3 px-3 bg-white border focus:outline-none focus:border-background"
               />
               {errors.email && (
                 <p className="text-red-500 text-sm">{errors.email.message}</p>
               )}
             </div>
-            <div className="relative 2xl:pt-10">
+            <div className="relative ">
               <input
                 {...register("password")}
                 type={hidePassword ? "text" : "password"}
                 placeholder="Enter password"
-                className="w-full rounded-md py-2 px-3 2xl:mb-4
+                className="w-full rounded-md py-3 px-3
                  bg-white border focus:outline-none focus:border-background"
                 autoComplete="off"
               />
               <div
-                className="absolute right-3 top-3 2xl:top-14 cursor-pointer"
+                className="absolute right-8 top-4  cursor-pointer"
                 onClick={togglePasswordVisibility}
               >
                 {hidePassword ? <FaRegEye /> : <FaRegEyeSlash />}
@@ -153,7 +155,7 @@ export default function LoginPage() {
               )}
             </div>
 
-            <div className="flex items-center pt-2 ">
+            <div className="flex items-center ">
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
                   type="checkbox"
@@ -166,19 +168,23 @@ export default function LoginPage() {
                 </span>
               </label>
             </div>
-            <div className="pt-3 2xl:pt-14">
+            <div className="pt-3">
               <button
                 type="submit"
-                className="w-full bg-background text-white py-[1rem] rounded-md hover:bg-background focus:outline-none focus:ring focus:ring-blue-300 mb-4 text-[20px]"
-                disabled={loading}
+                className={`w-full bg-background text-white py-[1rem] rounded-md hover:bg-background focus:outline-none focus:ring focus:ring-blue-300 mb-4 text-[20px] ${
+                  isSubmitting || !isValid
+                    ? "opacity-50 cursor-not-allowed"
+                    : ""
+                }`}
+                disabled={isSubmitting || !isValid}
               >
-                {loading ? "Loading..." : "Sign in"}
+                {isSubmitting ? "Loading..." : "Sign in"}
               </button>
             </div>
-            <hr className="2xl:mt-10" />
+            <hr className="" />
             <button
               type="button"
-              className="w-full bg-gray-100 text-white py-[1rem] rounded-md flex items-center gap-3 justify-center text-[20px] mt-4 2xl:mt-10"
+              className="w-full bg-gray-100 text-white py-[1rem] rounded-md flex items-center gap-3 justify-center text-[20px] mt-4 "
             >
               <Image src={google} alt="Google Logo" className="w-6 h-6" />
               Or sign in with Google
