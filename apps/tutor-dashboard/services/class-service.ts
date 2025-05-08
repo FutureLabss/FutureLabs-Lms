@@ -3,7 +3,7 @@ import { handleError } from "@/components/ui/exception/catchErrors";
 import { apiClient } from "@/lib/api-client";
 import { ClassroomResponse, ClassroomScheduleResponse, IclassRoomMaterials,
    IclassRoomModules, IRetriveClassroomResponse, IsingleClassroomDetails, 
-Itopic, TopicResponse } from "@/lib/types/classroom";
+Itopic, MaterialsResponse, TopicResponse } from "@/lib/types/classroom";
 import { AddStudentResponse } from "@/lib/types/get-student";
 
 // Get all classes
@@ -105,11 +105,9 @@ export async function createClasscroomMaterials(data: IclassRoomMaterials, class
 }
 
 // get a classmaterials
-export async function getClasscroomMaterials(
-  classroomId: string
-): Promise<IclassRoomMaterials> {
+export async function getClasscroomMaterials(classroomId: string, topicId:string): Promise<MaterialsResponse> {
   return apiClient
-    .post<IclassRoomMaterials>(`classrooms/${classroomId}/materials`)
+    .get<MaterialsResponse>(`classrooms/${classroomId}/topics/${topicId}/materials`)
     .then((response) => {
       return response;
     })
