@@ -197,9 +197,9 @@ function ClassroomModuleCom() {
   // const [isModuleId, setIsModuleId] = useState<number | null>(null);
   const paramsN = useParams<{ id: string }>();
   const id = paramsN?.id;
-  console.log(id, "paramsN");
+  // console.log(id, "paramsN");
 
-  console.log(id, "classroom id");
+  // console.log(id, "classroom id");
 
   // const classroomId = Number(id);
   const {
@@ -208,7 +208,7 @@ function ClassroomModuleCom() {
     error,
   } = useGetClassroomModules(id);
 
-  console.log(classModules, "classroom modules");
+  // console.log(classModules, "classroom modules");
 
   // const { data: singleModuleTopic } = useGetSingleModuleTopic(
   //   1, // classroomId
