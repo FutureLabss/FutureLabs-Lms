@@ -13,9 +13,9 @@ import EmptyState from "@/shared/components/common/emptyState/empty";
 export default function UserProfilePage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { data: user, loading} = useGetMeprofile();
+  const { data: user, loading } = useGetMeprofile();
   const userId = user?.data?.id;
-  console.log(user)
+  console.log(user);
 
   const { mutate: editUser } = useEditUserProfile(userId as string, {
     onSuccess(data) {
@@ -36,8 +36,8 @@ export default function UserProfilePage() {
     formData.append("gender", data.gender);
     formData.append("state", data.state);
     formData.append("lga", data.lga);
-    formData.append("phone_number", data.phone_number);
-      formData.append("image", data.image);
+    formData.append("phone_number", data.phone);
+    formData.append("image", data.image);
     return formData;
   };
 
@@ -70,12 +70,13 @@ export default function UserProfilePage() {
   //   }
   // };
 
-
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (file) {
       const localImageUrl = URL.createObjectURL(file);
-      setProfileImage(localImageUrl); 
+      setProfileImage(localImageUrl);
       const imageData: EditUserProfileData = {
         _method: "PUT",
         first_name: user?.data.fullname || "",
@@ -84,16 +85,16 @@ export default function UserProfilePage() {
         gender: "",
         state: "",
         lga: "",
-        phone_number: user?.data.profile.phone_number || "",
+        phone: user?.data?.profile?.phone || "",
         image: file,
       };
-  
+
       const formData = createFormData(imageData);
       console.log("these are edited formData", formData);
-  
+
       try {
         editUser(formData as unknown as EditUserProfileData);
-        // isFetching(); 
+        // isFetching();
         console.log("Profile image updated successfully");
       } catch (error) {
         console.error("Error uploading profile image:", error);
@@ -102,20 +103,19 @@ export default function UserProfilePage() {
       console.error("No file selected for upload");
     }
   };
-  
+
   const triggerFileInput = () => {
     fileInputRef.current?.click();
   };
 
   const profileData = {
-    "Full name": user?.data.fullname ,
-    "Email address": user?.data.email,
-    "Phone number": user?.data.profile.phone_number,
+    "Full name": user?.data?.fullname,
+    "Email address": user?.data?.email,
+    "Phone number": user?.data?.phone,
     "Chosen skill": "Product Design",
-    "Contact Address": user?.data.profile.address,
+    "Contact Address": user?.data?.address,
     // "image_url":user?.data.profile.image_url
   };
-  
 
   return (
     <div>
@@ -140,62 +140,66 @@ export default function UserProfilePage() {
             </div>
           ) : (
             <>
-            <div className="flex justify-end px-5">
-            <button
-              className="px-4 py-[10px] text-sm font-medium
-           text-black bg-transparent  border border-[#212C4A] rounded-xl hover:bg-transparent flex gap-2"
-            >
-              <MdEdit size={19} />
-              Edit profile
-            </button>
-          </div>
-          <div className="w-full max-w-4xl  mx-auto flex flex-col md:flex-row gap-8 p-6 2xl:pt-60">
-            <div className="flex flex-col items-center gap-4 ">
-              <div className="relative w-[409px] h-[409px]">
-              {user?.data.profile.image_url && (
-                  <Image
-                    src={profileImage || user?.data.profile.image_url || profile1} 
-                    alt="profile"
-                    layout="fill"
-                    objectFit="cover"
-                    unoptimized
-                  />
-                )}
-              </div>
-              <div className="flex flex-row justify-end items-end w-full">
-                <input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleImageUpload}
-                  accept="image/*"
-                  className="hidden"
-                />
+              <div className="flex justify-end px-5">
                 <button
-                  onClick={triggerFileInput}
                   className="px-4 py-[10px] text-sm font-medium
-                  text-black bg-transparent  border border-[#212C4A] rounded-xl hover:bg-transparent flex gap-2"
+           text-black bg-transparent  border border-[#212C4A] rounded-xl hover:bg-transparent flex gap-2"
                 >
-                  <IoMdCloudUpload size={19} />
-                  Upload photo
+                  <MdEdit size={19} />
+                  Edit profile
                 </button>
               </div>
-            </div>
+              <div className="w-full max-w-4xl  mx-auto flex flex-col md:flex-row gap-8 p-6 2xl:pt-60">
+                <div className="flex flex-col items-center gap-4 ">
+                  <div className="relative w-[409px] h-[409px]">
+                    {user?.data?.profile?.image_url && (
+                      <Image
+                        src={
+                          profileImage ||
+                          user?.data?.profile?.image_url ||
+                          profile1
+                        }
+                        alt="profile"
+                        layout="fill"
+                        objectFit="cover"
+                        unoptimized
+                      />
+                    )}
+                  </div>
+                  <div className="flex flex-row justify-end items-end w-full">
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleImageUpload}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                    <button
+                      onClick={triggerFileInput}
+                      className="px-4 py-[10px] text-sm font-medium
+                  text-black bg-transparent  border border-[#212C4A] rounded-xl hover:bg-transparent flex gap-2"
+                    >
+                      <IoMdCloudUpload size={19} />
+                      Upload photo
+                    </button>
+                  </div>
+                </div>
 
-            {/* Right Column: Profile Details */}
-            <div className="flex-1 w-full md:w-2/3">
-              <ul className="text-gray-700 space-y-4 ">
-                {Object.entries(profileData).map(([label, value], index) => (
-                  <li key={index}>
-                    <strong>{label}:</strong> <br /> {value}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
+                {/* Right Column: Profile Details */}
+                <div className="flex-1 w-full md:w-2/3">
+                  <ul className="text-gray-700 space-y-4 ">
+                    {Object.entries(profileData).map(
+                      ([label, value], index) => (
+                        <li key={index}>
+                          <strong>{label}:</strong> <br /> {value}
+                        </li>
+                      )
+                    )}
+                  </ul>
+                </div>
+              </div>
             </>
-           )
-
-          }
+          )}
         </div>
       </div>
     </div>
