@@ -731,8 +731,19 @@ export default function ClassroomDetailPage() {
           />
         )}
 
-        {/* <TabsContent value="assignments" className="space-y-4">
+        <TabsContent value="assignments" className="space-y-4">
           <Card>
+            <CardHeader className="text-center">
+              <CardTitle className="flex justify-center items-center">
+                <FileText className="mr-2 h-5 w-5 text-muted-foreground" />
+                No Assignments
+              </CardTitle>
+              <CardDescription>
+                You&apos;re all caught up! New assignments will appear here.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
                 <FileText className="mr-2 h-5 w-5" />
@@ -787,8 +798,8 @@ export default function ClassroomDetailPage() {
                 ))}
               </div>
             </CardContent>
-          </Card>
-        </TabsContent> */}
+          </Card> */}
+        </TabsContent>
 
         <TabsContent value="materials" className="space-y-4">
           <Card>
