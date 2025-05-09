@@ -303,7 +303,7 @@ function ClassroomModuleCom({
                             handleSetModuleId(module.id);
                           }}
                         >
-                          View
+                          View Topics
                         </Button>
                         {/* </Badge> */}
                       </div>
