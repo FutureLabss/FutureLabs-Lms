@@ -8,11 +8,11 @@ import { Progress } from "@/shared/components/ui/progress";
 
 interface MaterialDownloadProps {
   material: {
-    id: number;
-    title: string;
-    type: string;
-    size: string;
-    uploaded_at: string;
+    id?: number;
+    title?: string;
+    type?: string;
+    size?: string;
+    uploaded_at?: string;
     url?: string; // In a real app, this would be the actual download URL
   };
 }
@@ -51,12 +51,12 @@ export function MaterialDownload({ material }: MaterialDownloadProps) {
 
         // In a real application, you would trigger the actual file download here
         // For example:
-        // const link = document.createElement('a')
-        // link.href = material.url
-        // link.download = material.title
-        // document.body.appendChild(link)
-        // link.click()
-        // document.body.removeChild(link)
+        const link = document.createElement("a");
+        link.href = material.url || "#";
+        link.download = material.title || "downloaded-file";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       }, 500);
     }, 2000);
   };
