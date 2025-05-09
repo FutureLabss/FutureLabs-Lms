@@ -23,9 +23,6 @@ export const getRecordedCourses = async (): Promise<GetRecordedCourseData> => {
     return response;
   } catch (error) {
     console.error("Error fetching recorded courses:", error);
-    if (error instanceof Error) {
-      throw error.message;
-    }
     throw error;
   }
 }
