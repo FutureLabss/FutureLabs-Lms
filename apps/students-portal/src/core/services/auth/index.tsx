@@ -191,6 +191,64 @@ export const resendEmailVerification = async (profileId: string) => {
       return Promise.reject(error);
     });
 };
+export const forgotPassword = async (fPassword: string) => {
+  return axios
+    .post("/auth/forgot-password",fPassword )
+    .then((res) => {
+      setNotification({
+        type: NotificationType.success,
+        content: {
+          title:
+            "Please check your inbox to update your password.",
+        },
+      });
+      return res.data;
+    })
+    .catch((error) => {
+      const errorMessage = error?.response?.data?.errors?.email;
+      if (errorMessage) {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: errorMessage },
+        });
+      } else {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: "An unknown error occurred." },
+        });
+      }
+      return Promise.reject(error);
+    });
+};
+export const resetForgotPassword = async (newpassword: string) => {
+  return axios
+    .post("/auth/reset-password",newpassword )
+    .then((res) => {
+      setNotification({
+        type: NotificationType.success,
+        content: {
+          title:
+            "password successfully updated enjoy our website",
+        },
+      });
+      return res.data;
+    })
+    .catch((error) => {
+      const errorMessage = error?.response?.data?.errors?.email;
+      if (errorMessage) {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: errorMessage },
+        });
+      } else {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: "An unknown error occurred." },
+        });
+      }
+      return Promise.reject(error);
+    });
+};
 
 export const logout = (callback?: () => void) => {
   localStorage.removeItem("token");

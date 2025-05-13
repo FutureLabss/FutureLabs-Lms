@@ -152,7 +152,11 @@ export default function LoginPage() {
                 </p>
               )}
             </div>
-
+              <p className="text-end text-gray-600 my-0 text-sm">
+            <Link href="/forgotpassword" className="text-blue-500 hover:underline">
+            forgot password
+            </Link>
+          </p>
             <div className="flex items-center pt-2 ">
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
