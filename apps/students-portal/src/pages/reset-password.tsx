@@ -9,7 +9,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { FaLongArrowAltLeft } from 'react-icons/fa';
-// import { useParams } from "next/navigation";
 import { useAuthContext } from "@/shared/context/auth";
 
 
@@ -26,8 +25,6 @@ const schema = z
 type FormData = z.infer<typeof schema>;
 
 export default function ResetForgotPassword() {
-// const paramsP = useParams();
-// console.log(paramsP,'hi there i am param');
 
 const router = useRouter();
 const [loading, setLoading] = useState(false);
@@ -47,7 +44,6 @@ const [loading, setLoading] = useState(false);
     mode: "onChange",
   });
 
-//   const { email, token } = router.query;
  const { 'reset-token': resetToken, email } = router.query;
   const onSubmit = async (data: FormData) => {
     setLoading(true);
@@ -66,12 +62,10 @@ const [loading, setLoading] = useState(false);
       };
       console.error('Missing reset token or email',payload);
      await resetForgotPassword(payload)
-    //  await resetForgotPassword(data)
      console.log(data,'for testing');
      console.log(payload,'for testing for payload');
      
       reset();
-    //   router.replace("/user");
     } catch (e) {
       console.error("Error logging in", e);
     } finally {
@@ -174,7 +168,6 @@ const [loading, setLoading] = useState(false);
               <button
                 type="submit"
                 className="w-full bg-background text-white py-[1rem] rounded-md hover:bg-background focus:outline-none focus:ring focus:ring-blue-300 mb-4 text-[20px]"
-                // disabled={loading || isDirty }
                 aria-busy={loading}
               
               >

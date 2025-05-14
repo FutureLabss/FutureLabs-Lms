@@ -1,7 +1,6 @@
 import Image from "next/image";
 import loginprofile from "../assets/loginprofile.png";
 import logo from "../assets/logo.png";
-// import { useRouter } from "next/router";
 import { useState } from "react";
 import { z } from "zod";
 import { FaLongArrowAltLeft } from 'react-icons/fa';
@@ -9,7 +8,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { useAuthContext } from "@/shared/context/auth";
-// import { useRouter } from "next/router";
 
 
 const schema = z.object({
@@ -19,7 +17,6 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function ForgotPassword() {
-// const router = useRouter();
   const [loading, setLoading] = useState(false);
   const {forgotPassword} = useAuthContext();
 
@@ -39,13 +36,10 @@ export default function ForgotPassword() {
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
-    // console.log(data.email,'checking the value');
     
     try {
       await forgotPassword(data);
       reset();
-      console.log(data,'updating password')
-    //   router.replace("/user");
     } catch (e) {
       const loginError = e as Error;
       console.error("update password:", loginError.message);
@@ -126,7 +120,6 @@ export default function ForgotPassword() {
                 {loading ? "Loading..." : "continue"}
               </button>
             </div>
-            {/* <Link href='/resetforgotpassword'> go to reset password</Link> */}
           </form>
           
         </div>
