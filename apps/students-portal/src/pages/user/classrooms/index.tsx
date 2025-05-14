@@ -70,7 +70,7 @@ import { AlertCircle } from "lucide-react";
 
 export default function ClassroomsPage() {
   const { data: classroomsData } = useGetAllClassrooms();
-  // console.log(classroomsData, "classroomsData");
+  console.log(classroomsData, "classroomsData");
   return (
     <div className="container mx-auto py-6">
       {/* <div className="flex items-center justify-between mb-6">

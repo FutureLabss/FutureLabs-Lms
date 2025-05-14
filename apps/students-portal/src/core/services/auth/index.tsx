@@ -191,9 +191,9 @@ export const resendEmailVerification = async (profileId: string) => {
       return Promise.reject(error);
     });
 };
-export const forgotPassword = async (fPassword: string) => {
+export const forgotPassword = async (email: {email:string}) => {
   return axios
-    .post("/auth/forgot-password",fPassword )
+    .post("/auth/forgot-password", email )
     .then((res) => {
       setNotification({
         type: NotificationType.success,
@@ -205,7 +205,7 @@ export const forgotPassword = async (fPassword: string) => {
       return res.data;
     })
     .catch((error) => {
-      const errorMessage = error?.response?.data?.errors?.email;
+      const errorMessage = error?.response?.data?.errors?.message;
       if (errorMessage) {
         setNotification({
           type: NotificationType.error,
@@ -220,9 +220,9 @@ export const forgotPassword = async (fPassword: string) => {
       return Promise.reject(error);
     });
 };
-export const resetForgotPassword = async (newpassword: string) => {
+export const resetForgotPassword = async (payload:{ email: string; token: string; new_password: string; new_password_confirmation: string; }) => {
   return axios
-    .post("/auth/reset-password",newpassword )
+    .post("/auth/reset-password", payload)
     .then((res) => {
       setNotification({
         type: NotificationType.success,

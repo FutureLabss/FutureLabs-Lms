@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect, memo } from "react";
+import { useState } from "react";
 import {
   Book,
   Calendar,
+  FileText,
+  Folder,
   // FileText,
   // Folder,
   // GraduationCap,
@@ -31,12 +33,26 @@ import { Toaster } from "@/shared/components/ui/toaster";
 // import { AssignmentSubmissionDialog } from "@/shared/components/assignment-submission-dialog";
 // import { MaterialDownload } from "@/shared/components/material-download";
 import UserLayout, { layoutInterface } from "@/shared/layouts/userLayout";
-// import { useGetSingleClassroom } from "@/shared/hooks/query/classroom/getSingleClassroom";
+import { useGetSingleClassroom } from "@/shared/hooks/query/classroom/getSingleClassroom";
 import { useParams } from "next/navigation";
-// import { useGetClassroomModules } from "@/shared/hooks/query/classroom/getClassroomModules";
-import axios from "axios";
+import { useGetClassroomModules } from "@/shared/hooks/query/classroom/getClassroomModules";
+import Button from "@/shared/components/common/Button";
+import Modal from "@/shared/components/common/modal/modal";
+import {
+  useGetAllClassroomMaterials,
+  useGetAllModuleTopics,
+} from "@/shared/hooks/query/classroom/moduleTopicQuery";
 import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
-import { SingleClassroomResponse } from "@/core/types/interface/classroom.ts/getSingleClassroom";
+import {
+  MaterialResponse,
+  TopicsListResponse,
+} from "@/core/types/interface/classroom.ts/moduleTopics";
+import { MaterialDownload } from "@/shared/components/material-download";
+// import Loader from "@/shared/components/common/loader";
+// import axios from "axios";
+// import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
+// import { SingleClassroomResponse } from "@/core/types/interface/classroom.ts/getSingleClassroom";
+// import { useGetSingleModuleTopic } from "@/shared/hooks/query/classroom/moduleTopicQuery";
 
 // Mock classroom data
 // const classroom = {
@@ -191,59 +207,42 @@ import { SingleClassroomResponse } from "@/core/types/interface/classroom.ts/get
 //   },
 // ];
 
-const ClassroomModuleCom = memo(function ClassroomModuleCom() {
-  const [data, setData] = useState<ClassModulesApiResponse | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const paramsN = useParams<{ id: string }>();
-  const id = paramsN?.id;
-  // const { data: classModules } = useGetClassroomModules(id);
+interface ClassRoomTypes {
+  classModules: ClassModulesApiResponse | undefined;
+  isLoading: boolean;
+  error: unknown;
+  moduleTopics: TopicsListResponse | undefined;
+  moduleTopicsError: unknown;
+  moduleTopicsLoading: boolean;
+  isModuleId: number | null;
+  handleSetModuleId: (moduleId: number | null) => void;
+}
 
-  useEffect(() => {
-    if (!id) {
-      setError("Classroom ID not found");
-      setIsLoading(false);
-      return;
-    }
+function ClassroomModuleCom({
+  classModules,
+  isLoading,
+  error,
+  moduleTopics,
+  moduleTopicsError,
+  moduleTopicsLoading,
+  handleSetModuleId,
+  isModuleId,
+}: ClassRoomTypes) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.get(`classrooms/${id}/modules`);
-        setData(response.data);
-        setError(null);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
-        setData(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    // Add a timeout to prevent immediate re-fetching
-    const timer = setTimeout(() => {
-      fetchData();
-    }, 100);
-
-    return () => clearTimeout(timer);
-  }, [id]);
-
-  if (!id) return null;
+  if (moduleTopicsError) return <div>Error loading topics</div>;
 
   if (isLoading) return <div>Loading modules...</div>;
   if (error) return <div>Error loading modules</div>;
 
-  // console.log(classModules, "data");
   return (
     <TabsContent value="modules" className="space-y-4">
       <Card>
         <CardHeader>
-          {data ? (
+          {classModules ? (
             <CardTitle className="flex items-center">
               <Book className="mr-2 h-5 w-5" />
-              Modules ({data?.data?.length})
+              Modules ({classModules?.data?.length})
             </CardTitle>
           ) : null}
 
@@ -252,13 +251,13 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
             Modules ({data?.data.length})
           </CardTitle> */}
           <CardContent>
-            {data?.data?.length === 0 ? (
+            {classModules?.data?.length === 0 ? (
               <p className="text-sm text-muted-foreground">
                 No modules available yet
               </p>
             ) : (
               <div className="space-y-6">
-                {data?.data.map((module, index) => (
+                {classModules?.data.map((module, index) => (
                   <div
                     key={module.id}
                     className="border rounded-lg overflow-hidden"
@@ -272,26 +271,44 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
                           {module.description}
                         </p>
                       </div>
-                      {/* <Badge variant="outline">
-                            {module.topics.length} topics
-                          </Badge> */}
+                      <Badge variant="outline">
+                        {module.topics_count} topics
+                      </Badge>
                     </div>
-                    {/* <div className="divide-y">
-                          {module.topics.map((topic) => (
-                            <div
-                              key={topic.id}
-                              className="p-4 flex items-center justify-between"
-                            >
-                              <div className="flex items-center">
-                                <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center mr-3">
-                                  <FileText className="h-4 w-4 text-slate-600" />
-                                </div>
-                                <span>{topic.title}</span>
-                              </div>
-                              <Badge variant="secondary">{topic.duration}</Badge>
-                            </div>
-                          ))}
-                        </div> */}
+                    <div className="divide-y">
+                      {/* { */}
+                      {/* // module.topics.map((topic) => ( */}
+                      <div
+                        // key={topic.id}
+                        className="p-4 flex items-center justify-between"
+                      >
+                        <div className="flex items-center">
+                          <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center mr-3">
+                            <FileText className="h-4 w-4 text-slate-600" />
+                          </div>
+                          <span>Materials: {module.materials_count}</span>
+                        </div>
+                        <Badge variant="secondary">
+                          duration: {module.duration}
+                        </Badge>
+                        <Badge variant="secondary">
+                          created by: {module.created_by}
+                        </Badge>
+                        {/* <Badge variant="outline"> */}
+                        <Button
+                          className=""
+                          isBorder={true}
+                          onClick={() => {
+                            setIsModalOpen(true);
+                            handleSetModuleId(module.id);
+                          }}
+                        >
+                          View Topics
+                        </Button>
+                        {/* </Badge> */}
+                      </div>
+                      {/* // ))} */}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -302,58 +319,113 @@ const ClassroomModuleCom = memo(function ClassroomModuleCom() {
           </CardDescription>
         </CardHeader>
       </Card>
+
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          handleSetModuleId(null);
+        }}
+        title="Module Topics"
+        displayClose={true}
+      >
+        {moduleTopicsLoading ? (
+          <div>
+            {/* <Loader /> */}
+            loading...
+          </div>
+        ) : (
+          <div>
+            <h2 className="text-lg font-semibold mb-4">
+              Module {isModuleId}: Topics {moduleTopics?.data?.length}
+            </h2>
+            <p className="text-sm text-muted-foreground mb-4">
+              Here are the topics for this module
+            </p>
+          </div>
+        )}
+        {moduleTopics?.data?.length === 0 ? (
+          <p className="text-sm text-muted-foreground">
+            No topics available yet
+          </p>
+        ) : (
+          <div className="space-y-6">
+            {moduleTopics?.data.map((topic, index) => (
+              <div key={topic.id} className="border rounded-lg overflow-hidden">
+                <div className="bg-slate-50 p-4 flex items-center justify-between">
+                  <div>
+                    <h3 className="font-medium">
+                      Topic {index + 1}: {topic.title}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {topic.description}
+                    </p>
+                  </div>
+                  <Badge variant="secondary">{topic.duration} materials</Badge>
+
+                  <Badge variant="secondary">
+                    created by: {topic.created_by}
+                  </Badge>
+                </div>
+                <div className="divide-y"></div>
+                <div className="p-4 flex items-center justify-between"></div>
+              </div>
+            ))}
+          </div>
+        )}
+      </Modal>
     </TabsContent>
   );
-});
+}
 
 export default function ClassroomDetailPage() {
   const paramsN = useParams<{ id: string }>();
   const id = paramsN?.id;
-  // const defaultV = id;
-
-  // const { data: singleClass } = useGetSingleClassroom(id as string);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [singleClass, setSingleClass] =
-    useState<SingleClassroomResponse | null>(null);
-
   const [activeTab, setActiveTab] = useState("overview");
+  const myId = id ? id : null;
+  const [isModuleId, setIsModuleId] = useState<number | null>(null);
+  const isQueryEnabled = !!id && !!isModuleId;
 
-  useEffect(() => {
-    if (!id) {
-      setError("Classroom ID not found");
-      setIsLoading(false);
-      return;
+  const {
+    data: singleClassroom,
+    loading: singleClassroomLoading,
+    error: singleClassroomError,
+  } = useGetSingleClassroom(myId || "");
+
+  // const classroomId = Number(id);
+  const {
+    data: classModules,
+    loading: isLoading,
+    error,
+  } = useGetClassroomModules(id);
+
+  const {
+    data: moduleTopics,
+    error: moduleTopicsError,
+    loading: moduleTopicsLoading,
+  } = useGetAllModuleTopics(Number(id), Number(isModuleId), isQueryEnabled);
+
+  const {
+    data: allClassroomMaterials,
+    loading: allClassroomMaterialsoading,
+    error: allClassroomMaterialsrror,
+  } = useGetAllClassroomMaterials(Number(id), !!Number(id));
+
+  function handleSetModuleId(moduleId: number | null) {
+    if (moduleId === null) {
+      setIsModuleId(null);
     }
+    setIsModuleId(moduleId);
+  }
 
-    const fetchData = async () => {
-      try {
-        setIsLoading(true);
-        const response = await axios.get(`classrooms/${id}`);
-        setSingleClass(response.data);
-        setError(null);
-      } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "An unknown error occurred"
-        );
-        setSingleClass(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  // Pass an empty string or default value if id is not available
 
-    // Add a timeout to prevent immediate re-fetching
-    const timer = setTimeout(() => {
-      fetchData();
-    }, 100);
+  if (singleClassroomLoading) return <div>Loading modules...</div>;
+  if (singleClassroomError) return <div>Error loading modules</div>;
+  if (allClassroomMaterialsrror) return <div>Error loading topics</div>;
+  if (allClassroomMaterialsoading) return <div>Loading topics...</div>;
 
-    return () => clearTimeout(timer);
-  }, [id]);
-
-  if (!id) return null;
-
-  if (isLoading) return <div>Loading modules...</div>;
-  if (error) return <div>Error loading modules</div>;
+  // const assignments = singleClassroom.assignments || [];
   // const [selectedAssignment, setSelectedAssignment] = useState<
   //   (typeof assignments)[0] | null
   // >(null);
@@ -408,24 +480,28 @@ export default function ClassroomDetailPage() {
           >
             ← Back to Classrooms
           </Link>
-          {singleClass ? (
-            <h1 className="text-3xl font-bold">{singleClass.name}</h1>
+          {singleClassroom ? (
+            <h1 className="text-3xl font-bold">{singleClassroom.name}</h1>
           ) : (
             <h1 className="text-3xl font-bold">Nil</h1>
           )}
-          {singleClass ? (
-            <p className="text-sm text-gray-500">{singleClass.description}</p>
+          {singleClassroom ? (
+            <p className="text-sm text-gray-500">
+              {singleClassroom.description}
+            </p>
           ) : (
             <p className="text-sm text-gray-500">Nil</p>
           )}
-          {/* <p className="text-muted-foreground mt-1">{singleClass.description}</p> */}
+          {/* <p className="text-muted-foreground mt-1">{singleClassroom.description}</p> */}
         </div>
-        {singleClass ? (
+        {singleClassroom ? (
           <Badge
-            variant={singleClass.status === "active" ? "default" : "secondary"}
+            variant={
+              singleClassroom.status === "active" ? "default" : "secondary"
+            }
             className="text-sm px-3 py-1"
           >
-            {singleClass.status}
+            {singleClassroom.status}
           </Badge>
         ) : null}
       </div>
@@ -463,9 +539,9 @@ export default function ClassroomDetailPage() {
                     <h3 className="text-sm font-medium text-muted-foreground">
                       Days
                     </h3>
-                    {singleClass ? (
+                    {singleClassroom ? (
                       <p>
-                        {singleClass?.schedules?.days_of_week?.join(", ") ||
+                        {singleClassroom?.schedules?.days_of_week?.join(", ") ||
                           "No schedule set"}
                       </p>
                     ) : (
@@ -477,10 +553,10 @@ export default function ClassroomDetailPage() {
                     <h3 className="text-sm font-medium text-muted-foreground">
                       Time
                     </h3>
-                    {singleClass ? (
+                    {singleClassroom ? (
                       <p>
-                        {formatTime(singleClass.schedules.start_time)} -{" "}
-                        {formatTime(singleClass.schedules.end_time)}
+                        {formatTime(singleClassroom.schedules.start_time)} -{" "}
+                        {formatTime(singleClassroom.schedules.end_time)}
                       </p>
                     ) : (
                       <p>Nil</p>
@@ -495,8 +571,8 @@ export default function ClassroomDetailPage() {
                     <h3 className="text-sm font-medium text-muted-foreground">
                       Start Date
                     </h3>
-                    {singleClass ? (
-                      <p>{formatDate(singleClass.schedules.start_date)}</p>
+                    {singleClassroom ? (
+                      <p>{formatDate(singleClassroom.schedules.start_date)}</p>
                     ) : (
                       <p>Nil</p>
                     )}
@@ -507,8 +583,8 @@ export default function ClassroomDetailPage() {
                     <h3 className="text-sm font-medium text-muted-foreground">
                       End Date
                     </h3>
-                    {singleClass ? (
-                      <p>{formatDate(singleClass.schedules.end_date)}</p>
+                    {singleClassroom ? (
+                      <p>{formatDate(singleClassroom.schedules.end_date)}</p>
                     ) : (
                       <p>Nil</p>
                     )}
@@ -532,13 +608,13 @@ export default function ClassroomDetailPage() {
                   <h3 className="text-sm font-medium text-muted-foreground mb-2">
                     Tutors
                   </h3>
-                  {singleClass?.tutors.length === 0 ? (
+                  {singleClassroom?.tutors.length === 0 ? (
                     <p className="text-sm text-muted-foreground">
                       No tutors assigned yet
                     </p>
                   ) : (
                     <div>
-                      {singleClass?.tutors.map((tutor) => (
+                      {singleClassroom?.tutors.map((tutor) => (
                         <div key={tutor.id} className="flex items-center mb-3">
                           <Avatar className="h-8 w-8 mr-2">
                             <AvatarFallback>
@@ -581,7 +657,7 @@ export default function ClassroomDetailPage() {
                   ))} */}
                 </div>
                 <div>
-                  {singleClass?.students.length === 0 ? (
+                  {singleClassroom?.students.length === 0 ? (
                     <p className="text-sm text-muted-foreground">
                       No students enrolled yet
                     </p>
@@ -590,7 +666,7 @@ export default function ClassroomDetailPage() {
                       <h3 className="text-sm font-medium text-muted-foreground mb-2">
                         Students
                       </h3>
-                      {singleClass?.students.map((student) => (
+                      {singleClassroom?.students.map((student) => (
                         <div
                           key={student.id}
                           className="flex items-center mb-3"
@@ -642,10 +718,32 @@ export default function ClassroomDetailPage() {
           </div>
         </TabsContent>
 
-        {activeTab === "modules" && <ClassroomModuleCom />}
+        {activeTab === "modules" && (
+          <ClassroomModuleCom
+            classModules={classModules}
+            isLoading={isLoading}
+            error={error}
+            moduleTopics={moduleTopics}
+            moduleTopicsError={moduleTopicsError}
+            moduleTopicsLoading={moduleTopicsLoading}
+            handleSetModuleId={handleSetModuleId}
+            isModuleId={isModuleId}
+          />
+        )}
 
-        {/* <TabsContent value="assignments" className="space-y-4">
+        <TabsContent value="assignments" className="space-y-4">
           <Card>
+            <CardHeader className="text-center">
+              <CardTitle className="flex justify-center items-center">
+                <FileText className="mr-2 h-5 w-5 text-muted-foreground" />
+                No Assignments
+              </CardTitle>
+              <CardDescription>
+                You&apos;re all caught up! New assignments will appear here.
+              </CardDescription>
+            </CardHeader>
+          </Card>
+          {/* <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
                 <FileText className="mr-2 h-5 w-5" />
@@ -700,15 +798,15 @@ export default function ClassroomDetailPage() {
                 ))}
               </div>
             </CardContent>
-          </Card>
-        </TabsContent> */}
+          </Card> */}
+        </TabsContent>
 
-        {/* <TabsContent value="materials" className="space-y-4">
+        <TabsContent value="materials" className="space-y-4">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Folder className="mr-2 h-5 w-5" />
-                Course Materials ({materials.length})
+                {/* Course Materials ({materials.length}) */}
               </CardTitle>
               <CardDescription>
                 Download and access course materials provided by your instructor
@@ -716,30 +814,87 @@ export default function ClassroomDetailPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                {materials.map((material) => (
+                {/* {allClassroomMaterials?.data?.map((module) => (
                   <div
-                    key={material.id}
-                    className="flex items-center justify-between p-3 border rounded-lg"
+                    key={module.id}
+                    className="border rounded-lg overflow-hidden"
                   >
-                    <div className="flex items-center">
-                      <div className="h-10 w-10 rounded bg-slate-100 flex items-center justify-center mr-3">
-                        <FileText className="h-5 w-5 text-slate-600" />
+                    <div className="p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h3 className="font-medium">Module: {module.module}</h3>
+                        <Badge variant="outline">
+                          {module.module} materials
+                        </Badge>
                       </div>
-                      <div>
-                        <p className="font-medium">{material.title}</p>
-                        <p className="text-xs text-muted-foreground">
-                          {material.size} • Uploaded on{" "}
-                          {formatDate(material.uploaded_at)}
-                        </p>
+                      <div className="flex items-center justify-between text-sm">
+                        <div className="flex flex-col">
+                          <p>Topics: {module.title}</p>
+                          <p className="text-sm text-muted-foreground mb-3">
+                            description: {module.description}
+                          </p>
+                        </div>
+                        <div className="flex items-center">
+                          <Calendar className="mr-1 h-4 w-4 text-muted-foreground" />
+                          <span>
+                            Created: {formatDate(module.created_at)}
+                          </span>
+                        </div>
+                        <div className="flex items-center">
+                          <Users className="mr-1 h-4 w-4 text-muted-foreground" />
+                          <span>Created by: {module.created_by}</span>
+                        </div>
+                        <Badge variant="outline">
+                          duration: {module.duration} mins
+                        </Badge>
+                        <div>
+                          <Button
+                            className="ml-2"
+                            isBorder={true}
+                            onClick={() => {
+                              // setIsModalOpen(true);
+                              // handleSetModuleId(module.id);
+                            }}
+                          >
+                            View Materials
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                    <MaterialDownload material={material} />
                   </div>
-                ))}
+                ))} */}
+                {allClassroomMaterials?.data.map(
+                  (material: MaterialResponse) => (
+                    <div
+                      key={material.id}
+                      className="flex items-center justify-between p-3 border rounded-lg"
+                    >
+                      <div className="flex items-center">
+                        <div className="h-10 w-10 rounded bg-slate-100 flex items-center justify-center mr-3">
+                          <FileText className="h-5 w-5 text-slate-600" />
+                        </div>
+                        <div>
+                          <p className="font-medium">
+                            Topic : {material.topic}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {/* {material.size} • Uploaded on{" "} */}
+                            {/* {formatDate(material.uploaded_at)} */}
+                          </p>
+                        </div>
+                      </div>
+                      <Badge variant="secondary">
+                        module: {material.module}
+                      </Badge>
+                      <Badge variant="secondary">type: {material.type}</Badge>
+                      <Badge variant="secondary">{material.title}</Badge>
+                      <MaterialDownload material={material} />
+                    </div>
+                  )
+                )}
               </div>
             </CardContent>
           </Card>
-        </TabsContent> */}
+        </TabsContent>
       </Tabs>
     </div>
   );

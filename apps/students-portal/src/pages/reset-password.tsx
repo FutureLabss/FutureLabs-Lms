@@ -9,12 +9,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
 import { FaLongArrowAltLeft } from 'react-icons/fa';
-import { useParams } from "next/navigation";
+// import { useParams } from "next/navigation";
 import { useAuthContext } from "@/shared/context/auth";
 
-// import { useRouter } from "next/router"
 
-// Define schema with password and confirmPassword
 const schema = z
   .object({
     new_password: z.string().min(6, "Password must be at least 6 characters long"),
@@ -57,6 +55,7 @@ const [loading, setLoading] = useState(false);
     
     try {
       if (!resetToken || !email) {
+        console.log('Missing reset token or email');
         console.error('Missing reset token or email');
         return;
       }
@@ -65,6 +64,7 @@ const [loading, setLoading] = useState(false);
         email: email as string,
         token: resetToken as string  
       };
+      console.error('Missing reset token or email',payload);
      await resetForgotPassword(payload)
     //  await resetForgotPassword(data)
      console.log(data,'for testing');
@@ -147,7 +147,7 @@ const [loading, setLoading] = useState(false);
               >
                 {hidePassword ? <FaRegEye /> : <FaRegEyeSlash />}
               </div>
-              {errors.password && (
+              {errors.new_password && (
                 <p className="text-red-500 text-sm">
                   {errors.new_password.message}
                 </p>
@@ -163,7 +163,7 @@ const [loading, setLoading] = useState(false);
                 autoComplete="off"
               />
                
-              {errors.confirmPassword && (
+              {errors.new_password_confirmation && (
                 <p className="text-red-500 text-sm">
                   {errors.new_password_confirmation.message}
                 </p>
@@ -174,8 +174,7 @@ const [loading, setLoading] = useState(false);
               <button
                 type="submit"
                 className="w-full bg-background text-white py-[1rem] rounded-md hover:bg-background focus:outline-none focus:ring focus:ring-blue-300 mb-4 text-[20px]"
-                disabled={loading}
-                disabled={!isDirty}
+                // disabled={loading || isDirty }
                 aria-busy={loading}
               
               >

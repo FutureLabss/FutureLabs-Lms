@@ -1,7 +1,7 @@
 import Image from "next/image";
 import loginprofile from "../assets/loginprofile.png";
 import logo from "../assets/logo.png";
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 import { useState } from "react";
 import { z } from "zod";
 import { FaLongArrowAltLeft } from 'react-icons/fa';
@@ -10,6 +10,8 @@ import { useForm } from "react-hook-form";
 import Link from "next/link";
 import React, { useEffect, useRef } from "react";
 import { useAuthContext } from "@/shared/context/auth";
+// import { useRouter } from "next/router";
+
 
 const schema = z.object({
   email: z.string().email("Invalid email address")
@@ -18,7 +20,7 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function ForgotPassword() {
-const router = useRouter();
+// const router = useRouter();
   const [loading, setLoading] = useState(false);
   const {forgotPassword} = useAuthContext();
 
@@ -46,7 +48,7 @@ console.log(useForm());
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
-    console.log(data.email,'checking the value');
+    // console.log(data.email,'checking the value');
     
     try {
       await forgotPassword(data);
@@ -126,8 +128,8 @@ console.log(useForm());
               <button
                 type="submit"
                 className="w-full bg-background text-white py-[1rem] rounded-md hover:bg-background focus:outline-none focus:ring focus:ring-blue-300 mb-4 text-[20px]"
-                disabled={loading}
-                disabled={!isDirty}
+                disabled={loading || !isDirty }
+               
               >
                 {loading ? "Loading..." : "continue"}
               </button>

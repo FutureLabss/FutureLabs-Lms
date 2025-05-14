@@ -16,12 +16,22 @@ import { Eye, Loader, Plus, Search, Video } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import CourseCardSkeleton from "./loading-course-skeleton";
+import ErrorState from "@/components/ErrorState";
 
 // TypeScript interfaces for the API response
 
 export default function CoursesPage() {
-  const { data, loading: isLoading } = useGetAllRecordedCourses();
+  const {
+    data,
+    loading: isLoading,
+    error: isError,
+    refetch,
+  } = useGetAllRecordedCourses();
   const courses = data?.data || []; // Use the data from the query
+
+  if (isError instanceof Error) {
+    console.log("error", isError.message);
+  }
 
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -61,6 +71,10 @@ export default function CoursesPage() {
         {isLoading ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 ">
             <CourseCardSkeleton />
+          </div>
+        ) : isError ? (
+          <div className="flex items-center justify-center">
+            <ErrorState onRetry={refetch} />
           </div>
         ) : (
           ["all", "published", "draft"].map((tabValue) => (

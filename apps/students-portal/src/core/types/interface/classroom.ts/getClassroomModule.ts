@@ -6,6 +6,9 @@ export interface ModuleItem {
   classroom: string;
   created_by: string;
   updated_by: string;
+  duration: string;
+  topics_count: number;
+  materials_count: number;
 }
 
 // Represents the links object for pagination

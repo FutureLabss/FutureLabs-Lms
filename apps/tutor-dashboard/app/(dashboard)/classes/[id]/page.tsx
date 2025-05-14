@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Calendar, Clock, Edit, MoreHorizontal, Plus, Trash, Users, Layers } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -44,8 +44,10 @@ import DisplayTopicDetails from "@/components/displaytopicdetails"
 import { ViewSingleModuleModal } from "@/components/viewsinglemodule"
 import CourseCardSkeleton from "./loading"
 import { Skeleton } from "@/components/ui/skeleton"
-import { useDeleteClassroom } from "@/hooks/mutate/classroom"
+import { useDeleteClassroom, useDeleteClassroomModule } from "@/hooks/mutate/classroom"
 import DeleteClassRoomModal from "@/components/delete-class-modal"
+import DeleteClassRoomModuleModal from "@/components/delete-module-modal"
+import DisplayMaterialDetails from "@/components/displaymaterialdetails"
 
 const createDefaultClassData = (apiData: IsingleClassroomDetails): LocalClassData => {
   return {
@@ -78,7 +80,7 @@ export default function ClassDetailsPage() {
   const [localClassData, setLocalClassData] = useState<LocalClassData | null>(null)
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false)
   const [isAddStudentDialogOpen, setIsAddStudentDialogOpen] = useState(false)
-  const [isAddMaterialDialogOpen, setIsAddMaterialDialogOpen] = useState(false)
+
   const [isAddAssignmentDialogOpen, setIsAddAssignmentDialogOpen] = useState(false)
   const [studentToRemove, setStudentToRemove] = useState<string | null>(null)
   const [isRemoveStudentDialogOpen, setIsRemoveStudentDialogOpen] = useState(false)
@@ -95,6 +97,7 @@ export default function ClassDetailsPage() {
   const [isEditTopicDialogOpen, setIsEditTopicDialogOpen] = useState(false)
   const [isDeleteTopicDialogOpen, setIsDeleteTopicDialogOpen] = useState(false)
   const [selectedTopic, setSelectedTopic] = useState<any | null>(null)
+    const [isDeleting, setIsDeleting] = useState(false);
   const { mutate: deleteSingleClassroom } = useDeleteClassroom({
       onSuccess: () => {
         toast({
@@ -114,7 +117,7 @@ export default function ClassDetailsPage() {
       },
       classroomId: classId
     });
-    console.log(deleteSingleClassroom, "delete classroom")
+    const moduleId = params.selectedModuleId as string
   const [selectedTopicModuleId, setSelectedTopicModuleId] = useState<string | null | undefined>(null)
   const { data: getmodules } = useGetAllClasscroomModules(classId)
   console.log(getmodules, "modules")
@@ -123,15 +126,32 @@ export default function ClassDetailsPage() {
       console.log("Modules data structure:", JSON.stringify(getmodules, null, 2))
     }
   }, [getmodules])
-  const moduleId = params.selectedModuleId as string
-  const { data: getmodulesTopic } = useGetAllClasscroomModulesTopic(classId, moduleId)
+  const { mutate: deleteClassroomModule } = useDeleteClassroomModule({
+    onSuccess: () => {
+      toast({
+        title: "Module deleted",
+        description: "The module has been successfully deleted.",
+        variant: "destructive",
+      });
+      setIsDeleteModuleDialogOpen(false); 
+      // refetchModules();
+    },
+    onError: () => {
+      toast({
+        title: "Error",
+        description: "An error occurred while deleting the module.",
+        variant: "destructive",
+      });
+    },
+    classroomId: classId,
+    moduleId: moduleId 
+  });
   useEffect(() => {
     if (classData) {
       const defaultData = createDefaultClassData(classData)
       setLocalClassData(defaultData)
     }
   }, [classData])
-  // Add a separate useEffect to update modules in localClassData when getmodules changes
   useEffect(() => {
     if (getmodules?.data && localClassData) {
       setLocalClassData((prevData) => {
@@ -170,7 +190,7 @@ export default function ClassDetailsPage() {
   //     setLocalClassData(updatedClassData as typeof initialClassData);
   //   }
   // }, [classData]);
-
+;
   const handleAddStudent = (student: any) => {
     // console.log(st)
     // Check if student is already in the class
@@ -183,7 +203,6 @@ export default function ClassDetailsPage() {
       })
       return
     }
-
     // Add student to the class
     if (!localClassData) return
     const updatedClassData = {
@@ -197,7 +216,6 @@ export default function ClassDetailsPage() {
       description: `${student.fullname} has been added to ${localClassData.name}.`,
     })
   }
-
   const handleRemoveStudent = (studentId: string) => {
     setStudentToRemove(studentId)
     setIsRemoveStudentDialogOpen(true)
@@ -224,13 +242,10 @@ export default function ClassDetailsPage() {
       ),
     })
   }
-
   const handleViewProgress = (student: any) => {
     setSelectedStudent(student)
     setIsProgressModalOpen(true)
   }
-
-  // Update the handleAddMaterial function in the ClassDetailsPage component
   const handleAddMaterial = (material: any) => {
     // Add material to the class
     if (!localClassData) return
@@ -252,10 +267,7 @@ export default function ClassDetailsPage() {
       ...localClassData,
       modules: [...(localClassData.modules || []), module],
     }
-    // console.log(updatedClassData)
     setLocalClassData(updatedClassData)
-    // console.log(setLocalClassData)
-    // console.log(localClassData?.modules)
     toast({
       title: "Module added",
       description: `${module.title} has been added to ${updatedClassData.name}.`,
@@ -284,25 +296,35 @@ export default function ClassDetailsPage() {
   }
 
   // Add a handler function for deleting a module
-  const handleDeleteModule = () => {
-    if (!selectedModuleId) return
-    // Remove the module from the class
-    if (!localClassData) return
-    const updatedModules = localClassData.modules.filter((module) => module.id !== selectedModuleId)
-    const moduleToDelete = localClassData.modules.find((module) => module.id === selectedModuleId)
-    const updatedClassData = {
-      ...localClassData,
-      modules: updatedModules,
+  const handleDeleteModule = async () => {
+    if (!selectedModuleId || !localClassData) return;
+    setIsDeleting(true);
+    try {
+      await deleteClassroomModule({ classroomId: classId, moduleId: selectedModuleId });
+      const updatedModules = localClassData.modules.filter((module) => module.id !== selectedModuleId);
+      const moduleToDelete = localClassData.modules.find((module) => module.id === selectedModuleId);
+      const updatedClassData = {
+        ...localClassData,
+        modules: updatedModules,
+      };
+      setLocalClassData(updatedClassData);
+      setIsDeleteModuleDialogOpen(false);
+      setSelectedModuleId(null);
+      setSelectedModule(null);
+      toast({
+        title: "Module deleted",
+        description: `${moduleToDelete?.title} has been deleted from ${localClassData.name}.`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "An error occurred while deleting the module.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
     }
-    setLocalClassData(updatedClassData)
-    setIsDeleteModuleDialogOpen(false)
-    setSelectedModuleId(null)
-    setSelectedModule(null)
-    toast({
-      title: "Module deleted",
-      description: `${moduleToDelete?.title} has been deleted from ${localClassData.name}.`,
-    })
-  }
+  };
 
   // Add a handler function for adding a topic to a module
   const handleAddTopic = (topic: Itopic) => {
@@ -671,13 +693,15 @@ export default function ClassDetailsPage() {
               moduleId={module?.id}
               setIsEditTopicDialogOpen={setIsEditTopicDialogOpen}
               setSelectedTopicModuleId={setSelectedTopicModuleId}
-            />
+              selectedTopic={selectedTopic} 
+              handleAddMaterial={handleAddMaterial}            />
           </CardContent>
         </Card>
       ))}
     </div>
   )}
 </TabsContent>
+{/* student */}
             <TabsContent value="students" className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
@@ -756,51 +780,14 @@ export default function ClassDetailsPage() {
                 </Card>
               )}
             </TabsContent>
+                        {/* add materials */}
             <TabsContent value="materials" className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold">Materials</h2>
-                <Button onClick={() => setIsAddMaterialDialogOpen(true)}>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Add Material
-                </Button>
               </div>
-              <Card>
-                <CardContent className="p-0">
-                  <div className="divide-y">
-                    {localClassData?.materials.map((material) => (
-                      <div key={material.title} className="flex items-center justify-between p-4">
-                        <div>
-                          <p className="font-medium">{material.title}</p>
-                          <p className="text-sm text-muted-foreground">
-                            {material.type.toUpperCase()} • Added on{" "}
-                            {/* {new Date(material.created_at).toLocaleDateString()} */}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button variant="outline" size="sm" asChild>
-                            <Link href={material.url}>View</Link>
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Download</DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-destructive focus:text-destructive">
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              {/* <DisplayMaterialDetails
+               classId={classId} 
+               selectedTopic={selectedTopic}  /> */}
             </TabsContent>
             <TabsContent value="assignments" className="space-y-4">
               <div className="flex items-center justify-between">
@@ -913,26 +900,12 @@ export default function ClassDetailsPage() {
         onDelete={() => deleteSingleClassroom(classId)}
       />
       {/* Delete Module Dialog */}
-      <Dialog open={isDeleteModuleDialogOpen} onOpenChange={setIsDeleteModuleDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Module</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete this module? All topics within this module will also be deleted. This
-              action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsDeleteModuleDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button variant="destructive" onClick={handleDeleteModule}>
-              <Trash className="mr-2 h-4 w-4" />
-              Delete Module
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <DeleteClassRoomModuleModal
+        open={isDeleteModuleDialogOpen}
+        onOpenChange={setIsDeleteModuleDialogOpen}
+        onDelete={handleDeleteModule}
+        isSubmitting={isDeleting}
+      />
       {/* Add Student Modal */}
       <AddStudentModal
         open={isAddStudentDialogOpen}
@@ -971,13 +944,13 @@ export default function ClassDetailsPage() {
         />
       )}
       {/* Add Material Modal */}
-      <AddMaterialModal
+      {/* <AddMaterialModal
         open={isAddMaterialDialogOpen}
         onOpenChange={setIsAddMaterialDialogOpen}
         onMaterialAdded={handleAddMaterial}
         classId={classId}
         topicId={selectedTopic}
-      />
+      /> */}
       {/* Edit Class Modal */}
       <EditClassModal
         open={isEditClassDialogOpen}

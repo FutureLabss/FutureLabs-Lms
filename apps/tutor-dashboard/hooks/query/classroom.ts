@@ -1,6 +1,6 @@
-import { ClassroomResponse, IclassRoomMaterials, IclassRoomModules, IRetriveClassroomResponse, IsingleClassroomDetails, IsingleClassroomDetailsResponse, TopicResponse } from "@/lib/types/classroom";
+import { ClassroomResponse, IRetriveClassroomResponse, IsingleClassroomDetails, MaterialsResponse, TopicResponse } from "@/lib/types/classroom";
 import { IQueryArgs } from "@/lib/types/query";
-import { createClasscroomMaterials, getAllClassRoom, getClasscroomModules, getClasscroomModulesTopic, getClasscroomSingleModules, getSingleClassRoom } from "@/services/class-service";
+import {  getAllClassRoom, getClasscroomMaterials, getClasscroomModules, getClasscroomModulesTopic, getClasscroomSingleModules, getSingleClassRoom } from "@/services/class-service";
 import { useGetResourcesQuery } from "../helper/query";
 
 //   use query for getClassroom
@@ -46,14 +46,13 @@ export function  useGetSingleClasscroomModules(classroomId: string, moduleId:str
     }
 
     //   use query for getClassroomMaterials
-export function  useGetAllClasscroomMaterials( data:IclassRoomMaterials, classroomId:string, topicId:string){
-    const getClassroom:IQueryArgs<IclassRoomMaterials>={
-        key:["ClassroomMaterials"],
-        callback:()=>createClasscroomMaterials(data, classroomId, topicId)
+export function  useGetAllClasscroomMaterials(  classroomId:string, topicId:string){
+    const getClassroom:IQueryArgs<MaterialsResponse>={
+        key:["ClassroomMaterials", {classroomId, topicId}],
+        callback:()=>getClasscroomMaterials(classroomId, topicId)
     }
     return useGetResourcesQuery(getClassroom)
     }
-
     // getClasscroomModulesTopic
     export function  useGetAllClasscroomModulesTopic( classroomId:string, modulesId:string){
         const getClassroomModulesTopic:IQueryArgs<TopicResponse>={
