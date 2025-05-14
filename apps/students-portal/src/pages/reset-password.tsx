@@ -36,7 +36,7 @@ const [loading, setLoading] = useState(false);
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
+    formState: { errors },
     reset,
   } = useForm<FormData>({
     resolver: zodResolver(schema),

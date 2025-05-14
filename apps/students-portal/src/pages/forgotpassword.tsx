@@ -8,7 +8,6 @@ import { FaLongArrowAltLeft } from 'react-icons/fa';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import React, { useEffect, useRef } from "react";
 import { useAuthContext } from "@/shared/context/auth";
 // import { useRouter } from "next/router";
 
@@ -37,14 +36,6 @@ export default function ForgotPassword() {
     mode: "onChange",
   });
 
-  const handlefor   = useRef(null)
-  
-console.log(useForm());
-  useEffect(() => {
-    if (handlefor.current) {
-      handlefor.current.focus();
-    }
-  }, []);
 
   const onSubmit = async (data: FormData) => {
     setLoading(true);
@@ -118,6 +109,7 @@ console.log(useForm());
                 type="text"
                 {...register("email")}
                 placeholder="Email or phone number"
+                 autoFocus
                 className="w-full rounded-md py-2 px-3 2xl:mb-4 bg-white border focus:outline-none focus:border-background"
               />
               {errors.email && (
