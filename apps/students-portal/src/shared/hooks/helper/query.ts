@@ -3,12 +3,12 @@ import { useManageErrorNotifications, useManageLoadingState } from "./misc";
 import { IPaginatedQueryArgs, IQueryArgs, IQueryOptions } from "@/core/types/interface/query";
 
 export function useGetResourcesQuery<IReturn>({ callback, key }: IQueryArgs<IReturn>, options: IQueryOptions = {}) {
-  const { loadingConfig = { displayLoader: true }, errorConfig = { displayError: false }, ...queryOptions } = options;
+  const { loadingConfig = { displayLoader: true }, errorConfig = { displayError: false }, enabled = true, ...queryOptions } = options;
 
   const { status, data, isLoading, isFetching, error, } = useQuery(
     key,
     (arg) => callback && callback(arg),
-    queryOptions
+    { enabled, ...queryOptions }
   );
 
   useManageLoadingState(isLoading, loadingConfig);
