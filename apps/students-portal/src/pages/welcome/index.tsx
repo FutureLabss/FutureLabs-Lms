@@ -131,7 +131,7 @@ export default function WelcomePage() {
                     variant="outline"
                     size="lg"
                     className="w-full md:w-auto md:px-12"
-                    asChild
+                    asChild 
                   >
                     <Link href="/support">Contact Administrator</Link>
                   </Button> */}
