@@ -117,7 +117,7 @@ export default function WelcomePage() {
                   <div className="bg-amber-50 rounded-lg p-6 flex flex-col items-center">
                     <AlertCircle className="h-16 w-16 text-amber-500 mb-4" />
                     <h3 className="text-xl font-semibold text-amber-700">
-                      No Class Found
+                      No Class  Found
                     </h3>
                     <p className="text-amber-600 mt-2">
                       It looks like you haven&apos;t been assigned to a class
