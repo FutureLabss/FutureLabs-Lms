@@ -11,7 +11,7 @@ import {
 import useNotificationStore from "@/stores/notificationState";
 // import { useRouter } from "next/router";
 // import { handleError } from "@/shared/components/common/exception/catchErrors";
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient } from "react-query";
 
 export const queryClient = new QueryClient();
 
