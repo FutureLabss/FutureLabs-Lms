@@ -7,10 +7,6 @@ import { RiLiveLine } from "react-icons/ri";
 import { MdLeaderboard } from "react-icons/md";
 import { IoIosNotificationsOutline } from "react-icons/io";
 
-
-
-
-
 // import { LuUsers2 } from "react-icons/lu";
 // import { Menu } from "../types/interfaces/components/menu.interface";
 
@@ -26,19 +22,20 @@ export const AdminMenus: Menu[] = [
     id: "2",
     icon: SlGraduation,
     path: `${AdminRoutes.COURSES}`,
+    disabled: true,
   },
   {
     title: "Assignments",
     id: "3",
     icon: MdOutlineAssignment,
     path: `${AdminRoutes.PAYMENT}`,
-    disabled: false,
+    disabled: true,
   },
   {
-    title: "Live Classes",
+    title: "Classrooms",
     id: "4",
     icon: RiLiveLine,
-    path: `${AdminRoutes.LIVESESSIONS}`,
+    path: `${AdminRoutes.CLASSROOMS}`,
     disabled: false,
   },
   {
@@ -55,12 +52,12 @@ export const AdminMenus: Menu[] = [
     disabled: true,
     path: `${AdminRoutes.NOTIFICATION}`,
   },
-
 ];
 
-export const AdminMenuLookup = AdminMenus.reduce<{ [key: string]: Menu }>((val, item) => {
-  val = { ...val, [item.path]: item };
-  return val;
-}, {});
-
-
+export const AdminMenuLookup = AdminMenus.reduce<{ [key: string]: Menu }>(
+  (val, item) => {
+    val = { ...val, [item.path]: item };
+    return val;
+  },
+  {}
+);

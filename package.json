@@ -8,10 +8,6 @@
     "lint": "turbo run lint",
     "test": "turbo run test"
   },
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "author": "",
   "license": "ISC",
   "keywords": [],
@@ -23,6 +19,5 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
-  "packageManager": "npm@8.5.0"
-  
+  "packageManager": "pnpm@8.15.4"
 }
