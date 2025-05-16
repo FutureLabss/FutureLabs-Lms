@@ -80,7 +80,7 @@ export default function ForgotPassword() {
           </div>
         </div>
       </div> 
-      <div>
+      <div className='md:px-[76px] 2xl:px-[76px]'>
          <div className="pt-[30px]  pb-[20px] xsm:px-5 flex items-end justify-end">
           <Image src={logo} alt="Logo" />
         </div>

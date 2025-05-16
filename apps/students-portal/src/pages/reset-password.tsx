@@ -8,13 +8,14 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import Link from "next/link";
-import { FaLongArrowAltLeft } from 'react-icons/fa';
+import { FaLongArrowAltLeft } from "react-icons/fa";
 import { useAuthContext } from "@/shared/context/auth";
-
 
 const schema = z
   .object({
-    new_password: z.string().min(6, "Password must be at least 6 characters long"),
+    new_password: z
+      .string()
+      .min(6, "Password must be at least 6 characters long"),
     new_password_confirmation: z.string(),
   })
   .refine((data) => data.new_password === data.new_password_confirmation, {
@@ -25,11 +26,10 @@ const schema = z
 type FormData = z.infer<typeof schema>;
 
 export default function ResetForgotPassword() {
-
-const router = useRouter();
-const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const [hidePassword, setHidePassword] = useState(false);
-    const {resetForgotPassword} = useAuthContext();
+  const { resetForgotPassword } = useAuthContext();
   const {
     register,
     handleSubmit,
@@ -44,27 +44,27 @@ const [loading, setLoading] = useState(false);
     mode: "onChange",
   });
 
- const { 'reset-token': resetToken, email } = router.query;
+  const { "reset-token": resetToken, email } = router.query;
   const onSubmit = async (data: FormData) => {
     setLoading(true);
-    console.log(data, 'for reset forgotpassword');
-    
+    console.log(data, "for reset forgotpassword");
+
     try {
       if (!resetToken || !email) {
-        console.log('Missing reset token or email');
-        console.error('Missing reset token or email');
+        console.log("Missing reset token or email");
+        console.error("Missing reset token or email");
         return;
       }
       const payload = {
         ...data,
         email: email as string,
-        token: resetToken as string  
+        token: resetToken as string,
       };
-      console.error('Missing reset token or email',payload);
-     await resetForgotPassword(payload)
-     console.log(data,'for testing');
-     console.log(payload,'for testing for payload');
-     
+      console.error("Missing reset token or email", payload);
+      await resetForgotPassword(payload);
+      console.log(data, "for testing");
+      console.log(payload, "for testing for payload");
+
       reset();
     } catch (e) {
       console.error("Error logging in", e);
@@ -115,13 +115,16 @@ const [loading, setLoading] = useState(false);
           <Image src={logo} alt="Logo" />
         </div>
 
-             <div className="m-6">
-                <button className=" text-[#212C4A] border-4 border-[#212C4A] py-2 px-2 rounded-md ">
-                     <Link href="/forgotpassword" className="text-blue-500 hover:underline">       
-                        <FaLongArrowAltLeft />
-                    </Link>
-                </button>
-             </div>
+        <div className="m-6">
+          <button className=" text-[#212C4A] border-4 border-[#212C4A] py-2 px-2 rounded-md ">
+            <Link
+              href="/forgotpassword"
+              className="text-blue-500 hover:underline"
+            >
+              <FaLongArrowAltLeft />
+            </Link>
+          </button>
+        </div>
         <div className="p-5 mx-auto md:mt-[2.3rem] 2xl:mt-[10rem]">
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -156,20 +159,19 @@ const [loading, setLoading] = useState(false);
                 className="w-full rounded-md py-2 px-3 bg-white border focus:outline-none focus:border-background"
                 autoComplete="off"
               />
-               
+
               {errors.new_password_confirmation && (
                 <p className="text-red-500 text-sm">
                   {errors.new_password_confirmation.message}
                 </p>
               )}
             </div>
-{/* button for submition */}
+            {/* button for submition */}
             <div className="pt-3 2xl:pt-14">
               <button
                 type="submit"
                 className="w-full bg-background text-white py-[1rem] rounded-md hover:bg-background focus:outline-none focus:ring focus:ring-blue-300 mb-4 text-[20px]"
                 aria-busy={loading}
-              
               >
                 {loading ? "Loading..." : "Continue"}
               </button>
