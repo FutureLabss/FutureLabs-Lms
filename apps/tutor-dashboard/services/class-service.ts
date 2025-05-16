@@ -1,5 +1,6 @@
 // import type { ClassroomResponse } from "@/lib/types";
 import { handleError } from "@/components/ui/exception/catchErrors";
+import { toast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api-client";
 import { ClassroomResponse, ClassroomScheduleResponse, IclassRoomMaterials,
    IclassRoomModules, IRetriveClassroomResponse, IsingleClassroomDetails, 
@@ -156,3 +157,27 @@ export async function addStudentToClass(
     user_ids: [userid],
   });
 }
+
+
+export const getAllClassroomMaterials = async ({
+  classroomId,
+}: {
+  classroomId: number;
+}): Promise<MaterialsResponse> => {
+  try {
+    const response = await apiClient.get<MaterialsResponse>(
+      `classrooms/${classroomId}/resources?query=materials`
+    );
+    return response;
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: `An error occurred while fetching module materials. ${
+        error instanceof Error ? error.message : ""
+      }`,
+      variant: "destructive",
+    });
+    console.error("Error fetching module materials:", error);
+    throw error;
+  }
+};

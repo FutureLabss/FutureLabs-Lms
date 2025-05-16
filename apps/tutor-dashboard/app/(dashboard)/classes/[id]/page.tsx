@@ -1,5 +1,5 @@
 "use client"
-import { SetStateAction, useEffect, useState } from "react"
+import {  useEffect, useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Calendar, Clock, Edit, MoreHorizontal, Plus, Trash, Users, Layers } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -34,7 +34,7 @@ import { AddTopicModal } from "@/components/add-topic-modal"
 import { EditTopicModal } from "@/components/edit-topic-modal"
 import {
   useGetAllClasscroomModules,
-  useGetAllClasscroomModulesTopic,
+  useGetAllClassroomMaterials,
   useGetSingleClassroom,
 } from "@/hooks/query/classroom"
 import { useRouter } from "next/navigation"
@@ -47,7 +47,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useDeleteClassroom, useDeleteClassroomModule } from "@/hooks/mutate/classroom"
 import DeleteClassRoomModal from "@/components/delete-class-modal"
 import DeleteClassRoomModuleModal from "@/components/delete-module-modal"
-import DisplayMaterialDetails from "@/components/displaymaterialdetails"
+import ViewClassRoomMaterials from "@/components/viewclassroommaterials"
 
 const createDefaultClassData = (apiData: IsingleClassroomDetails): LocalClassData => {
   return {
@@ -98,6 +98,8 @@ export default function ClassDetailsPage() {
   const [isDeleteTopicDialogOpen, setIsDeleteTopicDialogOpen] = useState(false)
   const [selectedTopic, setSelectedTopic] = useState<any | null>(null)
     const [isDeleting, setIsDeleting] = useState(false);
+
+
   const { mutate: deleteSingleClassroom } = useDeleteClassroom({
       onSuccess: () => {
         toast({
@@ -327,28 +329,28 @@ export default function ClassDetailsPage() {
   };
 
   // Add a handler function for adding a topic to a module
-  const handleAddTopic = (topic: Itopic) => {
-    if (!selectedModuleId) return
-    if (!localClassData) return
-    const updatedModules = localClassData.modules.map((module) => {
-      if (module.id === selectedModuleId) {
-        return {
-          ...module,
-          topics: [...(module.Itopic || []), topic],
+    const handleAddTopic = (topic: Itopic) => {
+      console.log("Received topic:", topic);
+  if (!selectedModuleId || !localClassData) return;
+      const updatedModules = localClassData.modules.map((module) => {
+        if (module.id === selectedModuleId) {
+          return {
+            ...module,
+            topics: [...(module?.topics || []), topic],
+          }
         }
+        return module
+      })
+      const updatedClassData = {
+        ...localClassData,
+        modules: updatedModules,
       }
-      return module
-    })
-    const updatedClassData = {
-      ...localClassData,
-      modules: updatedModules,
+      setLocalClassData(updatedClassData)
+      toast({
+        title: "Topic added",
+        description: `${topic.title} has been added to the module`,
+      })
     }
-    setLocalClassData(updatedClassData)
-    toast({
-      title: "Topic added",
-      description: `${topic?.title} has been added to the module.`,
-    })
-  }
 
   // Add these handler functions after the other handler functions
   // Add a handler function for editing a topic
@@ -360,7 +362,7 @@ export default function ClassDetailsPage() {
       if (module.id === selectedTopicModuleId) {
         return {
           ...module,
-          topics: module.Itopic?.map((topic) => {
+          topics: module.topics?.map((topic) => {
             if (topic.id === updatedTopic.id) {
               return updatedTopic
             }
@@ -391,7 +393,7 @@ export default function ClassDetailsPage() {
       if (module.id === selectedTopicModuleId) {
         return {
           ...module,
-          topics: module.Itopic?.filter((topic) => topic.id !== selectedTopic.id) || [],
+          topics: module.topics?.filter((topic) => topic.id !== selectedTopic.id) || [],
         }
       }
       return module
@@ -785,9 +787,7 @@ export default function ClassDetailsPage() {
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold">Materials</h2>
               </div>
-              {/* <DisplayMaterialDetails
-               classId={classId} 
-               selectedTopic={selectedTopic}  /> */}
+                <ViewClassRoomMaterials classId={classId} />
             </TabsContent>
             <TabsContent value="assignments" className="space-y-4">
               <div className="flex items-center justify-between">

@@ -111,7 +111,7 @@ export interface IclassRoomModules {
   title: string;
   description: string;
   id?: string | null;
-  Itopic?: Itopic[];
+ topics?: Itopic[];
 }
 interface Module {
   id: string;
