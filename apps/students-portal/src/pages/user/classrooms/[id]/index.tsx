@@ -48,6 +48,7 @@ import {
   TopicsListResponse,
 } from "@/core/types/interface/classroom.ts/moduleTopics";
 import { MaterialDownload } from "@/shared/components/material-download";
+import { Student, Tutor } from "@/core/types/interface/classroom.ts/getSingleClassroom";
 // import Loader from "@/shared/components/common/loader";
 // import axios from "axios";
 // import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
@@ -614,7 +615,7 @@ export default function ClassroomDetailPage() {
                     </p>
                   ) : (
                     <div>
-                      {singleClassroom?.tutors.map((tutor) => (
+                      {singleClassroom?.tutors.map((tutor:Tutor) => (
                         <div key={tutor.id} className="flex items-center mb-3">
                           <Avatar className="h-8 w-8 mr-2">
                             <AvatarFallback>
@@ -666,7 +667,7 @@ export default function ClassroomDetailPage() {
                       <h3 className="text-sm font-medium text-muted-foreground mb-2">
                         Students
                       </h3>
-                      {singleClassroom?.students.map((student) => (
+                      {singleClassroom?.students.map((student:Student) => (
                         <div
                           key={student.id}
                           className="flex items-center mb-3"
