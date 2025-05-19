@@ -6,10 +6,11 @@ import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/get
 const setNotification = useNotificationStore.getState().displayNotification;
 
 export async function getClassroomModules(
-  id: string
+  id: string,
+  page: number
 ): Promise<ClassModulesApiResponse> {
   return axios
-    .get<ClassModulesApiResponse>(`/classrooms/${id}/modules`)
+    .get<ClassModulesApiResponse>(`/classrooms/${id}/modules?page=${page}`)
     .then((res: AxiosResponse<ClassModulesApiResponse>) => {
       if (res.status === 200) {
         // setNotification({
