@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import logo from "../assets/logo.png";
 import loginprofile from "../assets/loginprofile.png";
-import google from "../assets/google.png";
+// import google from "../assets/google.png";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { useAuthContext } from "@/shared/context/auth";
