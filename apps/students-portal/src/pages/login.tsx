@@ -182,13 +182,13 @@ export default function LoginPage() {
               </button>
             </div>
             <hr className="" />
-            <button
+            {/* <button
               type="button"
               className="w-full bg-gray-100 text-white py-[1rem] rounded-md flex items-center gap-3 justify-center text-[20px] mt-4 "
             >
               <Image src={google} alt="Google Logo" className="w-6 h-6" />
               Or sign in with Google
-            </button>
+            </button> */}
           </form>
           <p className="text-center mt-5 text-gray-600 text-sm">
             Don&apos;t have an account?{" "}

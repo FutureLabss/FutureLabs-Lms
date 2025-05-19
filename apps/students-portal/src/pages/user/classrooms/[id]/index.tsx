@@ -48,164 +48,7 @@ import {
   TopicsListResponse,
 } from "@/core/types/interface/classroom.ts/moduleTopics";
 import { MaterialDownload } from "@/shared/components/material-download";
-// import Loader from "@/shared/components/common/loader";
-// import axios from "axios";
-// import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
-// import { SingleClassroomResponse } from "@/core/types/interface/classroom.ts/getSingleClassroom";
-// import { useGetSingleModuleTopic } from "@/shared/hooks/query/classroom/moduleTopicQuery";
 
-// Mock classroom data
-// const classroom = {
-//   message: "Classroom retrieved successfully",
-//   id: 8,
-//   name: "Basic of Data Analytics",
-//   description:
-//     "Learn the fundamentals of data analytics including data collection, processing, analysis, and visualization techniques.",
-//   image_url: null,
-//   image_public_id: null,
-//   section: null,
-//   status: "active",
-//   start_date: "2025-04-22",
-//   end_date: "2025-04-23",
-//   created_by: 4,
-//   updated_by: null,
-//   course_id: 1,
-//   created_at: "2025-04-21T14:38:39.000000Z",
-//   updated_at: "2025-04-21T14:38:39.000000Z",
-//   students_count: 1,
-//   modules_count: 3,
-//   tutors: [
-//     {
-//       id: 4,
-//       fullname: "Ukpono Titus",
-//       email: "ukponoFL@gmail.com",
-//     },
-//   ],
-//   students: [
-//     {
-//       id: 13,
-//       fullname: "Peter Ime",
-//       email: "reniy89307@f5url.com",
-//     },
-//   ],
-//   schedules: {
-//     id: 8,
-//     days_of_week: ["Monday"],
-//     start_date: "2025-04-22",
-//     end_date: "2025-04-23",
-//     start_time: "16:38:00",
-//     end_time: "18:38:00",
-//     status: "active",
-//     classroom_id: 8,
-//     created_at: "2025-04-21T14:38:40.000000Z",
-//     updated_at: "2025-04-21T14:38:40.000000Z",
-//   },
-// };
-
-// Mock modules data
-// const modules = [
-//   {
-//     id: 1,
-//     title: "Introduction to Data Analytics",
-//     description: "Overview of data analytics concepts and tools",
-//     topics: [
-//       { id: 1, title: "What is Data Analytics?", duration: "45 mins" },
-//       { id: 2, title: "Data Collection Methods", duration: "60 mins" },
-//       { id: 3, title: "Data Processing Techniques", duration: "90 mins" },
-//     ],
-//   },
-//   {
-//     id: 2,
-//     title: "Data Visualization",
-//     description: "Learn how to create effective data visualizations",
-//     topics: [
-//       { id: 4, title: "Visualization Principles", duration: "60 mins" },
-//       { id: 5, title: "Chart Types and Their Uses", duration: "75 mins" },
-//       { id: 6, title: "Creating Interactive Dashboards", duration: "120 mins" },
-//     ],
-//   },
-//   {
-//     id: 3,
-//     title: "Data Analysis Tools",
-//     description: "Explore popular tools used in data analysis",
-//     topics: [
-//       {
-//         id: 7,
-//         title: "Introduction to Excel for Data Analysis",
-//         duration: "90 mins",
-//       },
-//       { id: 8, title: "SQL for Data Analysts", duration: "120 mins" },
-//       { id: 9, title: "Python Basics for Data Analysis", duration: "150 mins" },
-//     ],
-//   },
-// ];
-
-// Mock assignments data
-// const assignments = [
-//   {
-//     id: 1,
-//     title: "Data Collection Exercise",
-//     description: "Collect and organize data from provided sources",
-//     instructions:
-//       "1. Download the sample data files from the materials section.\n2. Organize the data into appropriate categories.\n3. Create a spreadsheet with the organized data.\n4. Write a brief summary of your findings (250-500 words).",
-//     due_date: "2025-04-25",
-//     status: "pending",
-//     points: 20,
-//   },
-//   {
-//     id: 2,
-//     title: "Visualization Project",
-//     description:
-//       "Create three different visualizations from the provided dataset",
-//     instructions:
-//       "1. Use the dataset provided in the materials section.\n2. Create three different types of visualizations (bar chart, line chart, pie chart, etc.).\n3. Each visualization should highlight a different aspect of the data.\n4. Include a brief explanation for each visualization explaining what insights it provides.",
-//     due_date: "2025-04-28",
-//     status: "pending",
-//     points: 30,
-//   },
-//   {
-//     id: 3,
-//     title: "Data Analysis Report",
-//     description: "Analyze the given dataset and write a comprehensive report",
-//     instructions:
-//       "1. Perform exploratory data analysis on the provided dataset.\n2. Identify key trends, patterns, and outliers.\n3. Create appropriate visualizations to support your findings.\n4. Write a comprehensive report (1000-1500 words) detailing your analysis process and findings.",
-//     due_date: "2025-05-02",
-//     status: "pending",
-//     points: 50,
-//   },
-// ];
-
-// Mock materials data
-// const materials = [
-//   {
-//     id: 1,
-//     title: "Data Analytics Fundamentals.pdf",
-//     type: "pdf",
-//     size: "2.4 MB",
-//     uploaded_at: "2025-04-21",
-//   },
-//   {
-//     id: 2,
-//     title: "Sample Dataset.xlsx",
-//     type: "excel",
-//     size: "1.8 MB",
-//     uploaded_at: "2025-04-21",
-//   },
-//   {
-//     id: 3,
-//     title: "Visualization Best Practices.pptx",
-//     type: "powerpoint",
-//     size: "5.2 MB",
-//     uploaded_at: "2025-04-22",
-//   },
-//   {
-//     id: 4,
-//     title: "Python for Data Analysis.zip",
-//     type: "archive",
-//     size: "8.7 MB",
-//     uploaded_at: "2025-04-22",
-//   },
-// ];
 
 interface ClassRoomTypes {
   classModules: ClassModulesApiResponse | undefined;
@@ -237,8 +80,8 @@ function ClassroomModuleCom({
 
   return (
     <TabsContent value="modules" className="space-y-4">
-      <Card>
-        <CardHeader>
+      <Card >
+        <CardHeader >
           {classModules ? (
             <CardTitle className="flex items-center">
               <Book className="mr-2 h-5 w-5" />
@@ -250,19 +93,19 @@ function ClassroomModuleCom({
             <Book className="mr-2 h-5 w-5" />
             Modules ({data?.data.length})
           </CardTitle> */}
-          <CardContent>
+          <CardContent className="p-0">
             {classModules?.data?.length === 0 ? (
               <p className="text-sm text-muted-foreground">
                 No modules available yet
               </p>
             ) : (
-              <div className="space-y-6">
+              <div className="space-y-6 ">
                 {classModules?.data.map((module, index) => (
                   <div
                     key={module.id}
                     className="border rounded-lg overflow-hidden"
                   >
-                    <div className="bg-slate-50 p-4 flex items-center justify-between">
+                    <div className="bg-slate-50 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between">
                       <div>
                         <h3 className="font-medium">
                           Module {index + 1}: {module.title}
@@ -271,7 +114,7 @@ function ClassroomModuleCom({
                           {module.description}
                         </p>
                       </div>
-                      <Badge variant="outline">
+                      <Badge variant="outline" className="mt-9 sm:mt-0">
                         {module.topics_count} topics
                       </Badge>
                     </div>
@@ -280,7 +123,7 @@ function ClassroomModuleCom({
                       {/* // module.topics.map((topic) => ( */}
                       <div
                         // key={topic.id}
-                        className="p-4 flex items-center justify-between"
+                        className="p-4 flex flex-col sm:flex-row items-center gap-4 justify-between"
                       >
                         <div className="flex items-center">
                           <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center mr-3">
@@ -296,7 +139,7 @@ function ClassroomModuleCom({
                         </Badge>
                         {/* <Badge variant="outline"> */}
                         <Button
-                          className=""
+                          className="text-[10px] lg:text-base"
                           isBorder={true}
                           onClick={() => {
                             setIsModalOpen(true);
@@ -352,12 +195,12 @@ function ClassroomModuleCom({
           <div className="space-y-6">
             {moduleTopics?.data.map((topic, index) => (
               <div key={topic.id} className="border rounded-lg overflow-hidden">
-                <div className="bg-slate-50 p-4 flex items-center justify-between">
+                <div className="bg-slate-50 p-4 flex flex-col gap-4 sm:flex-row  items-center justify-between">
                   <div>
                     <h3 className="font-medium">
                       Topic {index + 1}: {topic.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-[10px] text-muted-foreground">
                       {topic.description}
                     </p>
                   </div>
@@ -481,7 +324,7 @@ export default function ClassroomDetailPage() {
             ← Back to Classrooms
           </Link>
           {singleClassroom ? (
-            <h1 className="text-3xl font-bold">{singleClassroom.name}</h1>
+            <h1 className="text-[22px] sm:text-3xl font-bold">{singleClassroom.name}</h1>
           ) : (
             <h1 className="text-3xl font-bold">Nil</h1>
           )}
@@ -517,88 +360,76 @@ export default function ClassroomDetailPage() {
         }}
         className="space-y-4"
       >
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="modules">Modules</TabsTrigger>
-          <TabsTrigger value="assignments">Assignments</TabsTrigger>
-          <TabsTrigger value="materials">Materials</TabsTrigger>
-        </TabsList>
+       
+<TabsList className="w-auto justify-between flex overflow-x-auto sm:justify-between lg:grid lg:grid-cols-4 lg:w-auto ">
+  <TabsTrigger value="overview" className="flex-shrink-0">Overview</TabsTrigger>
+  <TabsTrigger value="modules" className="flex-shrink-0">Modules</TabsTrigger>
+  <TabsTrigger value="assignments" className="flex-shrink-0">Assignments</TabsTrigger>
+  <TabsTrigger value="materials" className="flex-shrink-0">Materials</TabsTrigger>
+</TabsList>
+
+
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Calendar className="mr-2 h-5 w-5" />
+                <CardTitle className="flex items-center text-base sm:text-2xl">
+                  <Calendar className="mr-2  h-5 w-5" />
                   Schedule Information
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      Days
-                    </h3>
-                    {singleClassroom ? (
-                      <p>
-                        {singleClassroom?.schedules?.days_of_week?.join(", ") ||
-                          "No schedule set"}
-                      </p>
-                    ) : (
-                      <p>Nil</p>
-                    )}
-                    {/* <p>{classroom.schedules.days_of_week.join(", ")}</p> */}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      Time
-                    </h3>
-                    {singleClassroom ? (
-                      <p>
-                        {formatTime(singleClassroom.schedules.start_time)} -{" "}
-                        {formatTime(singleClassroom.schedules.end_time)}
-                      </p>
-                    ) : (
-                      <p>Nil</p>
-                    )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div>
+    <h3 className="text-sm font-medium text-muted-foreground">Days</h3>
+    {singleClassroom ? (
+      <p>
+        {singleClassroom?.schedules?.days_of_week?.join(", ") ||
+          "No schedule set"}
+      </p>
+    ) : (
+      <p>Nil</p>
+    )}
+  </div>
 
-                    {/* <p>
-                      {formatTime(classroom.schedules.start_time)} -{" "}
-                      {formatTime(classroom.schedules.end_time)}
-                    </p> */}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      Start Date
-                    </h3>
-                    {singleClassroom ? (
-                      <p>{formatDate(singleClassroom.schedules.start_date)}</p>
-                    ) : (
-                      <p>Nil</p>
-                    )}
-                    {/* <p>{formatDate(classroom.schedules.start_date)}</p> */}
-                    {/* <p>{formatDate(classroom.schedules.start_date)}</p> */}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      End Date
-                    </h3>
-                    {singleClassroom ? (
-                      <p>{formatDate(singleClassroom.schedules.end_date)}</p>
-                    ) : (
-                      <p>Nil</p>
-                    )}
-                    {/* <p>{formatDate(classroom.schedules.end_date)}</p> */}
-                    {/* <p>{formatDate(classroom.schedules.end_date)}</p> */}
-                    {/* <p>{formatDate(classroom.schedules.end_date)}</p> */}
-                  </div>
-                </div>
+  <div>
+    <h3 className="text-sm font-medium text-muted-foreground">Time</h3>
+    {singleClassroom ? (
+      <p>
+        {formatTime(singleClassroom.schedules.start_time)} -{" "}
+        {formatTime(singleClassroom.schedules.end_time)}
+      </p>
+    ) : (
+      <p>Nil</p>
+    )}
+  </div>
+
+  <div>
+    <h3 className="text-sm font-medium text-muted-foreground">Start Date</h3>
+    {singleClassroom ? (
+      <p>{formatDate(singleClassroom.schedules.start_date)}</p>
+    ) : (
+      <p>Nil</p>
+    )}
+  </div>
+
+  <div>
+    <h3 className="text-sm font-medium text-muted-foreground">End Date</h3>
+    {singleClassroom ? (
+      <p>{formatDate(singleClassroom.schedules.end_date)}</p>
+    ) : (
+      <p>Nil</p>
+    )}
+  </div>
+</div>
+
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
+                <CardTitle className="flex items-center text-base sm:text-2xl">
                   <Users className="mr-2 h-5 w-5" />
                   People
                 </CardTitle>
@@ -812,7 +643,7 @@ export default function ClassroomDetailPage() {
                 Download and access course materials provided by your instructor
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <div className="space-y-2">
                 {/* {allClassroomMaterials?.data?.map((module) => (
                   <div
@@ -865,30 +696,39 @@ export default function ClassroomDetailPage() {
                 {allClassroomMaterials?.data.map(
                   (material: MaterialResponse) => (
                     <div
-                      key={material.id}
-                      className="flex items-center justify-between p-3 border rounded-lg"
-                    >
-                      <div className="flex items-center">
-                        <div className="h-10 w-10 rounded bg-slate-100 flex items-center justify-center mr-3">
-                          <FileText className="h-5 w-5 text-slate-600" />
-                        </div>
-                        <div>
-                          <p className="font-medium">
-                            Topic : {material.topic}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {/* {material.size} • Uploaded on{" "} */}
-                            {/* {formatDate(material.uploaded_at)} */}
-                          </p>
-                        </div>
+                    key={material.id}
+                    className="flex flex-col sm:flex-row  items-start sm:items-center justify-start sm:justify-between p-3 border rounded-lg"
+                  >
+                    {/* Left: Icon + Topic */}
+                    <div className="flex items-center">
+                      <div className="h-10 w-10 rounded bg-slate-100 flex items-center justify-center mr-3">
+                        <FileText className="h-5 w-5 text-slate-600" />
                       </div>
-                      <Badge variant="secondary">
+                      <div>
+                        <p className="text-sm sm:text-base font-medium">
+                          Topic: {material.topic}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {/* Optional metadata */}
+                        </p>
+                      </div>
+                    </div>
+                  
+                    {/* Right: Badges + Download */}
+                    <div className="flex flex-wrap sm:flex-row gap-2 sm:gap-3 items-start sm:items-center sm:max-w-[60%]">
+                      <Badge variant="secondary" className="text-[10px] sm:text-sm">
                         module: {material.module}
                       </Badge>
-                      <Badge variant="secondary">type: {material.type}</Badge>
-                      <Badge variant="secondary">{material.title}</Badge>
+                      <Badge variant="secondary" className="text-[10px] sm:text-sm">
+                        type: {material.type}
+                      </Badge>
+                      <Badge variant="secondary" className="text-[10px] sm:text-sm">
+                        {material.title}
+                      </Badge>
                       <MaterialDownload material={material} />
                     </div>
+                  </div>
+                  
                   )
                 )}
               </div>
