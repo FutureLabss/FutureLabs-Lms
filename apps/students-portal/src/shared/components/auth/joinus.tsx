@@ -17,14 +17,14 @@ export default function Joinus() {
          <div className="absolute 2xl:mt-[-62rem] md:mt-[-37rem] text-start w-full md:w-max-[100px] max-w-[900px] 2xl:px-[74px] px-[55px]">
             <h2 className=" text-[1rem] md:text-[3rem] 2xl:text-[5rem]
              text-white font-semibold w-full md:max-w-[500px] md:leading-tight max-w-[900px] 2xl:px-[74px]">
-            Join Futurelabs and Start Your Tech  Journey!
+            Join CleverClass and Start Your Tech  Journey!
             </h2>
             <p className="text-[1rem]  2xl:text-[1.44rem] text-white font-normal" >
             Kick start your tech join with us and learn from the  industry best
             </p>
             <div className="bg-primary 2xl:p-10 p-4 mt-[8rem] rounded-3xl">
                 <p className="text-[1rem] md:text-[1.2rem] 2xl:text-[1.5rem] text-white font-medium w-full max-w-[500px]" >
-                My journey as a designer isnt complete without futurelabs. To anyone out there,take on the opportunity. Best wishes
+                My journey as a designer isnt complete without CleverClass. To anyone out there,take on the opportunity. Best wishes
                 </p>
                 <div className="flex gap-3 items-center pt-5">
             <Image

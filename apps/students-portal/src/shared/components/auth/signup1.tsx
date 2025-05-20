@@ -24,7 +24,7 @@ export default function SignupCmponentFirstForm(props: Iprops) {
     return (
         <div className="md:px-[76px] xsm:px-4 2xl:px-[8rem] xsm:p-2">
             <div className="pt-[20px] pb-[10px] flex items-end flex-row justify-end">
-                <Image src={logo} alt="Futurelabs Logo" />
+                <Image src={logo} alt="CleverClass Logo" />
             </div>
             <div className="flex items-center space-x-4 md:mt-[2.3rem] 2xl:mt-[7rem] ">
                 <div className="flex items-center">
