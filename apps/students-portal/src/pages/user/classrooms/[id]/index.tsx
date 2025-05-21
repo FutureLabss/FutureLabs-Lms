@@ -245,7 +245,7 @@ function ClassroomModuleCom({
 
   return (
     <TabsContent value="modules" className="space-y-4">
-      <Card >
+      <Card className="">
         <CardHeader >
           {classModules ? (
             <CardTitle className="flex items-center">
@@ -258,7 +258,7 @@ function ClassroomModuleCom({
             <Book className="mr-2 h-5 w-5" />
             Modules ({data?.data.length})
           </CardTitle> */}
-          <CardContent className="p-0">
+          <CardContent className="p-0  w-full  ">
             {isLoading || isFetching ? (
               <ModuleSkeletonLoader />
             ) : classModules?.data?.length === 0 ? (
@@ -345,7 +345,7 @@ function ClassroomModuleCom({
           >
             Previous
           </Button>
-          <span>Page {classModules.meta.current_page}</span>
+          <span className="">Page {classModules.meta.current_page}</span>
           <Button
             isBorder={true}
             disabled={!classModules.links?.next || isFetching || isLoading}
