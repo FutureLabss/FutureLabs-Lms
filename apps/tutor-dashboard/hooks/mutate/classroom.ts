@@ -3,6 +3,7 @@ import { useCreateResources } from "../helper/mutation";
 import {
   addStudentToClass,
   createClasscroom,
+  createClasscroomAssignment,
   createClasscroomMaterials,
   createClasscroomModules,
   createClasscroomModulesTopic,
@@ -11,6 +12,7 @@ import {
 } from "@/services/class-service";
 import {
   ClassroomScheduleResponse,
+  CreateAssignmentRequest,
   IclassRoomMaterials,
   IclassRoomModules,
   Itopic,
@@ -91,6 +93,23 @@ export function useCreateClassroomModules({
     key: ["ClassroomModules"],
     callback: (data: IclassRoomModules) =>
       createClasscroomModules(data, classroomId),
+    onSuccess: onSuccess,
+    onError: onError,
+    options,
+  };
+  return useCreateResources(mutation);
+}
+// use mutate for create assignmenta
+export function useCreateClassroomAssignments({
+  onSuccess,
+  onError,
+  options,
+  classroomId,
+}: IMutationHook & { classroomId: string }) {
+  const mutation: IMutationArgs<CreateAssignmentRequest, CreateAssignmentRequest> = {
+    key: ["ClassroomAssignmnet"],
+    callback: (data: CreateAssignmentRequest) =>
+      createClasscroomAssignment(data, classroomId),
     onSuccess: onSuccess,
     onError: onError,
     options,

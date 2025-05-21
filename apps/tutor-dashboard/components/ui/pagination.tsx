@@ -1,117 +1,165 @@
-import * as React from "react"
-import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
+import React, { useEffect } from "react";
 
-import { cn } from "@/lib/utils"
-import { ButtonProps, buttonVariants } from "@/components/ui/button"
-
-const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
-  <nav
-    role="navigation"
-    aria-label="pagination"
-    className={cn("mx-auto flex w-full justify-center", className)}
-    {...props}
-  />
-)
-Pagination.displayName = "Pagination"
-
-const PaginationContent = React.forwardRef<
-  HTMLUListElement,
-  React.ComponentProps<"ul">
->(({ className, ...props }, ref) => (
-  <ul
-    ref={ref}
-    className={cn("flex flex-row items-center gap-1", className)}
-    {...props}
-  />
-))
-PaginationContent.displayName = "PaginationContent"
-
-const PaginationItem = React.forwardRef<
-  HTMLLIElement,
-  React.ComponentProps<"li">
->(({ className, ...props }, ref) => (
-  <li ref={ref} className={cn("", className)} {...props} />
-))
-PaginationItem.displayName = "PaginationItem"
-
-type PaginationLinkProps = {
-  isActive?: boolean
-} & Pick<ButtonProps, "size"> &
-  React.ComponentProps<"a">
-
-const PaginationLink = ({
-  className,
-  isActive,
-  size = "icon",
-  ...props
-}: PaginationLinkProps) => (
-  <a
-    aria-current={isActive ? "page" : undefined}
-    className={cn(
-      buttonVariants({
-        variant: isActive ? "outline" : "ghost",
-        size,
-      }),
-      className
-    )}
-    {...props}
-  />
-)
-PaginationLink.displayName = "PaginationLink"
-
-const PaginationPrevious = ({
-  className,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label="Go to previous page"
-    size="default"
-    className={cn("gap-1 pl-2.5", className)}
-    {...props}
-  >
-    <ChevronLeft className="h-4 w-4" />
-    <span>Previous</span>
-  </PaginationLink>
-)
-PaginationPrevious.displayName = "PaginationPrevious"
-
-const PaginationNext = ({
-  className,
-  ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
-  <PaginationLink
-    aria-label="Go to next page"
-    size="default"
-    className={cn("gap-1 pr-2.5", className)}
-    {...props}
-  >
-    <span>Next</span>
-    <ChevronRight className="h-4 w-4" />
-  </PaginationLink>
-)
-PaginationNext.displayName = "PaginationNext"
-
-const PaginationEllipsis = ({
-  className,
-  ...props
-}: React.ComponentProps<"span">) => (
-  <span
-    aria-hidden
-    className={cn("flex h-9 w-9 items-center justify-center", className)}
-    {...props}
-  >
-    <MoreHorizontal className="h-4 w-4" />
-    <span className="sr-only">More pages</span>
-  </span>
-)
-PaginationEllipsis.displayName = "PaginationEllipsis"
-
-export {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
+interface PaginationProps {
+  currentPage: number;
+  totalPages: number;
+  pageSize: number;
+  onPageChange: (page: number) => void;
+  onPageSizeChange: (page: number, size: number) => void;
+  hasNextPage?: boolean;
+  hasPrevPage?: boolean;
 }
+
+const Pagination: React.FC<PaginationProps> = ({
+  currentPage,
+  totalPages,
+  pageSize,
+  onPageChange,
+  onPageSizeChange,
+  hasNextPage,
+  hasPrevPage,
+}) => {
+  // Log pagination props for debugging
+  useEffect(() => {
+    console.log("Pagination props:", { currentPage, totalPages, pageSize, hasNextPage, hasPrevPage });
+  }, [currentPage, totalPages, pageSize, hasNextPage, hasPrevPage]);
+
+  const handleClick = (page: number) => {
+    if (page >= 1 && (page <= totalPages || (page > currentPage && hasNextPage) || (page < currentPage && hasPrevPage)) && page !== currentPage) {
+      console.log("Changing to page:", page);
+      onPageChange(page);
+    }
+  };
+
+  const renderPageNumbers = () => {
+    const pageNumbers = [];
+    const maxVisiblePages = 5;
+
+    // If totalPages is unreliable (API doesn't provide total), we can use a different approach
+    if (!totalPages || totalPages <= 0) {
+      // Just show a window around current page
+      const start = Math.max(1, currentPage - 2);
+      const end = currentPage + 2;
+      
+      for (let i = start; i <= end; i++) {
+        // Only add pages that make sense (we know current page exists)
+        if (i >= 1) {
+          // For pages after current, only add if hasNextPage is true or undefined
+          if (i <= currentPage || hasNextPage === undefined || hasNextPage) {
+            // For final page, only add if we're not sure there are more pages
+            if (i < end || hasNextPage === undefined || hasNextPage) {
+              pageNumbers.push(i);
+            }
+          }
+        }
+      }
+    } else {
+      // Traditional approach with known totalPages
+      if (totalPages <= maxVisiblePages) {
+        for (let i = 1; i <= totalPages; i++) {
+          pageNumbers.push(i);
+        }
+      } else {
+        let startPage = Math.max(1, currentPage - Math.floor(maxVisiblePages / 2));
+        let endPage = startPage + maxVisiblePages - 1;
+
+        if (endPage > totalPages) {
+          endPage = totalPages;
+          startPage = Math.max(1, endPage - maxVisiblePages + 1);
+        }
+
+        for (let i = startPage; i <= endPage; i++) {
+          pageNumbers.push(i);
+        }
+      }
+    }
+
+    return pageNumbers;
+  };
+
+  // Default to enabling next/prev based on hasNextPage/hasPrevPage if provided
+  const isPrevDisabled = hasPrevPage !== undefined ? !hasPrevPage : currentPage <= 1;
+  const isNextDisabled = hasNextPage !== undefined ? !hasNextPage : currentPage >= totalPages;
+
+  // Don't render pagination if we know there's only one page
+  if (totalPages === 1 && !hasNextPage) {
+    return null;
+  }
+
+  return (
+    <div className="flex flex-col md:flex-row items-center justify-between w-full space-y-4 md:space-y-0 space-x-0 md:space-x-2 py-4 px-4 bg-white border rounded-lg mt-4">
+      <nav className="flex items-center space-x-2" aria-label="Pagination Navigation">
+        {/* Previous Button */}
+        <button
+          className="px-3 py-1 border rounded bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={() => handleClick(currentPage - 1)}
+          disabled={isPrevDisabled}
+          aria-label="Previous page"
+        >
+          &lt;
+        </button>
+
+        {/* First page & leading ellipsis - only show if we have reliable total pages */}
+        {totalPages > 0 && currentPage > 3 && (
+          <>
+            <button
+              className="px-3 py-1 border rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
+              onClick={() => handleClick(1)}
+              aria-label={`Go to page 1`}
+            >
+              1
+            </button>
+            {currentPage > 4 && <span className="px-2">...</span>}
+          </>
+        )}
+
+        {/* Page Number Buttons */}
+        {renderPageNumbers().map((number) => (
+          <button
+            key={number}
+            className={`px-3 py-1 border rounded ${
+              currentPage === number
+                ? "bg-primary text-white"
+                : "bg-white text-gray-600 hover:bg-gray-100"
+            }`}
+            onClick={() => handleClick(number)}
+            aria-current={currentPage === number ? "page" : undefined}
+            aria-label={`Go to page ${number}`}
+          >
+            {number}
+          </button>
+        ))}
+
+        {/* Trailing ellipsis & last page - only show if we have reliable total pages */}
+        {totalPages > 0 && currentPage < totalPages - 2 && (
+          <>
+            {currentPage < totalPages - 3 && <span className="px-2">...</span>}
+            <button
+              className="px-3 py-1 border rounded bg-gray-100 text-gray-600 hover:bg-gray-200"
+              onClick={() => handleClick(totalPages)}
+              aria-label={`Go to page ${totalPages}`}
+            >
+              {totalPages}
+            </button>
+          </>
+        )}
+
+        {/* Next Button */}
+        <button
+          className="px-3 py-1 border rounded bg-gray-100 text-gray-600 hover:bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed"
+          onClick={() => handleClick(currentPage + 1)}
+          disabled={isNextDisabled}
+          aria-label="Next page"
+        >
+          &gt;
+        </button>
+      </nav>
+
+      <div className="text-sm text-gray-500">
+        Page {currentPage}{totalPages > 0 ? ` of ${totalPages}` : ''}
+      </div>
+    </div>
+  );
+};
+
+export default Pagination;

@@ -1,7 +1,7 @@
-import { ClassroomResponse, IclassRoomMaterials, IRetriveClassroomResponse, IsingleClassroomDetails, MaterialsResponse, TopicResponse } from "@/lib/types/classroom";
-import { IQueryArgs } from "@/lib/types/query";
-import {  getAllClassRoom, getAllClassroomMaterials, getClasscroomMaterials, getClasscroomModules, getClasscroomModulesTopic, getClasscroomSingleModules, getSingleClassRoom } from "@/services/class-service";
-import { useGetResourcesQuery } from "../helper/query";
+import { ClassroomResponse, CreateAssignmentResponse, IclassRoomMaterials, IRetriveClassroomResponse, IsingleClassroomDetails, MaterialsResponse, TopicResponse } from "@/lib/types/classroom";
+import { IPaginatedQueryArgs, IQueryArgs } from "@/lib/types/query";
+import {  getAllClassRoom, getAllClassroomAssignments, getAllClassroomMaterials, getClasscroomMaterials, getClasscroomModules, getClasscroomModulesTopic, getClasscroomSingleModules, getSingleClassRoom } from "@/services/class-service";
+import { useGetResourcesQuery, usePaginationQuery } from "../helper/query";
 
 //   use query for getClassroom
 export function  useGetAllClassroom(){
@@ -21,10 +21,10 @@ const getClassroom:IQueryArgs<IsingleClassroomDetails>={
 return useGetResourcesQuery(getClassroom)
 }
 //   use query for getClassroomModules
-export function  useGetAllClasscroomModules( id:string){
+export function  useGetAllClasscroomModules( id:string, page = 1, pageSize = 10){
     const getClassroom:IQueryArgs<ClassroomResponse>={
-        key:["ClassroomModules", {id}],
-        callback:()=>getClasscroomModules(id)
+        key:["ClassroomModules", {id, page, pageSize}],
+        callback:()=>getClasscroomModules(id, page, pageSize)
     }
     return useGetResourcesQuery(getClassroom)
     }
@@ -63,6 +63,18 @@ export function useGetAllClassroomMaterials(
     callback: () => getAllClassroomMaterials({ classroomId }),
   };
   return useGetResourcesQuery(allModuleTopics, { enabled });
+}
+
+// retrivved assignmnet
+export function useGetAllClassroomAssignments(
+  classroomId: number,
+  enabled: boolean
+) {
+  const allAssignments: IQueryArgs<CreateAssignmentResponse> = {
+    key: ["ClassroomAssignmnet", { classroomId }],
+    callback: () => getAllClassroomAssignments({ classroomId }),
+  };
+  return useGetResourcesQuery(allAssignments, { enabled });
 }
     
         

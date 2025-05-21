@@ -113,7 +113,7 @@ export interface IclassRoomModules {
   id?: string | null;
  topics?: Itopic[];
 }
-interface Module {
+export interface Module {
   id: string;
   title: string;
   description: string;
@@ -122,26 +122,26 @@ interface Module {
   updated_by: string;
 }
 
-interface Links {
-  first: string;
-  last: string | null;
-  prev: string | null;
-  next: string | null;
+export interface PaginationMeta {
+  current_page: number
+  from: number
+  path: string
+  per_page: number
+  to: number
 }
 
-interface Meta {
-  current_page: number;
-  from: number;
-  path: string;
-  per_page: number;
-  to: number;
+export interface PaginationLinks {
+  first: string | null
+  last: string | null
+  prev: string | null
+  next: string | null
 }
 
 export interface ClassroomResponse {
   message: string;
   data: Module[];
-  links: Links;
-  meta: Meta;
+  links: PaginationLinks
+  meta: PaginationMeta
 }
 
 // materials
@@ -174,15 +174,45 @@ interface Topic {
 export interface TopicResponse {
   message: string;
   data: Topic[];
-  links: Links;
-  meta: Meta;
+   links: PaginationLinks
+  meta: PaginationMeta
 }
 export interface MaterialsResponse {
   message: string;
   data: IclassRoomMaterials[];
-  links: Links;
-  meta: Meta;
+ links: PaginationLinks
+  meta: PaginationMeta
 }
+// assignment
+export interface CreateAssignmentRequest {
+  title: string;
+  description?: string;
+  module_id?: number;     
+  topic_id?: number | null;  
+  due_date: string; 
+  points: number;
+}
+
+interface Assignment {
+  id: number;
+  title: string;
+  description: string;
+  due_date: string;
+  points: number;
+  topic: string | null; 
+  module: string;
+  classroom: string;
+  created_by: string;
+  updated_by: string;
+  created_date: string; 
+}
+
+export interface CreateAssignmentResponse {
+  message: string;
+  data: Assignment[];
+}
+
+
 
   
   

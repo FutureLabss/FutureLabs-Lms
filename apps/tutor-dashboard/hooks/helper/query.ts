@@ -17,25 +17,38 @@ export function useGetResourcesQuery<IReturn>({ callback, key }: IQueryArgs<IRet
 }
 
 export function usePaginationQuery<IReturn>({ callback, key }: IPaginatedQueryArgs<IReturn>, options?: IQueryOptions) {
-  const { status, data, isLoading, isFetching, error } = useQuery(
+  const { status, data, isLoading, isFetching, error, refetch } = useQuery(
     key,
-    (arg) => {
-      return callback && callback(arg);
-    },
+    (arg) => callback && callback(arg),
     options
   );
 
-  let totalPages = 0;
-  let currentPage = 1;
+  let total = 0;
+  let current_page = 1;
   let totalItems = 0;
-  let pageSize = 0;
+  let per_page = 10;
+  let hasNextPage = false;
+  let hasPrevPage = false;
 
-  if (data?.pagination) {
-    const { count, limit, page } = data.pagination;
-    totalItems = count;
-    currentPage = page;
-    pageSize = limit;
-    totalPages = Math.ceil(count / limit);
+  if (data?.meta) {
+    const { current_page: cp, per_page: pp, to, from } = data.meta;
+    current_page = cp;
+    per_page = pp;
+    
+    // If the API provides a total count directly, use it
+    if (data.meta.total) {
+      totalItems = data.meta.total;
+    } else {
+      // Otherwise use 'to' as an approximation
+      totalItems = to;
+    }
+    
+    // Calculate total pages
+    total = Math.ceil(totalItems / per_page);
+    
+    // Check if there are next/previous pages based on links
+    hasNextPage = !!data?.links?.next;
+    hasPrevPage = !!data?.links?.prev;
   }
 
   return {
@@ -44,9 +57,49 @@ export function usePaginationQuery<IReturn>({ callback, key }: IPaginatedQueryAr
     loading: isLoading,
     error,
     isFetching,
-    totalPages,
+    refetch,
+    total,
     totalItems,
-    currentPage,
-    pageSize,
+    current_page,
+    per_page,
+    hasNextPage,
+    hasPrevPage,
+    nextPageUrl: data?.links?.next || null,
+    prevPageUrl: data?.links?.prev || null,
   };
 }
+
+// export function usePaginationQuery<IReturn>({ callback, key }: IPaginatedQueryArgs<IReturn>, options?: IQueryOptions) {
+//   const { status, data, isLoading, isFetching, error, refetch } = useQuery(
+//     key,
+//     (arg) => callback && callback(arg),
+//     options
+//   );
+
+//   let total = 0;
+//   let current_page = 1;
+//   let totalItems = 0;
+//   let per_page = 10;
+
+//  if (data?.meta) {
+//     const { current_page: cp, per_page: pp, to } = data.meta;
+//     current_page = cp;
+//     per_page = pp;
+//   totalItems = to; // This might be inaccurate if `meta.total` is missing
+//   total = Math.ceil(to / per_page);
+// }
+
+
+//   return {
+//     data: data?.data,
+//     status,
+//     loading: isLoading,
+//     error,
+//     isFetching,
+//     refetch,
+//     total,
+//     totalItems,
+//     current_page,
+//     per_page,
+//   };
+// }
