@@ -4,14 +4,22 @@ import {  getAllClassRoom, getClasscroomMaterials, getClasscroomModules, getClas
 import { useGetResourcesQuery } from "../helper/query";
 
 //   use query for getClassroom
-export function  useGetAllClassroom(){
-const getClassroom:IQueryArgs<IRetriveClassroomResponse>={
-    key:["ClassRoom"],
-    callback:()=>getAllClassRoom()
-}
-return useGetResourcesQuery(getClassroom)
-}
+// export function  useGetAllClassroom(){
+// const getClassroom:IQueryArgs<IRetriveClassroomResponse>={
+//     key:["ClassRoom"],
+//     callback:()=>getAllClassRoom()
+// }
+// return useGetResourcesQuery(getClassroom)
+// }
 
+
+export function useGetAllClassroom() {
+    const getClassroom: IQueryArgs<IRetriveClassroomResponse> = {
+      key: ["classroom"],
+      callback: () => getAllClassRoom(),
+    };
+    return useGetResourcesQuery(getClassroom);
+  }
 //   use query for singleClassroom
 export function  useGetSingleClassroom(classroomId:string){
 const getClassroom:IQueryArgs<IsingleClassroomDetails>={

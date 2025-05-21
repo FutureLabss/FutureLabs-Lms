@@ -1,16 +1,16 @@
-interface Tutor {
+export interface Tutor {
   id: number;
   fullname: string;
   email: string;
 }
 
-interface Student {
+export interface Student {
   id: number;
   fullname: string;
   email: string;
 }
 
-interface Schedule {
+export interface Schedule {
   id: number;
   days_of_week: string[];
   start_date: string; // ISO date string, e.g., "2025-04-22"
