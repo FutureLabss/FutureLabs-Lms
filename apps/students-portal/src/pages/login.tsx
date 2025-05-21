@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import logo from "../assets/logo.png";
 import loginprofile from "../assets/loginprofile.png";
-import google from "../assets/google.png";
+// import google from "../assets/google.png";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { useState } from "react";
 import { useAuthContext } from "@/shared/context/auth";
@@ -154,7 +154,11 @@ export default function LoginPage() {
                 </p>
               )}
             </div>
-
+              <p className="text-end text-gray-600 my-0 text-sm">
+            <Link href="/forgotpassword" className="text-blue-500 hover:underline">
+            forgot password
+            </Link>
+          </p>
             <div className="flex items-center ">
               <label className="relative inline-flex items-center cursor-pointer">
                 <input
@@ -182,13 +186,13 @@ export default function LoginPage() {
               </button>
             </div>
             <hr className="" />
-            <button
+            {/* <button
               type="button"
               className="w-full bg-gray-100 text-white py-[1rem] rounded-md flex items-center gap-3 justify-center text-[20px] mt-4 "
             >
               <Image src={google} alt="Google Logo" className="w-6 h-6" />
               Or sign in with Google
-            </button>
+            </button> */}
           </form>
           <p className="text-center mt-5 text-gray-600 text-sm">
             Don&apos;t have an account?{" "}

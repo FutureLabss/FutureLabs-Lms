@@ -13,6 +13,8 @@ import {
   VerifyEmail,
   SignUp,
   resendEmailVerification,
+ forgotPassword,
+ resetForgotPassword,
 } from "../../core/services/auth";
 
 interface AuthContextType {
@@ -25,6 +27,8 @@ interface AuthContextType {
   VerifyEmail: typeof VerifyEmail;
   SignUp: typeof SignUp;
   resendEmailVerification: typeof resendEmailVerification;
+  forgotPassword: typeof forgotPassword;
+  resetForgotPassword: typeof resetForgotPassword;
 }
 
 const usersContext = createContext<AuthContextType>({
@@ -37,6 +41,8 @@ const usersContext = createContext<AuthContextType>({
   VerifyEmail,
   SignUp,
   resendEmailVerification,
+  forgotPassword,
+  resetForgotPassword,
 });
 
 export default function AuthContext({ children }: { children: ReactNode }) {
@@ -81,6 +87,8 @@ export default function AuthContext({ children }: { children: ReactNode }) {
     VerifyEmail,
     SignUp,
     resendEmailVerification,
+    forgotPassword,
+    resetForgotPassword,
   };
 
   return (
