@@ -258,7 +258,7 @@ function ClassroomModuleCom({
             <Book className="mr-2 h-5 w-5" />
             Modules ({data?.data.length})
           </CardTitle> */}
-          <CardContent>
+          <CardContent className="p-0">
             {isLoading || isFetching ? (
               <ModuleSkeletonLoader />
             ) : classModules?.data?.length === 0 ? (
