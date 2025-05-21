@@ -1,4 +1,5 @@
 import {
+  getAllClassroomAssignments,
   getAllClassroomMaterials,
   getAllModuleTopics,
   getSingleModuleTopic,
@@ -6,6 +7,7 @@ import {
 import { useGetResourcesQuery } from "../../helper/query";
 import { IQueryArgs } from "@/core/types/interface/query";
 import {
+  ClassroomAllAssignmentResponse,
   ClassroomAllMaterialResponse,
   SingleModuleTopicResponse,
   TopicsListResponse,
@@ -42,6 +44,17 @@ export function useGetAllClassroomMaterials(
   const allModuleTopics: IQueryArgs<ClassroomAllMaterialResponse> = {
     key: ["classrommTopics", { classroomId }],
     callback: () => getAllClassroomMaterials({ classroomId }),
+  };
+  return useGetResourcesQuery(allModuleTopics, { enabled });
+}
+
+export function useGetAllClassroomAssignments(
+  classroomId: number,
+  enabled: boolean
+) {
+  const allModuleTopics: IQueryArgs<ClassroomAllAssignmentResponse> = {
+    key: ["classrommAssignment", { classroomId }],
+    callback: () => getAllClassroomAssignments({ classroomId }),
   };
   return useGetResourcesQuery(allModuleTopics, { enabled });
 }
