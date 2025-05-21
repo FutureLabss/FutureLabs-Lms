@@ -21,6 +21,13 @@ const getClassroom:IQueryArgs<IsingleClassroomDetails>={
 return useGetResourcesQuery(getClassroom)
 }
 //   use query for getClassroomModules
+// export function  useGetAllClasscroomModules( id:string, page = 1, pageSize = 10){
+//     const getClassroom:IPaginatedQueryArgs<ClassroomResponse>={
+//         key:["ClassroomModules", {id, page, pageSize}],
+//         callback:()=>getClasscroomModules(id, page, pageSize)
+//     }
+//     return usePaginationQuery(getClassroom)
+//     }
 export function  useGetAllClasscroomModules( id:string, page = 1, pageSize = 10){
     const getClassroom:IQueryArgs<ClassroomResponse>={
         key:["ClassroomModules", {id, page, pageSize}],

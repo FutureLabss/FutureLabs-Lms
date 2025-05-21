@@ -128,6 +128,7 @@ export interface PaginationMeta {
   path: string
   per_page: number
   to: number
+  total?:number
 }
 
 export interface PaginationLinks {

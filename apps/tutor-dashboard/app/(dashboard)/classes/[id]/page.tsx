@@ -40,7 +40,7 @@ import {
 } from "@/hooks/query/classroom"
 import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
-import type { IclassRoomMaterials, IclassRoomModules, IsingleClassroomDetails, Itopic, LocalClassData } from "@/lib/types/classroom"
+import type { IclassRoomMaterials, IclassRoomModules, IsingleClassroomDetails, Itopic, LocalClassData, Module } from "@/lib/types/classroom"
 import DisplayTopicDetails from "@/components/displaytopicdetails"
 import { ViewSingleModuleModal } from "@/components/viewsinglemodule"
 import CourseCardSkeleton from "./loading"
@@ -126,20 +126,26 @@ export default function ClassDetailsPage() {
     });
     const moduleId = params.selectedModuleId as string
   const [selectedTopicModuleId, setSelectedTopicModuleId] = useState<string | null | undefined>(null)
-  const [filter, setFilter] = useState<IAPIFilter>({ page: 1, pageSize: 10 });
-  const { data: getmodules, } = useGetAllClasscroomModules(classId)
-  console.log(getmodules, "modules")
-  const handlePageChange = (page: number) => {
-  setFilter(prev => ({ ...prev, page }));
-};
-const handlePageSizeChange = (page: number, size: number) => {
-  setFilter({ page, pageSize: size });
-};
-  useEffect(() => {
-    if (getmodules) {
-      console.log("Modules data structure:", JSON.stringify(getmodules, null, 2))
-    }
-  }, [getmodules])
+ const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+ const { 
+    data: getmodules, 
+    error, 
+    refetch 
+  } = useGetAllClasscroomModules(classId, page, pageSize);
+  console.log(getmodules)
+  
+
+
+const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+  // Handle page size change
+  const handlePageSizeChange = (newPage: number, newSize: number) => {
+    setPage(newPage);
+    setPageSize(newSize);
+  };
   const { mutate: deleteClassroomModule } = useDeleteClassroomModule({
     onSuccess: () => {
       toast({
@@ -275,12 +281,13 @@ const handlePageSizeChange = (page: number, size: number) => {
   }
 
   // Add a handler function for adding a module
-  const handleAddModule = (module: IclassRoomModules) => {
+  const handleAddModule = (module: Module) => {
     if (!localClassData) return
     const updatedClassData = {
       ...localClassData,
-      modules: [...(localClassData.modules || []), module],
+      modules: [...localClassData.modules, module],
     }
+    console.log("Module object:", module);
     setLocalClassData(updatedClassData)
     toast({
       title: "Module added",
@@ -618,25 +625,25 @@ const handlePageSizeChange = (page: number, size: number) => {
             </TabsList>
             {/* Modules Tab Content */}
             <ModulesTabContent
-  getmodules={getmodules}
-  loading={loading}
-  classId={classId}
-  selectedTopic={selectedTopic}
-  handlePageChange={handlePageChange}
-  handlePageSizeChange={handlePageSizeChange}
-  handleAddMaterial={handleAddMaterial}
-  setIsAddModuleDialogOpen={setIsAddModuleDialogOpen}
-  setIsEditModuleDialogOpen={setIsEditModuleDialogOpen}
-  setIsViewModuleDialogOpen={setIsViewModuleDialogOpen}
-  setIsDeleteModuleDialogOpen={setIsDeleteModuleDialogOpen}
-  setIsAddTopicDialogOpen={setIsAddTopicDialogOpen}
-  setIsEditTopicDialogOpen={setIsEditTopicDialogOpen}
-  setIsDeleteTopicDialogOpen={setIsDeleteTopicDialogOpen}
-  setSelectedModule={setSelectedModule}
-  setSelectedModuleId={setSelectedModuleId}
-  setSelectedTopic={setSelectedTopic}
-  setSelectedTopicModuleId={setSelectedTopicModuleId}
-/>
+              getmodules={getmodules}
+              loading={loading}
+              classId={classId}
+              selectedTopic={selectedTopic}
+              handlePageChange={handlePageChange}
+              handlePageSizeChange={handlePageSizeChange}
+              handleAddMaterial={handleAddMaterial}
+              setIsAddModuleDialogOpen={setIsAddModuleDialogOpen}
+              setIsEditModuleDialogOpen={setIsEditModuleDialogOpen}
+              setIsViewModuleDialogOpen={setIsViewModuleDialogOpen}
+              setIsDeleteModuleDialogOpen={setIsDeleteModuleDialogOpen}
+              setIsAddTopicDialogOpen={setIsAddTopicDialogOpen}
+              setIsEditTopicDialogOpen={setIsEditTopicDialogOpen}
+              setIsDeleteTopicDialogOpen={setIsDeleteTopicDialogOpen}
+              setSelectedModule={setSelectedModule}
+              setSelectedModuleId={setSelectedModuleId}
+              setSelectedTopic={setSelectedTopic}
+              setSelectedTopicModuleId={setSelectedTopicModuleId}
+            />
             {/* <TabsContent value="modules" className="space-y-4">
   <div className="flex items-center justify-between">
     <div>

@@ -10,17 +10,17 @@ export function useGetResourcesQuery<IReturn>({ callback, key }: IQueryArgs<IRet
     (arg) => callback && callback(arg),
     queryOptions
   );
-
   useManageLoadingState(isLoading, loadingConfig);
   useManageErrorNotifications(error as Error, errorConfig);
   return { data, status, loading: isLoading, error, isFetching, refetch };
 }
 
-export function usePaginationQuery<IReturn>({ callback, key }: IPaginatedQueryArgs<IReturn>, options?: IQueryOptions) {
+export function usePaginationQuery<IReturn>({ callback, key }: IPaginatedQueryArgs<IReturn>, options: IQueryOptions = {}) {
+  const { loadingConfig = { displayLoader: true }, errorConfig = { displayError: false }, ...queryOptions } = options;
   const { status, data, isLoading, isFetching, error, refetch } = useQuery(
     key,
     (arg) => callback && callback(arg),
-    options
+    queryOptions
   );
 
   let total = 0;
@@ -52,7 +52,7 @@ export function usePaginationQuery<IReturn>({ callback, key }: IPaginatedQueryAr
   }
 
   return {
-    data: data?.data,
+    data: data,
     status,
     loading: isLoading,
     error,

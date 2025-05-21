@@ -44,7 +44,7 @@ export interface IPaginatedReturns<IReturn> {
   prev: string | null
   next: string | null};
   meta: {
-    total?: number; 
+  total?: number; 
   current_page: number
   from: number
   path: string

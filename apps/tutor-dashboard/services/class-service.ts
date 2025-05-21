@@ -6,7 +6,7 @@ import { ClassroomResponse, ClassroomScheduleResponse, CreateAssignmentRequest, 
    IclassRoomModules, IRetriveClassroomResponse, IsingleClassroomDetails, 
 Itopic, MaterialsResponse, TopicResponse } from "@/lib/types/classroom";
 import { AddStudentResponse } from "@/lib/types/get-student";
-import { IPaginatedReturns } from "@/lib/types/query";
+import { IPaginatedQueryArgs, IPaginatedReturns } from "@/lib/types/query";
 
 // Get all classes
 export async function getAllClassRoom(): Promise<IRetriveClassroomResponse> {
@@ -93,8 +93,22 @@ export async function createClasscroomAssignment(
 }
 
 // get a classmodulus
+// export async function getClasscroomModules(classroomId: string,  page = 1, pageSize = 10): Promise<IPaginatedReturns<ClassroomResponse>>{
+//   return apiClient.get<IPaginatedReturns<ClassroomResponse>>(`classrooms/${classroomId}/modules?page=${page}`, 
+//     {
+//     params: {
+//       page,
+//       per_page: pageSize,
+//     },
+//   }
+//   )
+//     .then((response) => {
+//        console.log("API Response:", response);
+//       return response.data.data;
+//     }).catch(handleError);
+// }
 export async function getClasscroomModules(classroomId: string,  page = 1, pageSize = 10): Promise<ClassroomResponse>{
-  return apiClient.get<ClassroomResponse>(`classrooms/${classroomId}/modules`, 
+  return apiClient.get<ClassroomResponse>(`classrooms/${classroomId}/modules?page=${page}`, 
     {
     params: {
       page,

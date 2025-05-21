@@ -6,28 +6,20 @@ import { Plus, Layers, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
 import { TabsContent } from "@/components/ui/tabs";
 import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { Skeleton } from "./ui/skeleton";
 import CourseCardSkeleton from "@/app/(dashboard)/classes/[id]/loading";
-import { IclassRoomMaterials, Module } from "@/lib/types/classroom";
+import { ClassroomResponse, IclassRoomMaterials, Module } from "@/lib/types/classroom";
 import DisplayTopicDetails from "./displaytopicdetails";
 import Pagination from "./ui/pagination";
+import { IPaginatedReturns } from "@/lib/types/query";
 
 interface ModulesTabContentProps {
-  getmodules: {
-    data: Module[];
-    meta?: {
-      current_page: number;
-      per_page: number;
-      total?: number;
-    };
-  } | undefined;
+  getmodules?:ClassroomResponse,
   loading: boolean;
   classId: string;
   selectedTopic: any;
-
   // Handlers
   handlePageChange: (page: number) => void;
   handlePageSizeChange: (page: number, size: number) => void;
@@ -71,7 +63,7 @@ const ModulesTabContent: React.FC<ModulesTabContentProps> = ({
 }) => {
   const calculateTotalPages = () => {
     if (!getmodules?.meta) return 1;
-    const { total = getmodules.data.length, per_page } = getmodules.meta;
+    const { total = getmodules?.data?.length, per_page } = getmodules.meta;
     return Math.ceil(total / per_page);
   };
 
@@ -96,7 +88,7 @@ const ModulesTabContent: React.FC<ModulesTabContentProps> = ({
 
       {loading ? (
         <CourseCardSkeleton />
-      ) : !getmodules?.data || getmodules.data.length === 0 ? (
+      ) : !getmodules?.data || getmodules?.data?.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center p-6 text-center">
             <Layers className="h-12 w-12 text-muted-foreground mb-4" />
@@ -112,7 +104,7 @@ const ModulesTabContent: React.FC<ModulesTabContentProps> = ({
         </Card>
       ) : (
         <div className="space-y-4">
-          {getmodules.data.map((module) => (
+          {getmodules?.data?.map((module) => (
             <Card key={module.id}>
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between">

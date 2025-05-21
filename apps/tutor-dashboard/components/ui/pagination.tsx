@@ -82,9 +82,9 @@ const Pagination: React.FC<PaginationProps> = ({
   const isNextDisabled = hasNextPage !== undefined ? !hasNextPage : currentPage >= totalPages;
 
   // Don't render pagination if we know there's only one page
-  if (totalPages === 1 && !hasNextPage) {
-    return null;
-  }
+  // if (totalPages === 1 && !hasNextPage) {
+  //   return null;
+  // }
 
   return (
     <div className="flex flex-col md:flex-row items-center justify-between w-full space-y-4 md:space-y-0 space-x-0 md:space-x-2 py-4 px-4 bg-white border rounded-lg mt-4">
