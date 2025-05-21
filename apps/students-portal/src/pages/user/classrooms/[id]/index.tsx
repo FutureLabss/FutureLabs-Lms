@@ -17,6 +17,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
@@ -46,7 +47,165 @@ import {
   TopicsListResponse,
 } from "@/core/types/interface/classroom.ts/moduleTopics";
 import { MaterialDownload } from "@/shared/components/material-download";
+import ModuleSkeletonLoader from "./moduleskeleton";
+// import Loader from "@/shared/components/common/loader";
+// import axios from "axios";
+// import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
+// import { SingleClassroomResponse } from "@/core/types/interface/classroom.ts/getSingleClassroom";
+// import { useGetSingleModuleTopic } from "@/shared/hooks/query/classroom/moduleTopicQuery";
 
+// Mock classroom data
+// const classroom = {
+//   message: "Classroom retrieved successfully",
+//   id: 8,
+//   name: "Basic of Data Analytics",
+//   description:
+//     "Learn the fundamentals of data analytics including data collection, processing, analysis, and visualization techniques.",
+//   image_url: null,
+//   image_public_id: null,
+//   section: null,
+//   status: "active",
+//   start_date: "2025-04-22",
+//   end_date: "2025-04-23",
+//   created_by: 4,
+//   updated_by: null,
+//   course_id: 1,
+//   created_at: "2025-04-21T14:38:39.000000Z",
+//   updated_at: "2025-04-21T14:38:39.000000Z",
+//   students_count: 1,
+//   modules_count: 3,
+//   tutors: [
+//     {
+//       id: 4,
+//       fullname: "Ukpono Titus",
+//       email: "ukponoFL@gmail.com",
+//     },
+//   ],
+//   students: [
+//     {
+//       id: 13,
+//       fullname: "Peter Ime",
+//       email: "reniy89307@f5url.com",
+//     },
+//   ],
+//   schedules: {
+//     id: 8,
+//     days_of_week: ["Monday"],
+//     start_date: "2025-04-22",
+//     end_date: "2025-04-23",
+//     start_time: "16:38:00",
+//     end_time: "18:38:00",
+//     status: "active",
+//     classroom_id: 8,
+//     created_at: "2025-04-21T14:38:40.000000Z",
+//     updated_at: "2025-04-21T14:38:40.000000Z",
+//   },
+// };
+
+// Mock modules data
+// const modules = [
+//   {
+//     id: 1,
+//     title: "Introduction to Data Analytics",
+//     description: "Overview of data analytics concepts and tools",
+//     topics: [
+//       { id: 1, title: "What is Data Analytics?", duration: "45 mins" },
+//       { id: 2, title: "Data Collection Methods", duration: "60 mins" },
+//       { id: 3, title: "Data Processing Techniques", duration: "90 mins" },
+//     ],
+//   },
+//   {
+//     id: 2,
+//     title: "Data Visualization",
+//     description: "Learn how to create effective data visualizations",
+//     topics: [
+//       { id: 4, title: "Visualization Principles", duration: "60 mins" },
+//       { id: 5, title: "Chart Types and Their Uses", duration: "75 mins" },
+//       { id: 6, title: "Creating Interactive Dashboards", duration: "120 mins" },
+//     ],
+//   },
+//   {
+//     id: 3,
+//     title: "Data Analysis Tools",
+//     description: "Explore popular tools used in data analysis",
+//     topics: [
+//       {
+//         id: 7,
+//         title: "Introduction to Excel for Data Analysis",
+//         duration: "90 mins",
+//       },
+//       { id: 8, title: "SQL for Data Analysts", duration: "120 mins" },
+//       { id: 9, title: "Python Basics for Data Analysis", duration: "150 mins" },
+//     ],
+//   },
+// ];
+
+// Mock assignments data
+// const assignments = [
+//   {
+//     id: 1,
+//     title: "Data Collection Exercise",
+//     description: "Collect and organize data from provided sources",
+//     instructions:
+//       "1. Download the sample data files from the materials section.\n2. Organize the data into appropriate categories.\n3. Create a spreadsheet with the organized data.\n4. Write a brief summary of your findings (250-500 words).",
+//     due_date: "2025-04-25",
+//     status: "pending",
+//     points: 20,
+//   },
+//   {
+//     id: 2,
+//     title: "Visualization Project",
+//     description:
+//       "Create three different visualizations from the provided dataset",
+//     instructions:
+//       "1. Use the dataset provided in the materials section.\n2. Create three different types of visualizations (bar chart, line chart, pie chart, etc.).\n3. Each visualization should highlight a different aspect of the data.\n4. Include a brief explanation for each visualization explaining what insights it provides.",
+//     due_date: "2025-04-28",
+//     status: "pending",
+//     points: 30,
+//   },
+//   {
+//     id: 3,
+//     title: "Data Analysis Report",
+//     description: "Analyze the given dataset and write a comprehensive report",
+//     instructions:
+//       "1. Perform exploratory data analysis on the provided dataset.\n2. Identify key trends, patterns, and outliers.\n3. Create appropriate visualizations to support your findings.\n4. Write a comprehensive report (1000-1500 words) detailing your analysis process and findings.",
+//     due_date: "2025-05-02",
+//     status: "pending",
+//     points: 50,
+//   },
+// ];
+
+// Mock materials data
+// const materials = [
+//   {
+//     id: 1,
+//     title: "Data Analytics Fundamentals.pdf",
+//     type: "pdf",
+//     size: "2.4 MB",
+//     uploaded_at: "2025-04-21",
+//   },
+//   {
+//     id: 2,
+//     title: "Sample Dataset.xlsx",
+//     type: "excel",
+//     size: "1.8 MB",
+//     uploaded_at: "2025-04-21",
+//   },
+//   {
+//     id: 3,
+//     title: "Visualization Best Practices.pptx",
+//     type: "powerpoint",
+//     size: "5.2 MB",
+//     uploaded_at: "2025-04-22",
+//   },
+//   {
+//     id: 4,
+//     title: "Python for Data Analysis.zip",
+//     type: "archive",
+//     size: "8.7 MB",
+//     uploaded_at: "2025-04-22",
+//   },
+// ];
 
 interface ClassRoomTypes {
   classModules: ClassModulesApiResponse | undefined;
@@ -57,19 +216,27 @@ interface ClassRoomTypes {
   moduleTopicsLoading: boolean;
   isModuleId: number | null;
   handleSetModuleId: (moduleId: number | null) => void;
+  setPage: (page: number) => void;
+  page: number;
+  isFetching: boolean;
 }
 
 function ClassroomModuleCom({
   classModules,
   isLoading,
+  isFetching,
   error,
   moduleTopics,
   moduleTopicsError,
   moduleTopicsLoading,
   handleSetModuleId,
   isModuleId,
+  setPage,
+  page,
 }: ClassRoomTypes) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  console.log(classModules, "classModules");
 
   if (moduleTopicsError) return <div>Error loading topics</div>;
 
@@ -91,8 +258,10 @@ function ClassroomModuleCom({
             <Book className="mr-2 h-5 w-5" />
             Modules ({data?.data.length})
           </CardTitle> */}
-          <CardContent className="p-0">
-            {classModules?.data?.length === 0 ? (
+          <CardContent>
+            {isLoading || isFetching ? (
+              <ModuleSkeletonLoader />
+            ) : classModules?.data?.length === 0 ? (
               <p className="text-sm text-muted-foreground">
                 No modules available yet
               </p>
@@ -160,6 +329,37 @@ function ClassroomModuleCom({
           </CardDescription>
         </CardHeader>
       </Card>
+      {classModules?.meta && (
+        <CardFooter className="flex items-center justify-center gap-4">
+          <Button
+            isBorder={true}
+            disabled={
+              page <= 1 || !classModules.links?.prev || isFetching || isLoading
+            }
+            onClick={() => setPage(page - 1)}
+            className={`${
+              page <= 1 || !classModules.links?.prev
+                ? "cursor-not-allowed opacity-20 hover:none"
+                : "bg-primary text-white"
+            }`}
+          >
+            Previous
+          </Button>
+          <span>Page {classModules.meta.current_page}</span>
+          <Button
+            isBorder={true}
+            disabled={!classModules.links?.next || isFetching || isLoading}
+            onClick={() => setPage(page + 1)}
+            className={`${
+              !classModules.links?.next
+                ? "cursor-not-allowed opacity-20"
+                : "bg-primary text-white"
+            }`}
+          >
+            Next
+          </Button>
+        </CardFooter>
+      )}
 
       <Modal
         isOpen={isModalOpen}
@@ -226,7 +426,7 @@ export default function ClassroomDetailPage() {
   const myId = id ? id : null;
   const [isModuleId, setIsModuleId] = useState<number | null>(null);
   const isQueryEnabled = !!id && !!isModuleId;
-
+  const [page, setPage] = useState(1);
   const {
     data: singleClassroom,
     loading: singleClassroomLoading,
@@ -237,8 +437,9 @@ export default function ClassroomDetailPage() {
   const {
     data: classModules,
     loading: isLoading,
+    isFetching,
     error,
-  } = useGetClassroomModules(id);
+  } = useGetClassroomModules(id, page);
 
   const {
     data: moduleTopics,
@@ -557,6 +758,9 @@ export default function ClassroomDetailPage() {
             moduleTopicsLoading={moduleTopicsLoading}
             handleSetModuleId={handleSetModuleId}
             isModuleId={isModuleId}
+            page={page}
+            setPage={setPage}
+            isFetching={isFetching}
           />
         )}
 
