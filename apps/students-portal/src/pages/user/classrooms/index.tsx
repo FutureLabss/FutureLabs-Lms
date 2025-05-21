@@ -3,6 +3,7 @@ import UserLayout, { layoutInterface } from "@/shared/layouts/userLayout";
 import { useGetAllClassrooms } from "@/shared/hooks/query/classroom/getAllClassroom";
 import { GetAllClassroom } from "@/core/types/interface/classroom.ts/getAllClassroom";
 import { AlertCircle } from "lucide-react";
+// correction done
 
 // Mock data for classrooms
 // const classrooms = [

@@ -6,9 +6,7 @@ import {
   Calendar,
   FileText,
   Folder,
-  // FileText,
-  // Folder,
-  // GraduationCap,
+  
   Users,
 } from "lucide-react";
 import Link from "next/link";
@@ -247,8 +245,8 @@ function ClassroomModuleCom({
 
   return (
     <TabsContent value="modules" className="space-y-4">
-      <Card>
-        <CardHeader>
+      <Card >
+        <CardHeader >
           {classModules ? (
             <CardTitle className="flex items-center">
               <Book className="mr-2 h-5 w-5" />
@@ -260,7 +258,7 @@ function ClassroomModuleCom({
             <Book className="mr-2 h-5 w-5" />
             Modules ({data?.data.length})
           </CardTitle> */}
-          <CardContent>
+          <CardContent className="p-0">
             {isLoading || isFetching ? (
               <ModuleSkeletonLoader />
             ) : classModules?.data?.length === 0 ? (
@@ -268,13 +266,13 @@ function ClassroomModuleCom({
                 No modules available yet
               </p>
             ) : (
-              <div className="space-y-6">
+              <div className="space-y-6 ">
                 {classModules?.data.map((module, index) => (
                   <div
                     key={module.id}
                     className="border rounded-lg overflow-hidden"
                   >
-                    <div className="bg-slate-50 p-4 flex items-center justify-between">
+                    <div className="bg-slate-50 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between">
                       <div>
                         <h3 className="font-medium">
                           Module {index + 1}: {module.title}
@@ -283,7 +281,7 @@ function ClassroomModuleCom({
                           {module.description}
                         </p>
                       </div>
-                      <Badge variant="outline">
+                      <Badge variant="outline" className="mt-9 sm:mt-0">
                         {module.topics_count} topics
                       </Badge>
                     </div>
@@ -292,7 +290,7 @@ function ClassroomModuleCom({
                       {/* // module.topics.map((topic) => ( */}
                       <div
                         // key={topic.id}
-                        className="p-4 flex items-center justify-between"
+                        className="p-4 flex flex-col sm:flex-row items-center gap-4 justify-between"
                       >
                         <div className="flex items-center">
                           <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center mr-3">
@@ -308,7 +306,7 @@ function ClassroomModuleCom({
                         </Badge>
                         {/* <Badge variant="outline"> */}
                         <Button
-                          className=""
+                          className="text-[10px] lg:text-base"
                           isBorder={true}
                           onClick={() => {
                             setIsModalOpen(true);
@@ -395,12 +393,12 @@ function ClassroomModuleCom({
           <div className="space-y-6">
             {moduleTopics?.data.map((topic, index) => (
               <div key={topic.id} className="border rounded-lg overflow-hidden">
-                <div className="bg-slate-50 p-4 flex items-center justify-between">
+                <div className="bg-slate-50 p-4 flex flex-col gap-4 sm:flex-row  items-center justify-between">
                   <div>
                     <h3 className="font-medium">
                       Topic {index + 1}: {topic.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-[10px] text-muted-foreground">
                       {topic.description}
                     </p>
                   </div>
@@ -525,7 +523,7 @@ export default function ClassroomDetailPage() {
             ← Back to Classrooms
           </Link>
           {singleClassroom ? (
-            <h1 className="text-3xl font-bold">{singleClassroom.name}</h1>
+            <h1 className="text-[22px] sm:text-3xl font-bold">{singleClassroom.name}</h1>
           ) : (
             <h1 className="text-3xl font-bold">Nil</h1>
           )}
@@ -561,88 +559,76 @@ export default function ClassroomDetailPage() {
         }}
         className="space-y-4"
       >
-        <TabsList className="grid w-full grid-cols-4 lg:w-auto">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="modules">Modules</TabsTrigger>
-          <TabsTrigger value="assignments">Assignments</TabsTrigger>
-          <TabsTrigger value="materials">Materials</TabsTrigger>
-        </TabsList>
+       
+<TabsList className="w-auto justify-between flex overflow-x-auto sm:justify-between lg:grid lg:grid-cols-4 lg:w-auto ">
+  <TabsTrigger value="overview" className="flex-shrink-0">Overview</TabsTrigger>
+  <TabsTrigger value="modules" className="flex-shrink-0">Modules</TabsTrigger>
+  <TabsTrigger value="assignments" className="flex-shrink-0">Assignments</TabsTrigger>
+  <TabsTrigger value="materials" className="flex-shrink-0">Materials</TabsTrigger>
+</TabsList>
+
+
 
         <TabsContent value="overview" className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Calendar className="mr-2 h-5 w-5" />
+                <CardTitle className="flex items-center text-base sm:text-2xl">
+                  <Calendar className="mr-2  h-5 w-5" />
                   Schedule Information
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      Days
-                    </h3>
-                    {singleClassroom ? (
-                      <p>
-                        {singleClassroom?.schedules?.days_of_week?.join(", ") ||
-                          "No schedule set"}
-                      </p>
-                    ) : (
-                      <p>Nil</p>
-                    )}
-                    {/* <p>{classroom.schedules.days_of_week.join(", ")}</p> */}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      Time
-                    </h3>
-                    {singleClassroom ? (
-                      <p>
-                        {formatTime(singleClassroom.schedules.start_time)} -{" "}
-                        {formatTime(singleClassroom.schedules.end_time)}
-                      </p>
-                    ) : (
-                      <p>Nil</p>
-                    )}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div>
+    <h3 className="text-sm font-medium text-muted-foreground">Days</h3>
+    {singleClassroom ? (
+      <p>
+        {singleClassroom?.schedules?.days_of_week?.join(", ") ||
+          "No schedule set"}
+      </p>
+    ) : (
+      <p>Nil</p>
+    )}
+  </div>
 
-                    {/* <p>
-                      {formatTime(classroom.schedules.start_time)} -{" "}
-                      {formatTime(classroom.schedules.end_time)}
-                    </p> */}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      Start Date
-                    </h3>
-                    {singleClassroom ? (
-                      <p>{formatDate(singleClassroom.schedules.start_date)}</p>
-                    ) : (
-                      <p>Nil</p>
-                    )}
-                    {/* <p>{formatDate(classroom.schedules.start_date)}</p> */}
-                    {/* <p>{formatDate(classroom.schedules.start_date)}</p> */}
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      End Date
-                    </h3>
-                    {singleClassroom ? (
-                      <p>{formatDate(singleClassroom.schedules.end_date)}</p>
-                    ) : (
-                      <p>Nil</p>
-                    )}
-                    {/* <p>{formatDate(classroom.schedules.end_date)}</p> */}
-                    {/* <p>{formatDate(classroom.schedules.end_date)}</p> */}
-                    {/* <p>{formatDate(classroom.schedules.end_date)}</p> */}
-                  </div>
-                </div>
+  <div>
+    <h3 className="text-sm font-medium text-muted-foreground">Time</h3>
+    {singleClassroom ? (
+      <p>
+        {formatTime(singleClassroom.schedules.start_time)} -{" "}
+        {formatTime(singleClassroom.schedules.end_time)}
+      </p>
+    ) : (
+      <p>Nil</p>
+    )}
+  </div>
+
+  <div>
+    <h3 className="text-sm font-medium text-muted-foreground">Start Date</h3>
+    {singleClassroom ? (
+      <p>{formatDate(singleClassroom.schedules.start_date)}</p>
+    ) : (
+      <p>Nil</p>
+    )}
+  </div>
+
+  <div>
+    <h3 className="text-sm font-medium text-muted-foreground">End Date</h3>
+    {singleClassroom ? (
+      <p>{formatDate(singleClassroom.schedules.end_date)}</p>
+    ) : (
+      <p>Nil</p>
+    )}
+  </div>
+</div>
+
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader>
-                <CardTitle className="flex items-center">
+                <CardTitle className="flex items-center text-base sm:text-2xl">
                   <Users className="mr-2 h-5 w-5" />
                   People
                 </CardTitle>
@@ -859,7 +845,7 @@ export default function ClassroomDetailPage() {
                 Download and access course materials provided by your instructor
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <div className="space-y-2">
                 {/* {allClassroomMaterials?.data?.map((module) => (
                   <div
@@ -912,30 +898,39 @@ export default function ClassroomDetailPage() {
                 {allClassroomMaterials?.data.map(
                   (material: MaterialResponse) => (
                     <div
-                      key={material.id}
-                      className="flex items-center justify-between p-3 border rounded-lg"
-                    >
-                      <div className="flex items-center">
-                        <div className="h-10 w-10 rounded bg-slate-100 flex items-center justify-center mr-3">
-                          <FileText className="h-5 w-5 text-slate-600" />
-                        </div>
-                        <div>
-                          <p className="font-medium">
-                            Topic : {material.topic}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {/* {material.size} • Uploaded on{" "} */}
-                            {/* {formatDate(material.uploaded_at)} */}
-                          </p>
-                        </div>
+                    key={material.id}
+                    className="flex flex-col sm:flex-row  items-start sm:items-center justify-start sm:justify-between p-3 border rounded-lg"
+                  >
+                    {/* Left: Icon + Topic */}
+                    <div className="flex items-center">
+                      <div className="h-10 w-10 rounded bg-slate-100 flex items-center justify-center mr-3">
+                        <FileText className="h-5 w-5 text-slate-600" />
                       </div>
-                      <Badge variant="secondary">
+                      <div>
+                        <p className="text-sm sm:text-base font-medium">
+                          Topic: {material.topic}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          {/* Optional metadata */}
+                        </p>
+                      </div>
+                    </div>
+                  
+                    {/* Right: Badges + Download */}
+                    <div className="flex flex-wrap sm:flex-row gap-2 sm:gap-3 items-start sm:items-center sm:max-w-[60%]">
+                      <Badge variant="secondary" className="text-[10px] sm:text-sm">
                         module: {material.module}
                       </Badge>
-                      <Badge variant="secondary">type: {material.type}</Badge>
-                      <Badge variant="secondary">{material.title}</Badge>
+                      <Badge variant="secondary" className="text-[10px] sm:text-sm">
+                        type: {material.type}
+                      </Badge>
+                      <Badge variant="secondary" className="text-[10px] sm:text-sm">
+                        {material.title}
+                      </Badge>
                       <MaterialDownload material={material} />
                     </div>
+                  </div>
+                  
                   )
                 )}
               </div>
