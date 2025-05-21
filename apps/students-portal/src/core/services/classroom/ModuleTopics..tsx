@@ -1,4 +1,5 @@
 import {
+  ClassroomAllAssignmentResponse,
   ClassroomAllMaterialResponse,
   SingleModuleTopicResponse,
   TopicsListResponse,
@@ -21,8 +22,16 @@ export const getSingleModuleTopic = async ({
     );
     return response.data;
   } catch (error) {
-    console.error("Error fetching module topics:", error);
-    throw error;
+    toast({
+      title: "Error",
+      description: `An error occurred while fetching module topic." + ${
+        error instanceof Error ? error.message : ""
+      }`,
+      variant: "destructive",
+    });
+    console.error("Error fetching module topic:", error);
+    // throw error; // Ensure the function always returns or throws
+    return Promise.reject(error);
   }
 };
 
@@ -47,7 +56,8 @@ export const getAllModuleTopics = async ({
       variant: "destructive",
     });
     console.error("Error fetching module topics:", error);
-    throw error; // Ensure the function always returns or throws
+    // throw error; // Ensure the function always returns or throws
+    return Promise.reject(error);
   }
 };
 
@@ -70,6 +80,32 @@ export const getAllClassroomMaterials = async ({
       variant: "destructive",
     });
     console.error("Error fetching module materials:", error);
-    throw error; // Ensure the function always returns or throws
+    // throw error; // Ensure the function always returns or throws
+    return Promise.reject(error);
+  }
+};
+
+export const getAllClassroomAssignments = async ({
+  classroomId,
+}: {
+  classroomId: number;
+}): Promise<ClassroomAllAssignmentResponse> => {
+  try {
+    const response = await axios.get<ClassroomAllAssignmentResponse>(
+      `student/classrooms/${classroomId}/assignment?query=all`
+    );
+    return response?.data;
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: `An error occurred while fetching module assignments." + ${
+        error instanceof Error ? error.message : ""
+      }`,
+      variant: "destructive",
+    });
+    // console.error("Error fetching module assignments:", error);
+    // throw error;
+    //  Ensure the function always returns or throws
+    return Promise.reject(error);
   }
 };

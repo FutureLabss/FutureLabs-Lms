@@ -9,6 +9,10 @@ export interface BaseContent {
   status: number | string; // could be an enum in the future
 }
 
+export interface Pagination {
+  links: PaginationLinks;
+  meta: PaginationMeta;
+}
 // ✅ Course Material structure
 export interface CourseMaterial {
   id: number;
@@ -44,11 +48,9 @@ export interface TopicsListResponse {
 }
 
 // ✅ Paginated list of materials
-export interface MaterialsListResponse {
+export interface MaterialsListResponse extends Pagination {
   message: string;
   data: CourseMaterial[];
-  links: PaginationLinks;
-  meta: PaginationMeta;
 }
 
 // ✅ Reusable pagination link structure
@@ -92,4 +94,23 @@ export interface SingleMaterialItem {
 export interface ClassroomAllMaterialResponse {
   message: string;
   data: MaterialResponse[];
+}
+
+export interface Assignment {
+  id: number;
+  title: string;
+  description: string;
+  due_date: string;
+  points: number;
+  topic: string;
+  module: string;
+  classroom: string;
+  created_by: string;
+  updated_by: string;
+  created_date: string;
+}
+
+export interface ClassroomAllAssignmentResponse extends Pagination {
+  message: string;
+  data: Assignment[];
 }
