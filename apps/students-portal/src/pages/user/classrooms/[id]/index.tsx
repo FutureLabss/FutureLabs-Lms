@@ -19,6 +19,7 @@ import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/shared/components/ui/card";
@@ -48,6 +49,7 @@ import {
   TopicsListResponse,
 } from "@/core/types/interface/classroom.ts/moduleTopics";
 import { MaterialDownload } from "@/shared/components/material-download";
+import ModuleSkeletonLoader from "./moduleskeleton";
 // import Loader from "@/shared/components/common/loader";
 // import axios from "axios";
 // import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
@@ -216,19 +218,27 @@ interface ClassRoomTypes {
   moduleTopicsLoading: boolean;
   isModuleId: number | null;
   handleSetModuleId: (moduleId: number | null) => void;
+  setPage: (page: number) => void;
+  page: number;
+  isFetching: boolean;
 }
 
 function ClassroomModuleCom({
   classModules,
   isLoading,
+  isFetching,
   error,
   moduleTopics,
   moduleTopicsError,
   moduleTopicsLoading,
   handleSetModuleId,
   isModuleId,
+  setPage,
+  page,
 }: ClassRoomTypes) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  console.log(classModules, "classModules");
 
   if (moduleTopicsError) return <div>Error loading topics</div>;
 
@@ -251,7 +261,9 @@ function ClassroomModuleCom({
             Modules ({data?.data.length})
           </CardTitle> */}
           <CardContent>
-            {classModules?.data?.length === 0 ? (
+            {isLoading || isFetching ? (
+              <ModuleSkeletonLoader />
+            ) : classModules?.data?.length === 0 ? (
               <p className="text-sm text-muted-foreground">
                 No modules available yet
               </p>
@@ -319,6 +331,37 @@ function ClassroomModuleCom({
           </CardDescription>
         </CardHeader>
       </Card>
+      {classModules?.meta && (
+        <CardFooter className="flex items-center justify-center gap-4">
+          <Button
+            isBorder={true}
+            disabled={
+              page <= 1 || !classModules.links?.prev || isFetching || isLoading
+            }
+            onClick={() => setPage(page - 1)}
+            className={`${
+              page <= 1 || !classModules.links?.prev
+                ? "cursor-not-allowed opacity-20 hover:none"
+                : "bg-primary text-white"
+            }`}
+          >
+            Previous
+          </Button>
+          <span>Page {classModules.meta.current_page}</span>
+          <Button
+            isBorder={true}
+            disabled={!classModules.links?.next || isFetching || isLoading}
+            onClick={() => setPage(page + 1)}
+            className={`${
+              !classModules.links?.next
+                ? "cursor-not-allowed opacity-20"
+                : "bg-primary text-white"
+            }`}
+          >
+            Next
+          </Button>
+        </CardFooter>
+      )}
 
       <Modal
         isOpen={isModalOpen}
@@ -385,7 +428,7 @@ export default function ClassroomDetailPage() {
   const myId = id ? id : null;
   const [isModuleId, setIsModuleId] = useState<number | null>(null);
   const isQueryEnabled = !!id && !!isModuleId;
-
+  const [page, setPage] = useState(1);
   const {
     data: singleClassroom,
     loading: singleClassroomLoading,
@@ -396,8 +439,9 @@ export default function ClassroomDetailPage() {
   const {
     data: classModules,
     loading: isLoading,
+    isFetching,
     error,
-  } = useGetClassroomModules(id);
+  } = useGetClassroomModules(id, page);
 
   const {
     data: moduleTopics,
@@ -728,6 +772,9 @@ export default function ClassroomDetailPage() {
             moduleTopicsLoading={moduleTopicsLoading}
             handleSetModuleId={handleSetModuleId}
             isModuleId={isModuleId}
+            page={page}
+            setPage={setPage}
+            isFetching={isFetching}
           />
         )}
 
