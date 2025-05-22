@@ -9,7 +9,7 @@ import { useGetAllClassroomAssignments } from "@/hooks/query/classroom";
 interface Iprops {
   classId: string;
 }
-
+// pull updates
 export default function ViewAssignments({ classId }: Iprops) {
     const{data:retrivedAllAssignments,  loading,
     error,}=useGetAllClassroomAssignments(Number(classId), !!Number(classId))
