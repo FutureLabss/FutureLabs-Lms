@@ -2,7 +2,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import Link from "next/link";
 import React from "react";
 import CourseCardSkeleton from "@/app/(dashboard)/classes/[id]/loading";
 import { useGetAllClassroomAssignments } from "@/hooks/query/classroom";
@@ -38,7 +37,7 @@ export default function ViewAssignments({ classId }: Iprops) {
                   </div>
                   <div className="flex items-center gap-2">
                     <Button variant="outline" size="sm" asChild>
-                      <Link href={`/assignments/${assignment.id}`}>View</Link>
+                      {/* <Link href={`/assignments/${assignment.id}`}>View</Link> */}
                     </Button>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>

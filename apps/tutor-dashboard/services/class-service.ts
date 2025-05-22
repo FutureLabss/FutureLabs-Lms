@@ -108,7 +108,7 @@ export async function createClasscroomAssignment(
 //     }).catch(handleError);
 // }
 export async function getClasscroomModules(classroomId: string,  page = 1, pageSize = 10): Promise<ClassroomResponse>{
-  return apiClient.get<ClassroomResponse>(`classrooms/${classroomId}/modules?page=${page}`, 
+  return apiClient.get<ClassroomResponse>(`classrooms/${classroomId}/modules`, 
     {
     params: {
       page,
@@ -171,8 +171,8 @@ export async function createClasscroomModulesTopic(
   );
 }
 export async function getClasscroomModulesTopic(
+  classroomId: string,
   moduleId: string,
-  classroomId: string
 ): Promise<TopicResponse> {
   return apiClient
     .get<TopicResponse>(`classrooms/${classroomId}/modules/${moduleId}/topics`)

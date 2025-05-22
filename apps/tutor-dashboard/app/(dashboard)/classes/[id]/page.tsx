@@ -281,19 +281,32 @@ const handlePageChange = (newPage: number) => {
   }
 
   // Add a handler function for adding a module
-  const handleAddModule = (module: Module) => {
-    if (!localClassData) return
-    const updatedClassData = {
-      ...localClassData,
-      modules: [...localClassData.modules, module],
-    }
-    console.log("Module object:", module);
-    setLocalClassData(updatedClassData)
-    toast({
-      title: "Module added",
-      description: `${module.title} has been added to ${updatedClassData.name}.`,
-    })
+// Fix for the handleAddModule function
+const handleAddModule = (module: IclassRoomModules) => {
+  if (!localClassData) return;
+  console.log("Received module in handleAddModule:", module);
+  let moduleTitle;
+  if (typeof module === 'object' && module !== null) {
+    moduleTitle = module.title || 
+                 (module.title && module.title) || 
+                 (module.title && module.title) || 
+                 "New module";
+  } else {
+    moduleTitle = "New module";
   }
+  
+  const updatedClassData = {
+    ...localClassData,
+    modules: [...localClassData.modules, module],
+  };
+  
+  setLocalClassData(updatedClassData);
+  
+  toast({
+    title: "Module added",
+    description: `${moduleTitle} has been added to ${updatedClassData.name || "your class"}.`,
+  });
+}
   
   // Add a handler function for editing a module
   const handleEditModule = (updatedModule: any) => {
@@ -875,7 +888,7 @@ const handlePageChange = (newPage: number) => {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Students</span>
-                  <span className="text-sm">{localClassData?.currentStudents} / </span>
+                  <span className="text-sm">{localClassData?.students.length} </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Materials</span>

@@ -74,21 +74,28 @@ export function AddAssignmentModal({
 
   function onSubmit(values: z.infer<typeof assignmentFormSchema>) {
     setIsSubmitting(true);
-
-    createAssignment(
-      {
+    const newClassRoomAssigment = {
         title: values.title,
         description: values.description || "",
         due_date: values.dueDate,
         points: values.points,
+    };
+    createAssignment(
+    newClassRoomAssigment,
+    {
+      onSuccess: (data) => {
+        const toAddClassroomAssignment = {
+      ...data,
+      title: values.title,
+      description: values.description || "",
+      due_date: values.dueDate,
+      points: values.points,
+    };
+    onAssignmentAdded(toAddClassroomAssignment);
+    form.reset();
+    setIsSubmitting(false);
+    onOpenChange(false);
       },
-      {
-        onSuccess: (data) => {
-          onAssignmentAdded(data);
-          form.reset();
-          setIsSubmitting(false);
-          onOpenChange(false);
-        },
         onError: (error) => {
           console.error("Error creating assignment:", error);
           setIsSubmitting(false);
