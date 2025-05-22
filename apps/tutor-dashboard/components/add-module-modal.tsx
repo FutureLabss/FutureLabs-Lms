@@ -62,32 +62,41 @@
       },
     });
 
-    function onSubmit(values: z.infer<typeof moduleFormSchema>) {
-      setIsSubmitting(true);
-      
-      // Call the mutation instead of using setTimeout
-      createModules({
-        title: values.title,
-        description: values.description || "",
-        // Include any other required fields for your API
-      }, {
-        onSuccess: (data) => {
-          // Call the callback with the new module
-          onModuleAdded(data); // Assuming the API returns the created module
-          
-          // Reset form and state
-          form.reset();
-          setIsSubmitting(false);
-          
-          // Close the modal
-          onOpenChange(false);
-        },
-        onError: (error) => {
-          // Handle error (you might want to show a toast notification)
-          console.error("Error creating module:", error);
-          setIsSubmitting(false);
-        }
-      });
+function onSubmit(values: z.infer<typeof moduleFormSchema>) {
+  setIsSubmitting(true);
+  const newModule = {
+      title: values.title,
+      description: values.description || "",
+    };
+      createModules(newModule, {
+    onSuccess: (data) => {
+    const moduleToAdd = {
+      ...data,
+      title: values.title,
+      description: values.description || ""
+    };
+    
+      onModuleAdded(moduleToAdd);
+      form.reset();
+      setIsSubmitting(false);
+      onOpenChange(false);
+    },
+    onError: (error) => {
+      console.error("API error:", error);
+      setIsSubmitting(false);
+    }
+  });
+      // createModules(newModule, {
+      //   onSuccess: (data) => {
+      //     onModuleAdded(data);
+      //     form.reset();
+      //     setIsSubmitting(false);
+      //     onOpenChange(false);
+      //   },
+      //   onError: (error) => {
+      //     setIsSubmitting(false);
+      //   }
+      // });
     }
 
     // function onSubmit(values: z.infer<typeof moduleFormSchema>) {

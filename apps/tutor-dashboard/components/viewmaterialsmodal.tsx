@@ -37,10 +37,8 @@ interface ViewMaterialsModalProps {
     const { data: getMaterials, loading } = useGetAllClasscroomMaterials(
       classId,
       topicId
-    );
-  
+    )
     const materials = getMaterials?.data || [];
-  
     return (
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="max-w-3xl">
@@ -68,7 +66,6 @@ interface ViewMaterialsModalProps {
                     {/* new Date(material.created_at).toLocaleDateString() */}
                   </p>
                 </div>
-  
                 <div className="flex items-center gap-2">
                   <Button
                     variant="outline"
@@ -83,18 +80,17 @@ interface ViewMaterialsModalProps {
                       View
                     </NextLink>
                   </Button>
-  
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem>Edit</DropdownMenuItem>
-                      <DropdownMenuItem>Download</DropdownMenuItem>
+                    <DropdownMenuContent align="end" className="bg-white p-3">
+                      <DropdownMenuItem  className="pt-1">Edit</DropdownMenuItem>
+                      <DropdownMenuItem className="pt-1">Download</DropdownMenuItem>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem className="text-destructive focus:text-destructive">
+                      <DropdownMenuItem className="text-destructive focus:text-destructive pt-1">
                         Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>

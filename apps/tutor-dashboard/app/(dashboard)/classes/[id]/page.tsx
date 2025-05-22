@@ -1,5 +1,5 @@
 "use client"
-import { SetStateAction, useEffect, useState } from "react"
+import {  useEffect, useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Calendar, Clock, Edit, MoreHorizontal, Plus, Trash, Users, Layers } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -34,12 +34,13 @@ import { AddTopicModal } from "@/components/add-topic-modal"
 import { EditTopicModal } from "@/components/edit-topic-modal"
 import {
   useGetAllClasscroomModules,
-  useGetAllClasscroomModulesTopic,
+  useGetAllClassroomAssignments,
+  useGetAllClassroomMaterials,
   useGetSingleClassroom,
 } from "@/hooks/query/classroom"
 import { useRouter } from "next/navigation"
 import { useParams } from "next/navigation"
-import type { IclassRoomModules, IsingleClassroomDetails, Itopic, LocalClassData } from "@/lib/types/classroom"
+import type { IclassRoomMaterials, IclassRoomModules, IsingleClassroomDetails, Itopic, LocalClassData, Module } from "@/lib/types/classroom"
 import DisplayTopicDetails from "@/components/displaytopicdetails"
 import { ViewSingleModuleModal } from "@/components/viewsinglemodule"
 import CourseCardSkeleton from "./loading"
@@ -47,7 +48,12 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { useDeleteClassroom, useDeleteClassroomModule } from "@/hooks/mutate/classroom"
 import DeleteClassRoomModal from "@/components/delete-class-modal"
 import DeleteClassRoomModuleModal from "@/components/delete-module-modal"
-import DisplayMaterialDetails from "@/components/displaymaterialdetails"
+import ViewClassRoomMaterials from "@/components/viewclassroommaterials"
+import { AddAssignmentModal } from "@/components/add-assignments-modal"
+import ViewAssignments from "@/components/viewsassignments"
+import { IAPIFilter } from "@/lib/types/query"
+import Pagination from "@/components/ui/pagination"
+import ModulesTabContent from "@/components/ModulesTabContent"
 
 const createDefaultClassData = (apiData: IsingleClassroomDetails): LocalClassData => {
   return {
@@ -98,6 +104,7 @@ export default function ClassDetailsPage() {
   const [isDeleteTopicDialogOpen, setIsDeleteTopicDialogOpen] = useState(false)
   const [selectedTopic, setSelectedTopic] = useState<any | null>(null)
     const [isDeleting, setIsDeleting] = useState(false);
+
   const { mutate: deleteSingleClassroom } = useDeleteClassroom({
       onSuccess: () => {
         toast({
@@ -119,13 +126,26 @@ export default function ClassDetailsPage() {
     });
     const moduleId = params.selectedModuleId as string
   const [selectedTopicModuleId, setSelectedTopicModuleId] = useState<string | null | undefined>(null)
-  const { data: getmodules } = useGetAllClasscroomModules(classId)
-  console.log(getmodules, "modules")
-  useEffect(() => {
-    if (getmodules) {
-      console.log("Modules data structure:", JSON.stringify(getmodules, null, 2))
-    }
-  }, [getmodules])
+ const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+ const { 
+    data: getmodules, 
+    error, 
+    refetch 
+  } = useGetAllClasscroomModules(classId, page, pageSize);
+  console.log(getmodules)
+  
+
+
+const handlePageChange = (newPage: number) => {
+    setPage(newPage);
+  };
+  // Handle page size change
+  const handlePageSizeChange = (newPage: number, newSize: number) => {
+    setPage(newPage);
+    setPageSize(newSize);
+  };
   const { mutate: deleteClassroomModule } = useDeleteClassroomModule({
     onSuccess: () => {
       toast({
@@ -246,7 +266,7 @@ export default function ClassDetailsPage() {
     setSelectedStudent(student)
     setIsProgressModalOpen(true)
   }
-  const handleAddMaterial = (material: any) => {
+  const handleAddMaterial = (material: IclassRoomMaterials) => {
     // Add material to the class
     if (!localClassData) return
     const updatedClassData = {
@@ -261,18 +281,32 @@ export default function ClassDetailsPage() {
   }
 
   // Add a handler function for adding a module
-  const handleAddModule = (module: IclassRoomModules) => {
-    if (!localClassData) return
-    const updatedClassData = {
-      ...localClassData,
-      modules: [...(localClassData.modules || []), module],
-    }
-    setLocalClassData(updatedClassData)
-    toast({
-      title: "Module added",
-      description: `${module.title} has been added to ${updatedClassData.name}.`,
-    })
+// Fix for the handleAddModule function
+const handleAddModule = (module: IclassRoomModules) => {
+  if (!localClassData) return;
+  console.log("Received module in handleAddModule:", module);
+  let moduleTitle;
+  if (typeof module === 'object' && module !== null) {
+    moduleTitle = module.title || 
+                 (module.title && module.title) || 
+                 (module.title && module.title) || 
+                 "New module";
+  } else {
+    moduleTitle = "New module";
   }
+  
+  const updatedClassData = {
+    ...localClassData,
+    modules: [...localClassData.modules, module],
+  };
+  
+  setLocalClassData(updatedClassData);
+  
+  toast({
+    title: "Module added",
+    description: `${moduleTitle} has been added to ${updatedClassData.name || "your class"}.`,
+  });
+}
   
   // Add a handler function for editing a module
   const handleEditModule = (updatedModule: any) => {
@@ -327,28 +361,28 @@ export default function ClassDetailsPage() {
   };
 
   // Add a handler function for adding a topic to a module
-  const handleAddTopic = (topic: Itopic) => {
-    if (!selectedModuleId) return
-    if (!localClassData) return
-    const updatedModules = localClassData.modules.map((module) => {
-      if (module.id === selectedModuleId) {
-        return {
-          ...module,
-          topics: [...(module.Itopic || []), topic],
+    const handleAddTopic = (topic: Itopic) => {
+      console.log("Received topic:", topic);
+  if (!selectedModuleId || !localClassData) return;
+      const updatedModules = localClassData.modules.map((module) => {
+        if (module.id === selectedModuleId) {
+          return {
+            ...module,
+            topics: [...(module?.topics || []), topic],
+          }
         }
+        return module
+      })
+      const updatedClassData = {
+        ...localClassData,
+        modules: updatedModules,
       }
-      return module
-    })
-    const updatedClassData = {
-      ...localClassData,
-      modules: updatedModules,
+      setLocalClassData(updatedClassData)
+      toast({
+        title: "Topic added",
+        description: `${topic.title} has been added to the module`,
+      })
     }
-    setLocalClassData(updatedClassData)
-    toast({
-      title: "Topic added",
-      description: `${topic?.title} has been added to the module.`,
-    })
-  }
 
   // Add these handler functions after the other handler functions
   // Add a handler function for editing a topic
@@ -360,7 +394,7 @@ export default function ClassDetailsPage() {
       if (module.id === selectedTopicModuleId) {
         return {
           ...module,
-          topics: module.Itopic?.map((topic) => {
+          topics: module.topics?.map((topic) => {
             if (topic.id === updatedTopic.id) {
               return updatedTopic
             }
@@ -391,7 +425,7 @@ export default function ClassDetailsPage() {
       if (module.id === selectedTopicModuleId) {
         return {
           ...module,
-          topics: module.Itopic?.filter((topic) => topic.id !== selectedTopic.id) || [],
+          topics: module.topics?.filter((topic) => topic.id !== selectedTopic.id) || [],
         }
       }
       return module
@@ -454,6 +488,23 @@ export default function ClassDetailsPage() {
   //   );
   // }
 
+
+  // handle add assignments
+  const handleAddAssignment = (assignment: any) => {
+  if (!localClassData) return;
+  
+  const updatedClassData = {
+    ...localClassData,
+    assignments: [...localClassData.assignments, assignment],
+  };
+  
+  setLocalClassData(updatedClassData);
+  
+  toast({
+    title: "Assignment added",
+    description: `${assignment.title} has been added to ${localClassData.name}.`,
+  });
+};
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
@@ -586,7 +637,27 @@ export default function ClassDetailsPage() {
               <TabsTrigger value="assignments">Assignments</TabsTrigger>
             </TabsList>
             {/* Modules Tab Content */}
-            <TabsContent value="modules" className="space-y-4">
+            <ModulesTabContent
+              getmodules={getmodules}
+              loading={loading}
+              classId={classId}
+              selectedTopic={selectedTopic}
+              handlePageChange={handlePageChange}
+              handlePageSizeChange={handlePageSizeChange}
+              handleAddMaterial={handleAddMaterial}
+              setIsAddModuleDialogOpen={setIsAddModuleDialogOpen}
+              setIsEditModuleDialogOpen={setIsEditModuleDialogOpen}
+              setIsViewModuleDialogOpen={setIsViewModuleDialogOpen}
+              setIsDeleteModuleDialogOpen={setIsDeleteModuleDialogOpen}
+              setIsAddTopicDialogOpen={setIsAddTopicDialogOpen}
+              setIsEditTopicDialogOpen={setIsEditTopicDialogOpen}
+              setIsDeleteTopicDialogOpen={setIsDeleteTopicDialogOpen}
+              setSelectedModule={setSelectedModule}
+              setSelectedModuleId={setSelectedModuleId}
+              setSelectedTopic={setSelectedTopic}
+              setSelectedTopicModuleId={setSelectedTopicModuleId}
+            />
+            {/* <TabsContent value="modules" className="space-y-4">
   <div className="flex items-center justify-between">
     <div>
       <h2 className="text-xl font-semibold">Modules</h2>
@@ -700,7 +771,7 @@ export default function ClassDetailsPage() {
       ))}
     </div>
   )}
-</TabsContent>
+</TabsContent> */}
 {/* student */}
             <TabsContent value="students" className="space-y-4">
               <div className="flex items-center justify-between">
@@ -785,10 +856,9 @@ export default function ClassDetailsPage() {
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold">Materials</h2>
               </div>
-              {/* <DisplayMaterialDetails
-               classId={classId} 
-               selectedTopic={selectedTopic}  /> */}
+                <ViewClassRoomMaterials classId={classId} />
             </TabsContent>
+            {/*add  assignments */}
             <TabsContent value="assignments" className="space-y-4">
               <div className="flex items-center justify-between">
                 <h2 className="text-xl font-semibold">Assignments</h2>
@@ -797,42 +867,9 @@ export default function ClassDetailsPage() {
                   Add Assignment
                 </Button>
               </div>
-              <Card>
-                <CardContent className="p-0">
-                  <div className="divide-y">
-                    {localClassData?.assignments.map((assignment) => (
-                      <div key={assignment.id} className="flex items-center justify-between p-4">
-                        <div>
-                          <p className="font-medium">{assignment.title}</p>
-                          <p className="text-sm text-muted-foreground">
-                            Due: {new Date(assignment.dueDate).toLocaleDateString()} • {assignment.points} points
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Button variant="outline" size="sm" asChild>
-                            <Link href={`/assignments/${assignment.id}`}>View</Link>
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button variant="ghost" size="icon">
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent align="end">
-                              <DropdownMenuItem>Edit</DropdownMenuItem>
-                              <DropdownMenuItem>Grade</DropdownMenuItem>
-                              <DropdownMenuSeparator />
-                              <DropdownMenuItem className="text-destructive focus:text-destructive">
-                                Delete
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+              <ViewAssignments
+              classId={classId} />
+              
             </TabsContent>
           </Tabs>
         </div>
@@ -851,7 +888,7 @@ export default function ClassDetailsPage() {
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Students</span>
-                  <span className="text-sm">{localClassData?.currentStudents} / </span>
+                  <span className="text-sm">{localClassData?.students.length} </span>
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">Materials</span>
@@ -893,6 +930,14 @@ export default function ClassDetailsPage() {
           </Card>
         </div>
       </div>
+      {/* add assignments modal */}
+      <AddAssignmentModal
+      open={isAddAssignmentDialogOpen}
+      onOpenChange={setIsAddAssignmentDialogOpen}
+      onAssignmentAdded={handleAddAssignment}
+      classId={classId} 
+    />
+
       {/* Delete Class Dialog */}
       <DeleteClassRoomModal
         open={isDeleteDialogOpen}
@@ -1020,6 +1065,12 @@ export default function ClassDetailsPage() {
           moduleId={selectedModuleId}
         />
       )}
+      {/* <Pagination
+          activepage={currentPage}
+          totalPages={totalPages}
+          setFilter={setFilter}
+          filter={filter}
+        /> */}
     </div>
   )
 }

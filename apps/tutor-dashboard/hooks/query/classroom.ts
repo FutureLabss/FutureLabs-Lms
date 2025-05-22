@@ -1,7 +1,7 @@
-import { ClassroomResponse, IRetriveClassroomResponse, IsingleClassroomDetails, MaterialsResponse, TopicResponse } from "@/lib/types/classroom";
-import { IQueryArgs } from "@/lib/types/query";
-import {  getAllClassRoom, getClasscroomMaterials, getClasscroomModules, getClasscroomModulesTopic, getClasscroomSingleModules, getSingleClassRoom } from "@/services/class-service";
-import { useGetResourcesQuery } from "../helper/query";
+import { ClassroomResponse, CreateAssignmentResponse, IclassRoomMaterials, IRetriveClassroomResponse, IsingleClassroomDetails, MaterialsResponse, TopicResponse } from "@/lib/types/classroom";
+import { IPaginatedQueryArgs, IQueryArgs } from "@/lib/types/query";
+import {  getAllClassRoom, getAllClassroomAssignments, getAllClassroomMaterials, getClasscroomMaterials, getClasscroomModules, getClasscroomModulesTopic, getClasscroomSingleModules, getSingleClassRoom } from "@/services/class-service";
+import { useGetResourcesQuery, usePaginationQuery } from "../helper/query";
 
 //   use query for getClassroom
 // export function  useGetAllClassroom(){
@@ -29,10 +29,17 @@ const getClassroom:IQueryArgs<IsingleClassroomDetails>={
 return useGetResourcesQuery(getClassroom)
 }
 //   use query for getClassroomModules
-export function  useGetAllClasscroomModules( id:string){
+// export function  useGetAllClasscroomModules( id:string, page = 1, pageSize = 10){
+//     const getClassroom:IPaginatedQueryArgs<ClassroomResponse>={
+//         key:["ClassroomModules", {id, page, pageSize}],
+//         callback:()=>getClasscroomModules(id, page, pageSize)
+//     }
+//     return usePaginationQuery(getClassroom)
+//     }
+export function  useGetAllClasscroomModules( id:string, page = 1, pageSize = 10){
     const getClassroom:IQueryArgs<ClassroomResponse>={
-        key:["ClassroomModules", {id}],
-        callback:()=>getClasscroomModules(id)
+        key:["ClassroomModules", {id, page, pageSize}],
+        callback:()=>getClasscroomModules(id, page, pageSize)
     }
     return useGetResourcesQuery(getClassroom)
     }
@@ -54,12 +61,35 @@ export function  useGetAllClasscroomMaterials(  classroomId:string, topicId:stri
     return useGetResourcesQuery(getClassroom)
     }
     // getClasscroomModulesTopic
-    export function  useGetAllClasscroomModulesTopic( classroomId:string, modulesId:string){
+export function  useGetAllClasscroomModulesTopic( classroomId:string, modulesId:string){
         const getClassroomModulesTopic:IQueryArgs<TopicResponse>={
             key:["ClassroomModulesTopics", {classroomId, modulesId}],
             callback:()=>getClasscroomModulesTopic(classroomId, modulesId)
         }
         return useGetResourcesQuery(getClassroomModulesTopic)
-        }
+}
+
+export function useGetAllClassroomMaterials(
+  classroomId: number,
+  enabled: boolean
+) {
+  const allModuleTopics: IQueryArgs<MaterialsResponse> = {
+    key: ["ClassroomMaterials", { classroomId }],
+    callback: () => getAllClassroomMaterials({ classroomId }),
+  };
+  return useGetResourcesQuery(allModuleTopics, { enabled });
+}
+
+// retrivved assignmnet
+export function useGetAllClassroomAssignments(
+  classroomId: number,
+  enabled: boolean
+) {
+  const allAssignments: IQueryArgs<CreateAssignmentResponse> = {
+    key: ["ClassroomAssignmnet", { classroomId }],
+    callback: () => getAllClassroomAssignments({ classroomId }),
+  };
+  return useGetResourcesQuery(allAssignments, { enabled });
+}
     
         
