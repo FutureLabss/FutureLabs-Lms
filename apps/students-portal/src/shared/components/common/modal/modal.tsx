@@ -8,7 +8,13 @@ interface ModalProps {
   children?: React.ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, displayClose = false, title, children }) => {
+const Modal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  displayClose = false,
+  title,
+  children,
+}) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   const handleOutsideClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -33,10 +39,14 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, displayClose = false, ti
   return (
     <div
       onClick={handleOutsideClick}
-      className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto z-50
-       h-full w-full p-1 flex items-center justify-center"
+      className="fixed inset-0 bg-gray-600 bg-opacity-50  z-50
+       h-full w-full p-1 flex items-center justify-center "
+      id="margin-flaw"
     >
-      <div ref={modalRef} className="relative p-7 border w-[38rem] shadow-lg rounded-lg bg-white">
+      <div
+        ref={modalRef}
+        className="relative p-7 border w-[38rem] shadow-lg rounded-lg bg-white"
+      >
         <div className="flex justify-between items-center">
           {title && <div className="text-lg font-semibold">{title}</div>}
           {displayClose && (
@@ -48,7 +58,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, displayClose = false, ti
                 viewBox="0 0 24 24"
                 stroke="currentColor"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M6 18L18 6M6 6l12 12"
+                />
               </svg>
             </button>
           )}
