@@ -2,8 +2,10 @@
 
 import { useState } from "react";
 import {
+  BadgeAlertIcon,
   Book,
   Calendar,
+  ClipboardCheckIcon,
   FileText,
   Folder,
   GraduationCap,
@@ -44,6 +46,7 @@ import {
   useGetAllClassroomAssignments,
   useGetAllClassroomMaterials,
   useGetAllModuleTopics,
+  useGetSingleClassroomAssignment,
 } from "@/shared/hooks/query/classroom/moduleTopicQuery";
 import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
 import {
@@ -51,8 +54,16 @@ import {
   TopicsListResponse,
 } from "@/core/types/interface/classroom.ts/moduleTopics";
 import { MaterialDownload } from "@/shared/components/material-download";
-import { Student, Tutor } from "@/core/types/interface/classroom.ts/getSingleClassroom";
+import {
+  Student,
+  Tutor,
+} from "@/core/types/interface/classroom.ts/getSingleClassroom";
 import ModuleSkeletonLoader from "./moduleskeleton";
+import Loader from "@/shared/components/common/loader";
+import { AxiosError } from "axios";
+import { AssignmentSubmissionDialog } from "@/shared/components/assignment-submission-dialog";
+import { usePostAssignments } from "@/shared/hooks/mutate/user";
+import { toast } from "sonner";
 
 // import Loader from "@/shared/components/common/loader";
 // import axios from "axios";
@@ -247,7 +258,17 @@ function ClassroomModuleCom({
   if (moduleTopicsError) return <div>Error loading topics</div>;
 
   if (isLoading) return <div>Loading modules...</div>;
-  if (error) return <div>Error loading modules</div>;
+  if (error) {
+    if (error instanceof AxiosError) {
+      // console.log(error.message);
+      return (
+        <div className="border text-center w-full h-40 flex items-center justify-center">
+          <span className="mr-2">Error loading modules: {error.message}</span>
+          <BadgeAlertIcon color="red" />
+        </div>
+      );
+    }
+  }
 
   return (
     <TabsContent value="modules" className="space-y-4">
@@ -435,12 +456,29 @@ export default function ClassroomDetailPage() {
   const [isModuleId, setIsModuleId] = useState<number | null>(null);
   const isQueryEnabled = !!id && !!isModuleId;
   const [page, setPage] = useState(1);
+  const [showAssignmentModal, setShowAssignmentModal] =
+    useState<boolean>(false);
+  const [assignmentId, setAssignmentId] = useState<number | null>(null);
+
+  // const selectedAssignment = {
+  //   id: 1,
+  //   title: "Data Collection Exercise",
+  //   description: "Collect and organize data from provided sources",
+  //   instructions:
+  //     "1. Download the sample data files from the materials section.\n2. Organize the data into appropriate categories.\n3. Create a spreadsheet with the organized data.\n4. Write a brief summary of your findings (250-500 words).",
+  //   due_date: "2025-04-25",
+  //   status: "pending",
+  //   points: 20,
+  // };
   // const [assignmentPage, setAssignmentPage] = useState(1);
   const {
     data: singleClassroom,
     loading: singleClassroomLoading,
     error: singleClassroomError,
   } = useGetSingleClassroom(myId || "");
+
+  const singleClassRoomError =
+    singleClassroomError instanceof Error ? singleClassroomError.message : "";
 
   // const classroomId = Number(id);
   const {
@@ -456,11 +494,18 @@ export default function ClassroomDetailPage() {
     loading: moduleTopicsLoading,
   } = useGetAllModuleTopics(Number(id), Number(isModuleId), isQueryEnabled);
 
+  const moduleTopicsErrorMessage =
+    moduleTopicsError instanceof Error ? moduleTopicsError.message : "";
+
   const {
     data: allClassroomMaterials,
     loading: allClassroomMaterialsoading,
     error: allClassroomMaterialsrror,
   } = useGetAllClassroomMaterials(Number(id), !!Number(id));
+  const allClassroomMaterialsErrorMessage =
+    allClassroomMaterialsrror instanceof Error
+      ? allClassroomMaterialsrror.message
+      : "";
 
   function handleSetModuleId(moduleId: number | null) {
     if (moduleId === null) {
@@ -476,15 +521,47 @@ export default function ClassroomDetailPage() {
     // loading: isLoadingAssignments,
   } = useGetAllClassroomAssignments(Number(id), !!Number(id));
 
+  const allClassroomAssignmentsErrorMessage =
+    allClassroomAssignmentsError instanceof Error
+      ? allClassroomAssignmentsError.message
+      : "";
+
   console.log(allClassroomAssignments, "assignments");
+
+  const {
+    data: singleClassroomAssignment,
+    loading: singleClassroomAssignmentLoading,
+  } = useGetSingleClassroomAssignment(
+    Number(id),
+    Number(assignmentId),
+    !!Number(assignmentId)
+  );
+
+  console.log(singleClassroomAssignment, "single assignment");
+
+  const { mutate: postAssignment } = usePostAssignments(assignmentId || 0, {
+    onSuccess: () => {
+      toast("Assignment submitted successfully", {
+        description: "Your assignment has been submitted.",
+      });
+      setShowAssignmentModal(false);
+    },
+    onError: (error) => {
+      if (error instanceof AxiosError) {
+        toast("Error submitting assignment", { description: error.message });
+      }
+    },
+  });
 
   // Pass an empty string or default value if id is not available
 
-  if (singleClassroomLoading) return <div>Loading modules...</div>;
-  if (singleClassroomError) return <div>Error loading modules</div>;
-  if (allClassroomMaterialsrror) return <div>Error loading topics</div>;
-  if (allClassroomMaterialsoading) return <div>Loading topics...</div>;
-  if (allClassroomAssignmentsError) return <div>Error loading assignments</div>;
+  if (singleClassroomLoading) return <Loader />;
+  if (allClassroomMaterialsoading)
+    return (
+      <div>
+        Loading Materials... <Loader />
+      </div>
+    );
 
   // const assignments = singleClassroom.assignments || [];
   // const [selectedAssignment, setSelectedAssignment] = useState<
@@ -596,111 +673,125 @@ export default function ClassroomDetailPage() {
         </TabsList>
 
         <TabsContent value="overview" className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center text-base sm:text-2xl">
-                  <Calendar className="mr-2  h-5 w-5" />
-                  Schedule Information
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      Days
-                    </h3>
-                    {singleClassroom ? (
-                      <p>
-                        {singleClassroom?.schedules?.days_of_week?.join(", ") ||
-                          "No schedule set"}
-                      </p>
-                    ) : (
-                      <p>Nil</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      Time
-                    </h3>
-                    {singleClassroom ? (
-                      <p>
-                        {formatTime(singleClassroom.schedules.start_time)} -{" "}
-                        {formatTime(singleClassroom.schedules.end_time)}
-                      </p>
-                    ) : (
-                      <p>Nil</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      Start Date
-                    </h3>
-                    {singleClassroom ? (
-                      <p>{formatDate(singleClassroom.schedules.start_date)}</p>
-                    ) : (
-                      <p>Nil</p>
-                    )}
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      End Date
-                    </h3>
-                    {singleClassroom ? (
-                      <p>{formatDate(singleClassroom.schedules.end_date)}</p>
-                    ) : (
-                      <p>Nil</p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center text-base sm:text-2xl">
-                  <Users className="mr-2 h-5 w-5" />
-                  People
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                    Tutors
-                  </h3>
-                  {singleClassroom?.tutors.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">
-                      No tutors assigned yet
-                    </p>
-                  ) : (
+          {singleClassRoomError ? (
+            <div className="border text-center w-full h-40 flex items-center justify-center">
+              <span className="mr-2">
+                Error loading overview: {singleClassRoomError}
+              </span>
+              <BadgeAlertIcon color="red" />
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center text-base sm:text-2xl">
+                    <Calendar className="mr-2  h-5 w-5" />
+                    Schedule Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      {singleClassroom?.tutors.map((tutor:Tutor) => (
-                        <div key={tutor.id} className="flex items-center mb-3">
-                          <Avatar className="h-8 w-8 mr-2">
-                            <AvatarFallback>
-                              {tutor.fullname
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="text-sm font-medium">
-                              {tutor.fullname}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {tutor.email}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
+                      <h3 className="text-sm font-medium text-muted-foreground">
+                        Days
+                      </h3>
+                      {singleClassroom ? (
+                        <p>
+                          {singleClassroom?.schedules?.days_of_week?.join(
+                            ", "
+                          ) || "No schedule set"}
+                        </p>
+                      ) : (
+                        <p>Nil</p>
+                      )}
                     </div>
-                  )}
 
-                  {/* {classroom.tutors.map((tutor) => (
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground">
+                        Time
+                      </h3>
+                      {singleClassroom ? (
+                        <p>
+                          {formatTime(singleClassroom.schedules.start_time)} -{" "}
+                          {formatTime(singleClassroom.schedules.end_time)}
+                        </p>
+                      ) : (
+                        <p>Nil</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground">
+                        Start Date
+                      </h3>
+                      {singleClassroom ? (
+                        <p>
+                          {formatDate(singleClassroom.schedules.start_date)}
+                        </p>
+                      ) : (
+                        <p>Nil</p>
+                      )}
+                    </div>
+
+                    <div>
+                      <h3 className="text-sm font-medium text-muted-foreground">
+                        End Date
+                      </h3>
+                      {singleClassroom ? (
+                        <p>{formatDate(singleClassroom.schedules.end_date)}</p>
+                      ) : (
+                        <p>Nil</p>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center text-base sm:text-2xl">
+                    <Users className="mr-2 h-5 w-5" />
+                    People
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                      Tutors
+                    </h3>
+                    {singleClassroom?.tutors.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">
+                        No tutors assigned yet
+                      </p>
+                    ) : (
+                      <div>
+                        {singleClassroom?.tutors.map((tutor: Tutor) => (
+                          <div
+                            key={tutor.id}
+                            className="flex items-center mb-3"
+                          >
+                            <Avatar className="h-8 w-8 mr-2">
+                              <AvatarFallback>
+                                {tutor.fullname
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="text-sm font-medium">
+                                {tutor.fullname}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {tutor.email}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* {classroom.tutors.map((tutor) => (
                     <div key={tutor.id} className="flex items-center mb-3">
                       <Avatar className="h-8 w-8 mr-2">
                         <AvatarFallback>
@@ -718,44 +809,44 @@ export default function ClassroomDetailPage() {
                       </div>
                     </div>
                   ))} */}
-                </div>
-                <div>
-                  {singleClassroom?.students.length === 0 ? (
-                    <p className="text-sm text-muted-foreground">
-                      No students enrolled yet
-                    </p>
-                  ) : (
-                    <div>
-                      <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                        Students
-                      </h3>
-                      {singleClassroom?.students.map((student:Student) => (
-                        <div
-                          key={student.id}
-                          className="flex items-center mb-3"
-                        >
-                          <Avatar className="h-8 w-8 mr-2">
-                            <AvatarFallback>
-                              {student.fullname
-                                .split(" ")
-                                .map((n) => n[0])
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="text-sm font-medium">
-                              {student.fullname}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {student.email}
-                            </p>
+                  </div>
+                  <div>
+                    {singleClassroom?.students.length === 0 ? (
+                      <p className="text-sm text-muted-foreground">
+                        No students enrolled yet
+                      </p>
+                    ) : (
+                      <div>
+                        <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                          Students
+                        </h3>
+                        {singleClassroom?.students.map((student: Student) => (
+                          <div
+                            key={student.id}
+                            className="flex items-center mb-3"
+                          >
+                            <Avatar className="h-8 w-8 mr-2">
+                              <AvatarFallback>
+                                {student.fullname
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="text-sm font-medium">
+                                {student.fullname}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {student.email}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                        ))}
+                      </div>
+                    )}
 
-                  {/* {classroom.students.map((student) => (
+                    {/* {classroom.students.map((student) => (
                     <div key={student.id} className="flex items-center">
                       <Avatar className="h-8 w-8 mr-2">
                         <AvatarFallback>
@@ -775,10 +866,11 @@ export default function ClassroomDetailPage() {
                       </div>
                     </div>
                   ))} */}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
         </TabsContent>
 
         {activeTab === "modules" && (
@@ -798,78 +890,140 @@ export default function ClassroomDetailPage() {
         )}
 
         <TabsContent value="assignments" className="space-y-4">
-          {!allClassroomAssignments?.data && (
+          {allClassroomAssignmentsErrorMessage ? (
+            <div className="border text-center w-full h-40 flex items-center justify-center">
+              <span className="mr-2">
+                Error loading assignments: {allClassroomAssignmentsErrorMessage}
+              </span>
+              <BadgeAlertIcon color="red" />
+            </div>
+          ) : moduleTopicsErrorMessage ? (
+            <div>
+              <div className="border text-center w-full h-40 flex items-center justify-center">
+                <span className="mr-2">
+                  Error loading assignments: {moduleTopicsErrorMessage}
+                </span>
+                <BadgeAlertIcon color="red" />
+              </div>
+            </div>
+          ) : (
+            !allClassroomAssignments?.data && (
+              <Card>
+                <CardHeader className="text-center">
+                  <CardTitle className="flex justify-center items-center">
+                    <FileText className="mr-2 h-5 w-5 text-muted-foreground" />
+                    No Assignments
+                  </CardTitle>
+                  <CardDescription>
+                    You&apos;re all caught up! New assignments will appear here.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            )
+          )}
+          {allClassroomAssignments?.data && (
             <Card>
-              <CardHeader className="text-center">
-                <CardTitle className="flex justify-center items-center">
-                  <FileText className="mr-2 h-5 w-5 text-muted-foreground" />
-                  No Assignments
+              <CardHeader>
+                <CardTitle className="flex items-center text-[1.25rem] md:text-xl">
+                  <FileText className="mr-2 h-5 w-5" />
+                  Assignments ({allClassroomAssignments?.data.length})
                 </CardTitle>
                 <CardDescription>
-                  You&apos;re all caught up! New assignments will appear here.
+                  Complete and submit your assignments before the due date
                 </CardDescription>
               </CardHeader>
-            </Card>
-          )}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center text-[1.25rem] md:text-xl">
-                <FileText className="mr-2 h-5 w-5" />
-                Assignments ({allClassroomAssignments?.data.length})
-              </CardTitle>
-              <CardDescription>
-                Complete and submit your assignments before the due date
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {allClassroomAssignments?.data.map((assignment) => (
-                  <div
-                    key={assignment.id}
-                    className="border rounded-lg overflow-hidden"
-                  >
-                    <div className="p-2 md:p-4">
-                      <div className="flex items-center justify-between mb-1">
-                        <h3 className="font-medium">{assignment.title}</h3>
-                        {/* <Badge
-                          variant={
-                            assignment.status === "completed"
-                              ? "default"
-                              : "outline"
-                          }
-                        >
-                          {assignment. === "completed"
-                            ? "Completed"
-                            : "Pending"}
-                        </Badge> */}
-                      </div>
-                      <p className="text-sm text-muted-foreground mb-3">
-                        {assignment.description}
-                      </p>
-                      <div className="flex gap-3 md:items-center md:flex-row flex-col md:justify-between text-sm">
-                        <div className="flex items-center">
-                          <Calendar className="mr-1 h-4 w-4 text-muted-foreground" />
-                          <span>Due: {formatDate(assignment.due_date)}</span>
+              <CardContent>
+                <div className="space-y-4">
+                  {allClassroomAssignments?.data.map((assignment) => (
+                    <div
+                      key={assignment.id}
+                      className="border rounded-lg overflow-hidden"
+                    >
+                      <div className="p-2 md:p-4">
+                        <div className="flex items-center justify-between mb-1">
+                          <h3 className="font-medium">{assignment.title}</h3>
+                          <Badge
+                            className="w-fit"
+                            variant={
+                              assignment?.submission?.grade_status ===
+                                "pending" || "N/A"
+                                ? "default"
+                                : "outline"
+                            }
+                          >
+                            Status:{" "}
+                            {assignment.submission.grade_status === "pending" ||
+                            "N/A"
+                              ? "Pending"
+                              : "Graded"}
+                          </Badge>
                         </div>
-                        <Badge className="w-fit" variant={"secondary"}>
-                          {assignment.module}
-                        </Badge>
+                        <p className="text-sm text-muted-foreground mb-3">
+                          {assignment.description}
+                        </p>
+                        <div className="flex gap-3 md:items-center md:flex-row flex-col md:justify-between text-sm">
+                          <div className="flex items-center">
+                            <Calendar className="mr-1 h-4 w-4 text-muted-foreground" />
+                            <span>Due: {formatDate(assignment.due_date)}</span>
+                          </div>
+                          <Badge className="w-fit" variant={"secondary"}>
+                            {assignment.module}
+                          </Badge>
+                          {/* <div className="flex gap-2"> */}
 
-                        <div className="flex items-center">
-                          <GraduationCap className="mr-1 h-4 w-4 text-muted-foreground" />
-                          <span>{assignment.points} points</span>
+                          <Badge
+                            className="w-fit"
+                            variant={
+                              assignment?.submission?.status === "submitted"
+                                ? "default"
+                                : "outline"
+                            }
+                          >
+                            {assignment.submission.status === "submitted"
+                              ? "submitted"
+                              : "pending"}
+                          </Badge>
+                          <Badge className="w-fit" variant={"secondary"}>
+                            score: {assignment.submission.score}
+                          </Badge>
+                          {/* </div> */}
+                          <div className="flex items-center">
+                            <GraduationCap className="mr-1 h-4 w-4 text-muted-foreground" />
+                            <span>{assignment.points} points</span>
+                          </div>
                         </div>
+                      </div>
+                      <div className="bg-slate-50 p-3 flex justify-end">
+                        <Button
+                          onClick={() => {
+                            setShowAssignmentModal(true);
+                            setAssignmentId(assignment.id);
+                          }}
+                          isBorder={true}
+                          className="text-[10px] lg:text-base"
+                        >
+                          <div className="flex items-center gap-2">
+                            <ClipboardCheckIcon className="h-4 w-4" />
+
+                            <span>View & Submit</span>
+                          </div>
+                        </Button>
                       </div>
                     </div>
-                    {/* <div className="bg-slate-50 p-3 flex justify-end">
-                      <Button onClick={() => openAssignmentDialog(assignment)}>
-                        View & Submit
-                      </Button>
-                    </div> */}
-                  </div>
-                ))}
-              </div>
-              {/* {allClassroomAssignments?.meta && (
+                  ))}
+                  {singleClassroomAssignmentLoading
+                    ? "Loading...."
+                    : showAssignmentModal &&
+                      singleClassroomAssignment?.data && (
+                        <AssignmentSubmissionDialog
+                          open={showAssignmentModal}
+                          onOpenChange={setShowAssignmentModal}
+                          assignment={singleClassroomAssignment.data}
+                          postAssignment={postAssignment}
+                        />
+                      )}
+                </div>
+                {/* {allClassroomAssignments?.meta && (
                 <CardFooter className="flex items-center justify-center gap-4">
                   <Button
                     isBorder={true}
@@ -905,21 +1059,32 @@ export default function ClassroomDetailPage() {
                   </Button>
                 </CardFooter>
               )} */}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
         </TabsContent>
 
         <TabsContent value="materials" className="space-y-4">
           <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Folder className="mr-2 h-5 w-5" />
-                {/* Course Materials ({materials.length}) */}
-              </CardTitle>
-              <CardDescription>
-                Download and access course materials provided by your instructor
-              </CardDescription>
-            </CardHeader>
+            {allClassroomMaterialsErrorMessage ? (
+              <div className="border text-center w-full h-40 flex items-center justify-center">
+                <span className="mr-2">
+                  Error loading materials: {allClassroomMaterialsErrorMessage}
+                </span>
+                <BadgeAlertIcon color="red" />
+              </div>
+            ) : (
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <Folder className="mr-2 h-5 w-5" />
+                  {/* Course Materials ({materials.length}) */}
+                </CardTitle>
+                <CardDescription>
+                  Download and access course materials provided by your
+                  instructor
+                </CardDescription>
+              </CardHeader>
+            )}
             <CardContent className="p-0">
               <div className="space-y-2">
                 {/* {allClassroomMaterials?.data?.map((module) => (

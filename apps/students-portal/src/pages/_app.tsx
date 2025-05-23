@@ -7,8 +7,7 @@ import AuthContext from "@/shared/context/auth";
 import { QueryClientProvider } from "react-query";
 import Loader from "@/shared/components/common/loader";
 import NotificationComponent from "@/shared/components/common/notification";
-
-
+import { Toaster } from "@/shared/components/ui/sonner";
 
 type Page = NextPage & { Layout?: React.FC };
 const queryClient = getQueryClientConfig();
@@ -26,9 +25,8 @@ export default function App({ Component, pageProps }: AppProps) {
             <PageComponent {...pageProps} />
           </Layout>
         </AuthContext>
+        <Toaster richColors className="" position="top-right" />
       </QueryClientProvider>
     </>
   );
 }
-
-

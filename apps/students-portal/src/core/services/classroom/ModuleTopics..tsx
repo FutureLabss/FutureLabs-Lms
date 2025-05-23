@@ -1,13 +1,17 @@
+import { NotificationType } from "@/core/types/enum/notification";
 import {
   ClassroomAllAssignmentResponse,
   ClassroomAllMaterialResponse,
+  SingleAssignmentResponse,
   SingleModuleTopicResponse,
   TopicsListResponse,
 } from "@/core/types/interface/classroom.ts/moduleTopics";
-import { toast } from "@/shared/components/ui/use-toast";
-import axios from "axios";
+import useNotificationStore from "@/stores/notificationState";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
-export const getSingleModuleTopic = async ({
+const setNotification = useNotificationStore.getState().displayNotification;
+
+export async function getSingleModuleTopic({
   topicId,
   classroomId,
   moduleId,
@@ -15,97 +19,116 @@ export const getSingleModuleTopic = async ({
   topicId: number;
   classroomId: number;
   moduleId: number;
-}): Promise<SingleModuleTopicResponse> => {
-  try {
-    const response = await axios.get<SingleModuleTopicResponse>(
+}): Promise<SingleModuleTopicResponse> {
+  return axios
+    .get<SingleModuleTopicResponse>(
       `classrooms/${classroomId}/modules/${moduleId}/topics/${topicId}`
-    );
-    return response.data;
-  } catch (error) {
-    toast({
-      title: "Error",
-      description: `An error occurred while fetching module topic." + ${
-        error instanceof Error ? error.message : ""
-      }`,
-      variant: "destructive",
+    )
+    .then((res: AxiosResponse<SingleModuleTopicResponse>) => res.data)
+    .catch((error) => {
+      if (error instanceof Error) {
+        const errorMessage = error?.message || "Failed to fetch module topic.";
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: errorMessage },
+        });
+      }
+      return Promise.reject(error);
     });
-    console.error("Error fetching module topic:", error);
-    // throw error; // Ensure the function always returns or throws
-    return Promise.reject(error);
-  }
-};
+}
 
-export const getAllModuleTopics = async ({
+export async function getAllModuleTopics({
   classroomId,
   moduleId,
 }: {
   classroomId: number;
   moduleId: number;
-}): Promise<TopicsListResponse> => {
-  try {
-    const response = await axios.get<TopicsListResponse>(
+}): Promise<TopicsListResponse> {
+  return axios
+    .get<TopicsListResponse>(
       `classrooms/${classroomId}/modules/${moduleId}/topics`
-    );
-    return response?.data;
-  } catch (error) {
-    toast({
-      title: "Error",
-      description: `An error occurred while fetching module topics." + ${
-        error instanceof Error ? error.message : ""
-      }`,
-      variant: "destructive",
+    )
+    .then((res: AxiosResponse<TopicsListResponse>) => res.data)
+    .catch((error) => {
+      if (error instanceof AxiosError) {
+        const errorMessage =
+          error?.response?.data?.message || "Failed to fetch module topics.";
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: errorMessage },
+        });
+      }
+      return Promise.reject(error);
     });
-    console.error("Error fetching module topics:", error);
-    // throw error; // Ensure the function always returns or throws
-    return Promise.reject(error);
-  }
-};
+}
 
-export const getAllClassroomMaterials = async ({
+export async function getAllClassroomMaterials({
   classroomId,
 }: {
   classroomId: number;
-}): Promise<ClassroomAllMaterialResponse> => {
-  try {
-    const response = await axios.get<ClassroomAllMaterialResponse>(
+}): Promise<ClassroomAllMaterialResponse> {
+  return axios
+    .get<ClassroomAllMaterialResponse>(
       `classrooms/${classroomId}/resources?query=materials`
-    );
-    return response?.data;
-  } catch (error) {
-    toast({
-      title: "Error",
-      description: `An error occurred while fetching module materials." + ${
-        error instanceof Error ? error.message : ""
-      }`,
-      variant: "destructive",
+    )
+    .then((res: AxiosResponse<ClassroomAllMaterialResponse>) => res.data)
+    .catch((error) => {
+      if (error instanceof AxiosError) {
+        const errorMessage =
+          error?.message || "Failed to fetch classroom materials.";
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: errorMessage },
+        });
+      }
+      return Promise.reject(error);
     });
-    console.error("Error fetching module materials:", error);
-    // throw error; // Ensure the function always returns or throws
-    return Promise.reject(error);
-  }
-};
+}
 
-export const getAllClassroomAssignments = async ({
+export async function getAllClassroomAssignments({
   classroomId,
 }: {
   classroomId: number;
-}): Promise<ClassroomAllAssignmentResponse> => {
-  try {
-    const response = await axios.get<ClassroomAllAssignmentResponse>(
+}): Promise<ClassroomAllAssignmentResponse> {
+  return axios
+    .get<ClassroomAllAssignmentResponse>(
       `student/classrooms/${classroomId}/assignment?query=all`
-    );
-    return response?.data;
-  } catch (error) {
-    toast({
-      title: "Error",
-      description: `An error occurred while fetching module assignments." + ${
-        error instanceof Error ? error.message : ""
-      }`,
-      variant: "destructive",
+    )
+    .then((res: AxiosResponse<ClassroomAllAssignmentResponse>) => res.data)
+    .catch((error) => {
+      if (error instanceof Error) {
+        const errorMessage = error?.message || "Failed to fetch assignments.";
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: errorMessage },
+        });
+      }
+      return Promise.reject(error);
     });
-    // console.error("Error fetching module assignments:", error);
-    // throw error;
-    //  Ensure the function always returns or throws
-    return Promise.reject(error);
-  }
-};
+}
+
+export async function getSingleClassroomAssignment({
+  classroomId,
+  assignmentId,
+}: {
+  classroomId: number;
+  assignmentId: number;
+}): Promise<SingleAssignmentResponse> {
+  return axios
+    .get<SingleAssignmentResponse>(
+      `student/classrooms/${classroomId}/assignments/${assignmentId}`
+    )
+    .then((res: AxiosResponse<SingleAssignmentResponse>) => res.data)
+    .catch((error) => {
+      if (error instanceof Error) {
+        console.log(error);
+
+        const errorMessage = error?.message || "Failed to fetch assignment.";
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: errorMessage },
+        });
+      }
+      return Promise.reject(error);
+    });
+}
