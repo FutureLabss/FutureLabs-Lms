@@ -73,15 +73,12 @@ export function CreateClassModal({ open, onOpenChange }: CreateClassModalProps) 
         end_date: values.end_date,
       },
       schedule: {
-        // days_of_week: values.days_of_week.split(",").map((day) => day.trim()()),
-        // days_of_week: values.days_of_week.split(",").map((day) => day.trim()),
         days_of_week: values.days_of_week
           .split(",")
           .map((day) => {
             const trimmed = day.trim().toLowerCase();
             return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
           }),
-
         start_time: values.start_time,
         end_time: values.end_time,
         start_date: values.start_date,
