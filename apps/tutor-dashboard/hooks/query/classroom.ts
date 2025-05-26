@@ -2,6 +2,8 @@ import { ClassroomResponse, CreateAssignmentResponse, IclassRoomMaterials, IRetr
 import { IPaginatedQueryArgs, IQueryArgs } from "@/lib/types/query";
 import {  getAllClassRoom, getAllClassroomAssignments, getAllClassroomMaterials, getClasscroomMaterials, getClasscroomModules, getClasscroomModulesTopic, getClasscroomSingleModules, getSingleClassRoom } from "@/services/class-service";
 import { useGetResourcesQuery, usePaginationQuery } from "../helper/query";
+import { useQueryClient } from "react-query";
+import { useEffect } from "react";
 
 //   use query for getClassroom
 // export function  useGetAllClassroom(){
@@ -28,21 +30,32 @@ const getClassroom:IQueryArgs<IsingleClassroomDetails>={
 }
 return useGetResourcesQuery(getClassroom)
 }
-//   use query for getClassroomModules
+// get all modules
+export function useGetAllClasscroomModules(id: string, page = 1, pageSize = 10) {
+  const queryClient = useQueryClient();
+  const queryResult = usePaginationQuery({
+    key: ["ClassroomModules", {id, page, pageSize}],
+    callback: () => getClasscroomModules(id, page, pageSize)
+  });
+  // Prefetch the next page if available
+  useEffect(() => {
+    if (queryResult.nextPageUrl) {
+      queryClient.prefetchQuery(
+        ["ClassroomModules", id, page + 1, pageSize],
+        () => getClasscroomModules(id, page + 1, pageSize)
+      );
+    }
+  }, [queryResult.nextPageUrl, page, pageSize, queryClient, id]);
+
+  return queryResult;
+}
 // export function  useGetAllClasscroomModules( id:string, page = 1, pageSize = 10){
-//     const getClassroom:IPaginatedQueryArgs<ClassroomResponse>={
-//         key:["ClassroomModules", {id, page, pageSize}],
-//         callback:()=>getClasscroomModules(id, page, pageSize)
-//     }
-//     return usePaginationQuery(getClassroom)
-//     }
-export function  useGetAllClasscroomModules( id:string, page = 1, pageSize = 10){
-    const getClassroom:IQueryArgs<ClassroomResponse>={
-        key:["ClassroomModules", {id, page, pageSize}],
-        callback:()=>getClasscroomModules(id, page, pageSize)
-    }
-    return useGetResourcesQuery(getClassroom)
-    }
+//   const getClassroom:IQueryArgs<ClassroomResponse>={
+//       key:["ClassroomModules", {id, page, pageSize}],
+//       callback:()=>getClasscroomModules(id, page, pageSize)
+//   }
+//   return useGetResourcesQuery(getClassroom)
+//   }
         // get single module
 export function  useGetSingleClasscroomModules(classroomId: string, moduleId:string){
     const getClassroom:IQueryArgs<ClassroomResponse>={

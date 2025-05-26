@@ -15,57 +15,33 @@ export function useGetResourcesQuery<IReturn>({ callback, key }: IQueryArgs<IRet
   return { data, status, loading: isLoading, error, isFetching, refetch };
 }
 
-export function usePaginationQuery<IReturn>({ callback, key }: IPaginatedQueryArgs<IReturn>, options: IQueryOptions = {}) {
-  const { loadingConfig = { displayLoader: true }, errorConfig = { displayError: false }, ...queryOptions } = options;
-  const { status, data, isLoading, isFetching, error, refetch } = useQuery(
+export function usePaginationQuery<IReturn>({ callback, key }: IPaginatedQueryArgs<IReturn>) {
+  const { data, isLoading, isFetching, error, refetch } = useQuery(
     key,
-    (arg) => callback && callback(arg),
-    queryOptions
+   (arg) => callback && callback(arg),
+    { keepPreviousData: true }  // Important for smooth pagination
   );
 
-  let total = 0;
-  let current_page = 1;
-  let totalItems = 0;
-  let per_page = 10;
-  let hasNextPage = false;
-  let hasPrevPage = false;
-
-  if (data?.meta) {
-    const { current_page: cp, per_page: pp, to, from } = data.meta;
-    current_page = cp;
-    per_page = pp;
-    
-    // If the API provides a total count directly, use it
-    if (data.meta.total) {
-      totalItems = data.meta.total;
-    } else {
-      // Otherwise use 'to' as an approximation
-      totalItems = to;
-    }
-    
-    // Calculate total pages
-    total = Math.ceil(totalItems / per_page);
-    
-    // Check if there are next/previous pages based on links
-    hasNextPage = !!data?.links?.next;
-    hasPrevPage = !!data?.links?.prev;
-  }
+  // Calculate pagination metadata
+  const current_page = data?.meta?.current_page || 1;
+  const per_page = data?.meta?.per_page || 10;
+  const totalItems = data?.meta?.total || 0;
+  const totalPages = Math.ceil(totalItems / per_page);
+  const hasNextPage = !!data?.links?.next;
+  const hasPrevPage = !!data?.links?.prev;
 
   return {
-    data: data,
-    status,
+    data,
     loading: isLoading,
-    error,
     isFetching,
-    refetch,
-    total,
-    totalItems,
+    error,
     current_page,
+    totalPages,
     per_page,
     hasNextPage,
     hasPrevPage,
-    nextPageUrl: data?.links?.next || null,
-    prevPageUrl: data?.links?.prev || null,
+    nextPageUrl: data?.links?.next,
+    prevPageUrl: data?.links?.prev,
   };
 }
 

@@ -13,13 +13,16 @@ import CourseCardSkeleton from "@/app/(dashboard)/classes/[id]/loading";
 import { ClassroomResponse, IclassRoomMaterials, Module } from "@/lib/types/classroom";
 import DisplayTopicDetails from "./displaytopicdetails";
 import Pagination from "./ui/pagination";
-import { IPaginatedReturns } from "@/lib/types/query";
 
 interface ModulesTabContentProps {
-  getmodules?:ClassroomResponse,
+  getmodules?: ClassroomResponse;
   loading: boolean;
   classId: string;
   selectedTopic: any;
+  currentPage: number;
+  totalPages: number;
+  hasNextPage?: boolean;
+  hasPrevPage?: boolean;
   // Handlers
   handlePageChange: (page: number) => void;
   handlePageSizeChange: (page: number, size: number) => void;
@@ -46,6 +49,10 @@ const ModulesTabContent: React.FC<ModulesTabContentProps> = ({
   loading,
   classId,
   selectedTopic,
+  currentPage,
+  totalPages,
+  hasNextPage,
+  hasPrevPage,   
   handlePageChange,
   handlePageSizeChange,
   handleAddMaterial,
@@ -61,11 +68,6 @@ const ModulesTabContent: React.FC<ModulesTabContentProps> = ({
   setSelectedTopic,
   setSelectedTopicModuleId,
 }) => {
-  const calculateTotalPages = () => {
-    if (!getmodules?.meta) return 1;
-    const { total = getmodules?.data?.length, per_page } = getmodules.meta;
-    return Math.ceil(total / per_page);
-  };
 
   return (
     <TabsContent value="modules" className="space-y-4">
@@ -176,14 +178,16 @@ const ModulesTabContent: React.FC<ModulesTabContentProps> = ({
           ))}
 
           {getmodules?.meta && (
-            <Pagination
-              currentPage={getmodules.meta.current_page}
-              totalPages={calculateTotalPages()}
-              pageSize={getmodules.meta.per_page}
-              onPageChange={handlePageChange}
-              onPageSizeChange={handlePageSizeChange}
-            />
-          )}
+          <Pagination
+            currentPage={currentPage} 
+            totalPages={totalPages} 
+            pageSize={getmodules.meta.per_page}
+            onPageChange={handlePageChange}
+            onPageSizeChange={handlePageSizeChange}
+            hasNextPage={hasNextPage}
+            hasPrevPage={hasPrevPage}
+          />
+        )}
         </div>
       )}
     </TabsContent>

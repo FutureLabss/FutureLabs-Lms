@@ -91,22 +91,7 @@ export async function createClasscroomAssignment(
     })
     .catch(handleError);
 }
-
-// get a classmodulus
-// export async function getClasscroomModules(classroomId: string,  page = 1, pageSize = 10): Promise<IPaginatedReturns<ClassroomResponse>>{
-//   return apiClient.get<IPaginatedReturns<ClassroomResponse>>(`classrooms/${classroomId}/modules?page=${page}`, 
-//     {
-//     params: {
-//       page,
-//       per_page: pageSize,
-//     },
-//   }
-//   )
-//     .then((response) => {
-//        console.log("API Response:", response);
-//       return response.data.data;
-//     }).catch(handleError);
-// }
+// get all module
 export async function getClasscroomModules(classroomId: string,  page = 1, pageSize = 10): Promise<ClassroomResponse>{
   return apiClient.get<ClassroomResponse>(`classrooms/${classroomId}/modules`, 
     {
