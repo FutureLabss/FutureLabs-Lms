@@ -7,7 +7,7 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TabsContent } from "@/components/ui/tabs";
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Skeleton } from "./ui/skeleton";
 import CourseCardSkeleton from "@/app/(dashboard)/classes/[id]/loading";
 import { ClassroomResponse, IclassRoomMaterials, Module } from "@/lib/types/classroom";
