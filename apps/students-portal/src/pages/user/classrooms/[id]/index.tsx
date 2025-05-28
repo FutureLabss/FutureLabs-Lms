@@ -290,7 +290,8 @@ function ClassroomModuleCom({
                       {/* // module.topics.map((topic) => ( */}
                       <div
                         // key={topic.id}
-                        className="p-4 flex flex-col sm:flex-row items-center gap-4 justify-between"
+                        // classname
+                        className="p-4 flex flex-col sm:flex-row flex-wrap w-full items-center gap-4 justify-between"
                       >
                         <div className="flex items-center">
                           <div className="h-8 w-8 rounded-full bg-slate-100 flex items-center justify-center mr-3">
@@ -298,12 +299,16 @@ function ClassroomModuleCom({
                           </div>
                           <span>Materials: {module.materials_count}</span>
                         </div>
+                        <span>
                         <Badge variant="secondary">
                           duration: {module.duration}
                         </Badge>
+                        </span>
+                        <span>
                         <Badge variant="secondary">
                           created by: {module.created_by}
                         </Badge>
+                        </span>
                         {/* <Badge variant="outline"> */}
                         <Button
                           className="text-[10px] lg:text-base"
