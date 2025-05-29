@@ -79,11 +79,15 @@ export async function createClasscroomModules(
 }
 
 // get a classmodulus
-export async function getClasscroomModules(classroomId: string): Promise<ClassroomResponse> {
-  return apiClient.get<ClassroomResponse>(`classrooms/${classroomId}/modules`)
+export async function getClasscroomModules(
+  classroomId: string
+): Promise<ClassroomResponse> {
+  return apiClient
+    .get<ClassroomResponse>(`classrooms/${classroomId}/modules`)
     .then((response) => {
       return response;
-    }).catch(handleError);
+    })
+    .catch(handleError);
 }
 
 // get a single module
@@ -115,20 +119,35 @@ export async function getClasscroomMaterials(classroomId: string, topicId:string
 }
 
 // create a classmaterialsTopic
-export async function createClasscroomModulesTopic(data: Itopic, classroomId:string |undefined | null, moduleId: string|undefined | null): Promise<Itopic> {
-  return apiClient.post<Itopic>(`classrooms/${classroomId}/modules/${moduleId}}/topics`, data)
-  // return apiClient.post<Itopic>(`modules/${moduleId}/topics`, data)
+export async function createClasscroomModulesTopic(
+  data: Itopic,
+  classroomId: string | undefined | null,
+  moduleId: string | undefined | null
+): Promise<Itopic> {
+  return (
+    apiClient
+      .post<Itopic>(
+        `classrooms/${classroomId}/modules/${moduleId}}/topics`,
+        data
+      )
+      // return apiClient.post<Itopic>(`modules/${moduleId}/topics`, data)
+      .then((response) => {
+        return response;
+      })
+      .catch(handleError)
+  );
+}
+export async function getClasscroomModulesTopic(
+  moduleId: string,
+  classroomId: string
+): Promise<TopicResponse> {
+  return apiClient
+    .get<TopicResponse>(`classrooms/${classroomId}/modules/${moduleId}/topics`)
     .then((response) => {
       return response;
-    }).catch(handleError);
+    })
+    .catch(handleError);
 }
-export async function getClasscroomModulesTopic(classroomId:string, moduleId: string | null | undefined, ): Promise<TopicResponse> {
-  return apiClient.get<TopicResponse>(`classrooms/${classroomId}/modules/${moduleId}/topics`)
-    .then((response) => {
-      return response;
-    }).catch(handleError);
-}
-
 
 // export async function createStudent(data: Itopic, moduleId: string): Promise<Itopic> {
 //   return apiClient.post<Itopic>(`modules/${moduleId}/topics`, data)

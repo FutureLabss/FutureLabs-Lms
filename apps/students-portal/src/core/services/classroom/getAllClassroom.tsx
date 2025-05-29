@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
 import { NotificationType } from "@/core/types/enum/notification";
 import useNotificationStore from "@/stores/notificationState";
 // import { GetAllClassroom } from "@/core/types/interface/classroom.ts/getAllClassroom";
@@ -24,16 +24,12 @@ export async function getAllClassroom(): Promise<GetAllClassroomResponse> {
       }
     })
     .catch((error) => {
-      const errorMessage = error?.response?.data?.message;
-      if (errorMessage) {
+      console.log("allClaroom eror", error);
+      if (error instanceof AxiosError) {
+        const errorMessage = error?.message || "An unknown error occurred.";
         setNotification({
           type: NotificationType.error,
           content: { title: "Error", text: errorMessage },
-        });
-      } else {
-        setNotification({
-          type: NotificationType.error,
-          content: { title: "Error", text: "An unknown error occurred." },
         });
       }
       return Promise.reject(error);

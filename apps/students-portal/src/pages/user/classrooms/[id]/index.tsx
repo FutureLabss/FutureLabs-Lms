@@ -245,7 +245,7 @@ function ClassroomModuleCom({
 
   return (
     <TabsContent value="modules" className="space-y-4">
-      <Card className="">
+      <Card >
         <CardHeader >
           {classModules ? (
             <CardTitle className="flex items-center">
@@ -351,6 +351,9 @@ function ClassroomModuleCom({
             Previous
           </Button>
           <span className="">Page {classModules.meta.current_page}</span>
+          <span className="text-sm md:text-base">
+            Page {classModules.meta.current_page}
+          </span>
           <Button
             isBorder={true}
             disabled={!classModules.links?.next || isFetching || isLoading}

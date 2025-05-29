@@ -11,7 +11,7 @@ import {
 import useNotificationStore from "@/stores/notificationState";
 // import { useRouter } from "next/router";
 // import { handleError } from "@/shared/components/common/exception/catchErrors";
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient } from "react-query";
 
 export const queryClient = new QueryClient();
 
@@ -177,6 +177,64 @@ export const resendEmailVerification = async (profileId: string) => {
     })
     .catch((error) => {
       const errorMessage = error?.response?.data?.message;
+      if (errorMessage) {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: errorMessage },
+        });
+      } else {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: "An unknown error occurred." },
+        });
+      }
+      return Promise.reject(error);
+    });
+};
+export const forgotPassword = async (email: {email:string}) => {
+  return axios
+    .post("/auth/forgot-password", email )
+    .then((res) => {
+      setNotification({
+        type: NotificationType.success,
+        content: {
+          title:
+            "Please check your inbox to update your password.",
+        },
+      });
+      return res.data;
+    })
+    .catch((error) => {
+      const errorMessage = error?.response?.data?.errors?.message;
+      if (errorMessage) {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: errorMessage },
+        });
+      } else {
+        setNotification({
+          type: NotificationType.error,
+          content: { title: "Error", text: "An unknown error occurred." },
+        });
+      }
+      return Promise.reject(error);
+    });
+};
+export const resetForgotPassword = async (payload:{ email: string; token: string; new_password: string; new_password_confirmation: string; }) => {
+  return axios
+    .post("/auth/reset-password", payload)
+    .then((res) => {
+      setNotification({
+        type: NotificationType.success,
+        content: {
+          title:
+            "password successfully updated enjoy our website",
+        },
+      });
+      return res.data;
+    })
+    .catch((error) => {
+      const errorMessage = error?.response?.data?.errors?.email;
       if (errorMessage) {
         setNotification({
           type: NotificationType.error,

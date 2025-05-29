@@ -1,12 +1,16 @@
 import {
+  getAllClassroomAssignments,
   getAllClassroomMaterials,
   getAllModuleTopics,
+  getSingleClassroomAssignment,
   getSingleModuleTopic,
 } from "@/core/services/classroom/ModuleTopics.";
 import { useGetResourcesQuery } from "../../helper/query";
 import { IQueryArgs } from "@/core/types/interface/query";
 import {
+  ClassroomAllAssignmentResponse,
   ClassroomAllMaterialResponse,
+  SingleAssignmentResponse,
   SingleModuleTopicResponse,
   TopicsListResponse,
 } from "@/core/types/interface/classroom.ts/moduleTopics";
@@ -44,4 +48,27 @@ export function useGetAllClassroomMaterials(
     callback: () => getAllClassroomMaterials({ classroomId }),
   };
   return useGetResourcesQuery(allModuleTopics, { enabled });
+}
+
+export function useGetAllClassroomAssignments(
+  classroomId: number,
+  enabled: boolean
+) {
+  const allAssignment: IQueryArgs<ClassroomAllAssignmentResponse> = {
+    key: ["classrommAssignment", { classroomId }],
+    callback: () => getAllClassroomAssignments({ classroomId }),
+  };
+  return useGetResourcesQuery(allAssignment, { enabled });
+}
+
+export function useGetSingleClassroomAssignment(
+  classroomId: number,
+  assignmentId: number,
+  enabled: boolean
+) {
+  const singleAssignment: IQueryArgs<SingleAssignmentResponse> = {
+    key: ["classrommAssignment", { classroomId, assignmentId }],
+    callback: () => getSingleClassroomAssignment({ classroomId, assignmentId }),
+  };
+  return useGetResourcesQuery(singleAssignment, { enabled });
 }
