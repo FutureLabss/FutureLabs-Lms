@@ -66,7 +66,7 @@ export default function AppDrawer(props: Props) {
                 <Link
                   href={item.disabled ? "#" : item.path}
                   key={item.path}
-                  className={`flex items-center py-3 px-4 rounded-md gap-3
+                  className={`flex justify-start items-center py-3 rounded-md gap-3
                     ${
                       item.disabled
                         ? "cursor-not-allowed text-gray-400"
@@ -107,7 +107,7 @@ export default function AppDrawer(props: Props) {
             <h4 className="text-[#202020] text-[1rem] px-2 ">SETTINGS</h4>
             <Link
               href=""
-              className="flex items-center py-3 gap-3 cursor-not-allowed text-gray-400 texttext-[#202020] hover:text-secondary"
+              className="flex items-center py-3 gap-3 cursor-not-allowed text-gray-400  hover:text-secondary"
             >
               <span>
                 <CiSettings />
@@ -118,7 +118,7 @@ export default function AppDrawer(props: Props) {
             </Link>
             <Link
               href=""
-              className="flex items-center py-3 gap-3 cursor-not-allowed text-gray-400 text-[#202020] hover:text-secondary"
+              className="flex items-center py-3 gap-3 cursor-not-allowed text-gray-400  hover:text-secondary"
             >
               <span>
                 <SlSupport />
