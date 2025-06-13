@@ -118,82 +118,86 @@ export default function UserProfilePage() {
   };
 
   return (
-    <div>
+    <div className=" sm:py-9 lg:py-6">
       <div className="pb-5 sm:mt-[-5rem] ">
         <Breadcrumb />
       </div>
-      <div className="bg-white w-full h-full flex justify-center py-10 mt-10">
-  <div className="w-full">
-    {loading ? (
-      <EmptyState />
-    ) : (
-      <>
-        {/* Edit Button - Top Right */}
-        <div className="flex justify-end px-5">
-          <button
-            className="px-4 py-[10px] text-sm font-medium text-black bg-transparent border border-[#212C4A] rounded-xl hover:bg-transparent flex gap-2"
-          >
-            <MdEdit size={19} />
-            Edit profile
-          </button>
-        </div>
+      <div className="bg-white w-full h-full flex justify-center py-5 mt-10">
+        <div className="w-full">
+          {loading ? (
+            <EmptyState />
+          ) : (
+            <>
+              {/* Edit Button - Top Right */}
+              <div className="flex justify-end px-5">
+                <button className="px-4 py-[10px] text-sm font-medium text-black bg-transparent border border-[#212C4A] rounded-xl hover:bg-transparent flex gap-2">
+                  <MdEdit size={19} />
+                  Edit profile
+                </button>
+              </div>
 
-        {/* Layout Container */}
-        <div className="w-full max-w-4xl mx-auto flex flex-col md:flex-row gap-8 p-4 sm:p-6 2xl:pt-60">
-          
-          {/* Left Column: Avatar */}
-          <div className="flex flex-col items-center gap-4 md:items-start">
-            <div className="relative w-48 h-48 sm:w-[409px] sm:h-[409px]">
-              {user?.data?.profile?.image_url && (
-                <Image
-                  src={
-                    profileImage || user?.data?.profile?.image_url || profile1
-                  }
-                  alt="profile"
-                  layout="fill"
-                  objectFit="cover"
-                  unoptimized
-                />
-              )}
-            </div>
-          </div>
-
-          {/* Right Column: Details + Upload */}
-          <div className="flex flex-col justify-between w-full md:w-2/3">
-            <div className="text-gray-700 space-y-4 text-sm sm:text-base">
-              {Object.entries(profileData).map(([label, value], index) => (
-                <div key={index}>
-                  <strong>{label}:</strong>
-                  <br />
-                  {value}
+              {/* Layout Container */}
+              <div className="w-full max-w-4xl mx-auto flex flex-col md:flex-row gap-8 p-4 sm:p-6">
+                {/* Left Column: Avatar */}
+                <div className="flex flex-col items-center gap-4 md:items-start">
+                  <div className="relative w-48 h-48 sm:w-[409px] sm:h-[409px]">
+                    {user?.data?.profile?.image_url ? (
+                      <Image
+                        src={profileImage || user?.data?.profile?.image_url}
+                        alt="profile"
+                        layout="fill"
+                        objectFit="cover"
+                        unoptimized
+                      />
+                    ) : (
+                      <Image
+                        src={profile1 || profileImage}
+                        alt="profile"
+                        layout="fill"
+                        objectFit="cover"
+                        unoptimized
+                      />
+                    )}
+                  </div>
                 </div>
-              ))}
-            </div>
 
-            {/* Upload Photo - Order last on mobile, unchanged on desktop */}
-            <div className="flex justify-center md:justify-end mt-6 md:mt-10 order-last md:order-none">
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                accept="image/*"
-                className="hidden"
-              />
-              <button
-                onClick={triggerFileInput}
-                className="px-4 py-[10px] text-sm font-medium text-black border border-[#212C4A] rounded-xl bg-transparent hover:bg-gray-100 flex gap-2"
-              >
-                <IoMdCloudUpload size={19} />
-                Upload photo
-              </button>
-            </div>
-          </div>
+                {/* Right Column: Details + Upload */}
+                <div className="flex flex-col justify-between w-full md:w-2/3">
+                  <div className="text-gray-700 space-y-4 text-sm sm:text-base">
+                    {Object.entries(profileData).map(
+                      ([label, value], index) => (
+                        <div key={index}>
+                          <strong>{label}:</strong>
+                          <br />
+                          {value}
+                        </div>
+                      )
+                    )}
+                  </div>
+
+                  {/* Upload Photo - Order last on mobile, unchanged on desktop */}
+                  <div className="flex justify-center md:justify-end mt-6 md:mt-10 order-last md:order-none">
+                    <input
+                      type="file"
+                      ref={fileInputRef}
+                      onChange={handleImageUpload}
+                      accept="image/*"
+                      className="hidden"
+                    />
+                    <button
+                      onClick={triggerFileInput}
+                      className="px-4 py-[10px] text-sm font-medium text-black border border-[#212C4A] rounded-xl bg-transparent hover:bg-gray-100 flex gap-2"
+                    >
+                      <IoMdCloudUpload size={19} />
+                      Upload photo
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </div>
-      </>
-    )}
-  </div>
-</div>
-
+      </div>
     </div>
   );
 }
