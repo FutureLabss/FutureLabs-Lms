@@ -3,14 +3,18 @@ import { useCreateResources } from "../helper/mutation";
 import {
   addStudentToClass,
   createClasscroom,
+  createClasscroomAssignment,
   createClasscroomMaterials,
   createClasscroomModules,
   createClasscroomModulesTopic,
   deleteClasscroom,
   deleteClasscroomModule,
+  gradingstudentsubmittedassignment,
 } from "@/services/class-service";
 import {
+  AssignmentGrade,
   ClassroomScheduleResponse,
+  CreateAssignmentRequest,
   IclassRoomMaterials,
   IclassRoomModules,
   Itopic,
@@ -97,6 +101,23 @@ export function useCreateClassroomModules({
   };
   return useCreateResources(mutation);
 }
+// use mutate for create assignmenta
+export function useCreateClassroomAssignments({
+  onSuccess,
+  onError,
+  options,
+  classroomId,
+}: IMutationHook & { classroomId: string }) {
+  const mutation: IMutationArgs<CreateAssignmentRequest, CreateAssignmentRequest> = {
+    key: ["ClassroomAssignmnet"],
+    callback: (data: CreateAssignmentRequest) =>
+      createClasscroomAssignment(data, classroomId),
+    onSuccess: onSuccess,
+    onError: onError,
+    options,
+  };
+  return useCreateResources(mutation);
+}
 //   use mutate for CreateClassroomMaterial
 export function useCreateClassroomMaterial({ onSuccess, onError, options, topicId, classroomId}: IMutationHook & { topicId: string, classroomId:string }) {
     const mutation: IMutationArgs<IclassRoomMaterials, IclassRoomMaterials> = {
@@ -120,6 +141,24 @@ export function useCreateClassroomModulesTopic({
   const mutation: IMutationArgs<Itopic, Itopic> = {
     key: ["ClassroomModulesTopics"],
     callback: (data: Itopic) => createClasscroomModulesTopic(data, classroomId, moduleId ),
+    onSuccess: onSuccess,
+    onError: onError,
+    options,
+  };
+  return useCreateResources(mutation);
+}
+
+
+export function usegradingstudentsubmittedassignment({
+  onSuccess,
+  onError,
+  options, 
+  assignmentId,
+}:
+   IMutationHook & { assignmentId: string | undefined}) {
+  const mutation: IMutationArgs<AssignmentGrade, AssignmentGrade> = {
+    key: ["gradeStudentSubmittedAssignment", {assignmentId}],
+    callback: (data: AssignmentGrade) => gradingstudentsubmittedassignment(assignmentId, data,),
     onSuccess: onSuccess,
     onError: onError,
     options,
