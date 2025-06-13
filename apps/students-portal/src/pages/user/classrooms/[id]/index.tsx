@@ -932,7 +932,7 @@ export default function ClassroomDetailPage() {
                   Complete and submit your assignments before the due date
                 </CardDescription>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-2">
                 <div className="space-y-4">
                   {allClassroomAssignments?.data.map((assignment) => (
                     <div

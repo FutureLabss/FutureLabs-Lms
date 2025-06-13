@@ -76,8 +76,8 @@ export default function UserLayout(props: layoutInterface) {
     <>
       {!isLoading && <NotAssignedClassAlert isAssigned={isAssignedToClass} />}
       {/* <NotAssignedClassAlert /> */}
-      <div className="h-screen bg-[#f1f1f1]">
-        <div className="md:max-w-[1440px] 2xl:max-w-[2440px]  mx-auto w-full flex ">
+      <div className="h-dvh bg-[#f1f1f1]">
+        <div className=" 2xl:max-w-[2440px]  mx-auto w-full flex ">
           <div className="">
             <AppDrawer
               onLogout={toggleLogOutModal}

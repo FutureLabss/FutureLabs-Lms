@@ -55,7 +55,7 @@ export function useGetAllClassroomAssignments(
   enabled: boolean
 ) {
   const allAssignment: IQueryArgs<ClassroomAllAssignmentResponse> = {
-    key: ["classrommAssignment", { classroomId }],
+    key: ["classroomAssignment", { classroomId }],
     callback: () => getAllClassroomAssignments({ classroomId }),
   };
   return useGetResourcesQuery(allAssignment, { enabled });
@@ -67,7 +67,7 @@ export function useGetSingleClassroomAssignment(
   enabled: boolean
 ) {
   const singleAssignment: IQueryArgs<SingleAssignmentResponse> = {
-    key: ["classrommAssignment", { classroomId, assignmentId }],
+    key: ["classroomAssignment", { classroomId, assignmentId }],
     callback: () => getSingleClassroomAssignment({ classroomId, assignmentId }),
   };
   return useGetResourcesQuery(singleAssignment, { enabled });
