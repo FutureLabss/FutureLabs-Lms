@@ -15,7 +15,7 @@ interface Props {
 export default function PreAppBar(props: Props) {
   const { title, description } = props;
   return (
-    <div className="">
+    <div className="flex justify-between items-center md:flex-none">
       <div className="py-2 px-5 lg:hidden" onClick={props.onToggle}>
         <svg
           className="h-6 w-6 text-blue-3"
@@ -31,9 +31,9 @@ export default function PreAppBar(props: Props) {
           />
         </svg>
       </div>
-      <div className="flex flex-row lg:mt-[1.75rem]  lg:ml-[16rem] 2xl:ml-[22rem] px-5 justify-between">
-        <div className="w-full xsm:max-w-[210px]  xxs:max-w-[240px] md:max-w-[400px]">
-          <h3 className="md:text-[27px] xsm:text-[1.15rem] xxs:text-[1.35rem] font-bold pt-2">
+      <div className="flex flex-row w-full py-4 gap-4 md:gap-0 lg:ml-[16rem] 2xl:ml-[22rem] px-3 sm:px-5 items-center lg:justify-between">
+        <div className="w-full sm:mx-auto  text-center md:mx-0 md:max-w-[400px]">
+          <h3 className="md:text-[27px] xsm:text-[1.15rem] xxs:text-[1.35rem] font-bold">
             {title}
           </h3>
           <p className="text-[1rem] 2xl:text-[1rem] text-gray-600  hidden md:col lg:flex font-[400]">
@@ -42,23 +42,27 @@ export default function PreAppBar(props: Props) {
           {/* <h3 className="text-[27px] font-bold pt-2">Welcome manny 👋🏻</h3> */}
         </div>
         <div
-          className="flex flex-col md:flex-row items-center gap-4 cursor-pointer
-          2xl:max-w-[800px]"
+          className="flex flex-col md:flex-row items-center gap-2 cursor-pointer
+          2xl:max-w-[800px] md:max-w-[400px] ml-auto"
         >
           <div>
-            <Image src={Avatar} alt="profile" className="2xl:w-20 2xl:h-20" />
+            <Image
+              src={Avatar}
+              alt="profile"
+              className="h-10 w-10 2xl:w-12 2xl:h-12 aspect-auto"
+            />
           </div>
           <Link href={"/user/userProfile"}>
             <div
               //  onClick={toggleModal}
-              className="text-xs flex flex-row md:gap-4 items-center"
+              className="text-xs flex flex-row  items-center"
             >
-              <p className="md:text-[1.1rem]  text-[#85878D] font-medium">
+              <p className="md:text-[.9rem]  text-[#85878D] font-medium">
                 profile
               </p>
-              <div className="">
-                <IoIosArrowForward size={29} />
-              </div>
+              {/* <div className=""> */}
+              <IoIosArrowForward size={15} />
+              {/* </div> */}
             </div>
           </Link>
         </div>
