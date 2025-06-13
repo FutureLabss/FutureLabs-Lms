@@ -39,13 +39,17 @@ export default function AppDrawer(props: Props) {
   return (
     <>
       <div
-        className={`w-[15rem] 2xl:w-[20rem] justify-between py-3 px-[2rem] fixed lg:flex z-20 lg:z-auto border-x h-screen 
-          lg:h-[calc(100vh)] bg-gray-50 flex flex-col gap-1 overflow-y-auto
-        ${display ? "flex" : "hidden"}
-        ${display ? "top-0 " : ""} `}
+        className={`w-[15rem] 2xl:w-[20rem] justify-between py-3 px-[1rem] fixed lg:flex z-20 lg:z-auto border-x 
+          lg:h-[calc(100vh)] bg-gray-50 flex flex-col gap-1 overflow-y-auto h-dvh
+          transition-transform duration-700 ease-in-out pt-4
+         ${display ? "translate-x-0 " : "-translate-x-full"}
+          lg:translate-x-0
+        
+        
+        `}
       >
         <div>
-          <div className="flex flex-row justify-between">
+          <div className="flex flex-row justify-between items-center">
             <div>
               <Image src={logo} alt={""} />
             </div>
@@ -56,7 +60,7 @@ export default function AppDrawer(props: Props) {
               <FaTimes className="text-secondary" />
             </div>
           </div>
-          <div className="md:pt-[56px]">
+          <div className="py-5 md:pt-[56px]">
             {AdminMenus.map((item) => {
               const isActive =
                 currentMenuItem &&
