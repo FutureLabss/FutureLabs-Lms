@@ -2,7 +2,7 @@
 import { handleError } from "@/components/ui/exception/catchErrors";
 import { toast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api-client";
-import { ClassroomResponse, ClassroomScheduleResponse, CreateAssignmentRequest, CreateAssignmentResponse, IclassRoomMaterials,
+import { AssignmentGrade, ClassroomResponse, ClassroomScheduleResponse, CreateAssignmentRequest, CreateAssignmentResponse, IclassRoomMaterials,
    IclassRoomModules, IRetriveClassroomResponse, IsingleClassroomDetails, 
 Itopic, MaterialsResponse, TopicResponse } from "@/lib/types/classroom";
 import { AddStudentResponse } from "@/lib/types/get-student";
@@ -194,6 +194,12 @@ export async function addStudentToClass(
   });
 }
 
+export async function gradingstudentsubmittedassignment(
+  assignmentId: string | undefined,
+  data: AssignmentGrade,
+): Promise<AssignmentGrade> {
+  return apiClient.post<AssignmentGrade>(`assignments/${assignmentId}/grade`, data );
+}
 
 export const getAllClassroomMaterials = async ({
   classroomId,
@@ -220,18 +226,20 @@ export const getAllClassroomMaterials = async ({
 // get classroomassignment
 export const getAllClassroomAssignments = async ({
   classroomId,
+  query = "all",
 }: {
   classroomId: number;
+  query?: "all" | "submissions";
 }): Promise<CreateAssignmentResponse> => {
   try {
     const response = await apiClient.get<CreateAssignmentResponse>(
-      `classrooms/${classroomId}/assignments?query=all`
+      `classrooms/${classroomId}/assignments?query=${query}`
     );
     return response;
   } catch (error) {
     toast({
       title: "Error",
-      description: `An error occurred while fetching classroom assignment. ${
+      description: `An error occurred while fetching classroom assignments. ${
         error instanceof Error ? error.message : ""
       }`,
       variant: "destructive",

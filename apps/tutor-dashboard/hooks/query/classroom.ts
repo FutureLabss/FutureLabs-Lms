@@ -1,9 +1,13 @@
-import { ClassroomResponse, CreateAssignmentResponse, IclassRoomMaterials, IRetriveClassroomResponse, IsingleClassroomDetails, MaterialsResponse, TopicResponse } from "@/lib/types/classroom";
+import { Assignment, ClassroomResponse, CreateAssignmentResponse, IclassRoomMaterials, IRetriveClassroomResponse, IsingleClassroomDetails, MaterialsResponse, SubmittedAssignment, TopicResponse } from "@/lib/types/classroom";
 import { IPaginatedQueryArgs, IQueryArgs } from "@/lib/types/query";
 import {  getAllClassRoom, getAllClassroomAssignments, getAllClassroomMaterials, getClasscroomMaterials, getClasscroomModules, getClasscroomModulesTopic, getClasscroomSingleModules, getSingleClassRoom } from "@/services/class-service";
 import { useGetResourcesQuery, usePaginationQuery } from "../helper/query";
-import { useQueryClient } from "react-query";
+import { useQuery, useQueryClient, UseQueryResult } from "react-query";
 import { useEffect } from "react";
+// import { Assignment } from "@/lib/types/types";
+import axios from "axios";
+import { apiClient } from "@/lib/api-client";
+// import { Assignment } from "@/lib/types/types";
 
 //   use query for getClassroom
 // export function  useGetAllClassroom(){
@@ -94,15 +98,37 @@ export function useGetAllClassroomMaterials(
 }
 
 // retrivved assignmnet
-export function useGetAllClassroomAssignments(
-  classroomId: number,
-  enabled: boolean
-) {
-  const allAssignments: IQueryArgs<CreateAssignmentResponse> = {
-    key: ["ClassroomAssignmnet", { classroomId }],
-    callback: () => getAllClassroomAssignments({ classroomId }),
-  };
-  return useGetResourcesQuery(allAssignments, { enabled });
+
+export function useGetAllClassroomAssignments<T extends "submissions" | "all">(
+  classId: string,
+  enabled: boolean,
+  type?: T
+): UseQueryResult<{
+  message: string;
+  data: T extends "submissions" ? SubmittedAssignment[] : Assignment[];
+}> {
+  return useQuery({
+    queryKey: ["assignments", classId, type],
+    enabled: enabled && !!classId, // Added classId check
+    queryFn: async () => {
+      const res = await getAllClassroomAssignments({
+        classroomId: Number(classId),
+        query: type === "submissions" ? "submissions" : "all"
+      });
+      return res;
+    },
+  });
 }
+// export function useGetAllClassroomAssignments(
+//   classroomId: number,
+//   query: string = "all",
+//   enabled: boolean
+// ) {
+//   const allAssignments: IQueryArgs<CreateAssignmentResponse> = {
+//     key: ["ClassroomAssignmnet", { classroomId, query }],
+//     callback: () => getAllClassroomAssignments({ classroomId, query }),
+//   };
+//   return useGetResourcesQuery(allAssignments, { enabled });
+// }
     
         

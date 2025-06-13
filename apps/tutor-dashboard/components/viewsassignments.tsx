@@ -2,25 +2,50 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import CourseCardSkeleton from "@/app/(dashboard)/classes/[id]/loading";
 import { useGetAllClassroomAssignments } from "@/hooks/query/classroom";
+import Link from "next/link";
+import { ViewSubmittedAssignmentsModal } from "./ViewSubmittedAssignmentsModal";
 
 interface Iprops {
   classId: string;
 }
-// pull updates
+
+interface Assignment {
+  id: string;
+  title: string;
+  due_date: string;
+  points: number;
+}
+
 export default function ViewAssignments({ classId }: Iprops) {
-    const{data:retrivedAllAssignments,  loading,
-    error,}=useGetAllClassroomAssignments(Number(classId), !!Number(classId))
-     const assignments = retrivedAllAssignments?.data|| [];
+  const [openModal, setOpenModal] = useState(false);
+  const [selectedAssignmentId, setSelectedAssignmentId] = useState<string | null>(null);
+
+  const {
+    data: retrivedAllAssignments,
+    isLoading,
+    error,
+  } = useGetAllClassroomAssignments(classId, !!classId, "all");
+
+  const assignments = retrivedAllAssignments?.data ?? [];
+
+  const handleViewSubmissions = (assignmentId: string) => {
+    setSelectedAssignmentId(assignmentId);
+    setOpenModal(true);
+  };
 
   return (
     <div>
-      {loading ? (
+      {isLoading ? (
         <CourseCardSkeleton />
+      ) : error ? (
+        <div className="text-center text-destructive py-6">
+          Error loading assignments
+        </div>
       ) : assignments.length === 0 ? (
-        <div className="text-center text-muted-foreground py-6">u 
+        <div className="text-center text-muted-foreground py-6">
           No assignments found for this classroom.
         </div>
       ) : (
@@ -36,8 +61,15 @@ export default function ViewAssignments({ classId }: Iprops) {
                     </p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" asChild>
-                      {/* <Link href={`/assignments/${assignment.id}`}>View</Link> */}
+                    {/* <Button variant="outline" size="sm" asChild>
+                      <Link href={`/assignments/${assignment.id}`}>View</Link>
+                    </Button> */}
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => handleViewSubmissions(assignment.id)}
+                    >
+                      View Submissions
                     </Button>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
@@ -47,7 +79,6 @@ export default function ViewAssignments({ classId }: Iprops) {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem>Grade</DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem className="text-destructive focus:text-destructive">
                           Delete
@@ -60,6 +91,15 @@ export default function ViewAssignments({ classId }: Iprops) {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {selectedAssignmentId && (
+        <ViewSubmittedAssignmentsModal
+          open={openModal}
+          onOpenChange={setOpenModal}
+          assignmentId={selectedAssignmentId}
+          classId={classId}
+        />
       )}
     </div>
   );

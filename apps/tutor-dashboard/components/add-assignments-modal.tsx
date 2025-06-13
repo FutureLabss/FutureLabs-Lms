@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -26,9 +25,6 @@ import {
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
 import { useCreateClassroomAssignments } from "@/hooks/mutate/classroom";
-
-// Replace with your actual hook to create assignments
-// import { useCreateAssignment } from "@/hooks/mutate/assignments";
 
 const assignmentFormSchema = z.object({
   title: z.string().min(2, {
@@ -113,7 +109,6 @@ export function AddAssignmentModal({
             Create a new assignment for your class
           </DialogDescription>
         </DialogHeader>
-
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -129,7 +124,6 @@ export function AddAssignmentModal({
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="description"
@@ -147,7 +141,6 @@ export function AddAssignmentModal({
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="dueDate"
@@ -161,7 +154,6 @@ export function AddAssignmentModal({
                 </FormItem>
               )}
             />
-
             <FormField
               control={form.control}
               name="points"
@@ -169,13 +161,20 @@ export function AddAssignmentModal({
                 <FormItem>
                   <FormLabel>Points</FormLabel>
                   <FormControl>
-                    <Input type="number" min={1} {...field} />
+                    <Input
+                      type="number"
+                      min={1}
+                      {...field}
+                      value={field.value ?? ""}
+                      onChange={(e) =>
+                        field.onChange(e.target.valueAsNumber)
+                      }
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
             <DialogFooter className="pt-4">
               <Button
                 type="button"

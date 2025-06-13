@@ -57,6 +57,8 @@ interface Schedule {
     email: string;
     avatar: string;
     enrollmentDate: string;
+    joined?: string;
+    fullname:string;
   }
   
   export interface IsingleClassroomDetails {
@@ -194,8 +196,8 @@ export interface CreateAssignmentRequest {
   points: number;
 }
 
-interface Assignment {
-  id: number;
+export interface Assignment {
+  id: string;
   title: string;
   description: string;
   due_date: string;
@@ -212,6 +214,30 @@ export interface CreateAssignmentResponse {
   message: string;
   data: Assignment[];
 }
+
+export interface SubmittedAssignment {
+  id: string;
+  submission_text: string;
+  submitted_at: string;
+  score: string;
+  file_path: string;
+  public_id: string;
+  grade_status: string;
+  submission_status: string;
+  late_submission: boolean;
+  student: Student;
+  assignment: Assignment;
+}
+
+export type GradeStatus = "graded" | "cancelled" | "rejected" | "pending" | "";
+
+export interface AssignmentGrade {
+  score: number;
+  grade_status: GradeStatus;
+  feedback?:string
+}
+
+
 
 
 

@@ -9,8 +9,10 @@ import {
   createClasscroomModulesTopic,
   deleteClasscroom,
   deleteClasscroomModule,
+  gradingstudentsubmittedassignment,
 } from "@/services/class-service";
 import {
+  AssignmentGrade,
   ClassroomScheduleResponse,
   CreateAssignmentRequest,
   IclassRoomMaterials,
@@ -139,6 +141,24 @@ export function useCreateClassroomModulesTopic({
   const mutation: IMutationArgs<Itopic, Itopic> = {
     key: ["ClassroomModulesTopics"],
     callback: (data: Itopic) => createClasscroomModulesTopic(data, classroomId, moduleId ),
+    onSuccess: onSuccess,
+    onError: onError,
+    options,
+  };
+  return useCreateResources(mutation);
+}
+
+
+export function usegradingstudentsubmittedassignment({
+  onSuccess,
+  onError,
+  options, 
+  assignmentId,
+}:
+   IMutationHook & { assignmentId: string | undefined}) {
+  const mutation: IMutationArgs<AssignmentGrade, AssignmentGrade> = {
+    key: ["gradeStudentSubmittedAssignment", {assignmentId}],
+    callback: (data: AssignmentGrade) => gradingstudentsubmittedassignment(assignmentId, data,),
     onSuccess: onSuccess,
     onError: onError,
     options,
