@@ -84,22 +84,23 @@ export function AddTopicModal({
   function onSubmit(values: z.infer<typeof topicFormSchema>) {
     if (!moduleId) return;
     setIsSubmitting(true);
-    createTopics(
+    const newTopic = {
+      title: values.title,
+        description: values.description,
+        duration: values.duration,
+    };
+    createTopics(newTopic,
       {
+        onSuccess: (data) => {
+        const moduleToAddTopic = {
+        ...data,
         title: values.title,
         description: values.description,
         duration: values.duration,
-      },
-      {
-        onSuccess: (data) => {
-          // Call the callback with the new module
-          onTopicAdded(data); // Assuming the API returns the created module
-
-          // Reset form and state
+      };
+          onTopicAdded(moduleToAddTopic);
           form.reset();
           setIsSubmitting(false);
-
-          // Close the modal
           onOpenChange(false);
         },
         onError: (error) => {

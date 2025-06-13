@@ -41,6 +41,7 @@ export default function DisplayTopicDetails(props: TopicProps) {
       classId,
       moduleId
     );
+    console.log(getmodulesTopic, "topic")
   
     const topics = getmodulesTopic?.data || [];
   
@@ -139,7 +140,6 @@ export default function DisplayTopicDetails(props: TopicProps) {
             ))}
           </div>
         )}
-  
         <AddMaterialModal
           open={isAddMaterialDialogOpen}
           onOpenChange={setIsAddMaterialDialogOpen}
@@ -147,7 +147,6 @@ export default function DisplayTopicDetails(props: TopicProps) {
           classId={classId}
           topicId={selectedTopic?.id}
         />
-  
         {selectedTopic && (
           <ViewMaterialsModal
             open={isViewMaterialsDialogOpen}

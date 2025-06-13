@@ -1,8 +1,10 @@
 
 import { LoadingConfig, ErrorConfig, SuccessConfig } from "@/components/loader/loader.interface";
+import { PaginationMeta } from "./classroom";
 
 export interface IAPIFilter {
-  // page?: number;
+  page?: number;
+  pageSize?: number;
   [index: string]: string | number | undefined;
 }
 
@@ -37,12 +39,18 @@ export interface IQueryOptions {
 }
 
 export interface IPaginatedReturns<IReturn> {
+  links: {first: string | null
+  last: string | null
+  prev: string | null
+  next: string | null};
+  meta: {
+  total?: number; 
+  current_page: number
+  from: number
+  path: string
+  per_page: number
+  to: number };
   data: IReturn;
-  pagination: {
-    limit: number;
-    page: number;
-    count: number;
-  };
 }
 
 export interface IMutationHook<IReturn = unknown, TError = Error> {

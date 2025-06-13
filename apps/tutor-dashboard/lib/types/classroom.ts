@@ -57,6 +57,8 @@ interface Schedule {
     email: string;
     avatar: string;
     enrollmentDate: string;
+    joined?: string;
+    fullname:string;
   }
   
   export interface IsingleClassroomDetails {
@@ -111,9 +113,9 @@ export interface IclassRoomModules {
   title: string;
   description: string;
   id?: string | null;
-  Itopic?: Itopic[];
+ topics?: Itopic[];
 }
-interface Module {
+export interface Module {
   id: string;
   title: string;
   description: string;
@@ -122,26 +124,27 @@ interface Module {
   updated_by: string;
 }
 
-interface Links {
-  first: string;
-  last: string | null;
-  prev: string | null;
-  next: string | null;
+export interface PaginationMeta {
+  current_page: number
+  from: number
+  path: string
+  per_page: number
+  to: number
+  total?:number
 }
 
-interface Meta {
-  current_page: number;
-  from: number;
-  path: string;
-  per_page: number;
-  to: number;
+export interface PaginationLinks {
+  first: string | null
+  last: string | null
+  prev: string | null
+  next: string | null
 }
 
 export interface ClassroomResponse {
   message: string;
   data: Module[];
-  links: Links;
-  meta: Meta;
+  links: PaginationLinks
+  meta: PaginationMeta
 }
 
 // materials
@@ -174,15 +177,69 @@ interface Topic {
 export interface TopicResponse {
   message: string;
   data: Topic[];
-  links: Links;
-  meta: Meta;
+   links: PaginationLinks
+  meta: PaginationMeta
 }
 export interface MaterialsResponse {
   message: string;
   data: IclassRoomMaterials[];
-  links: Links;
-  meta: Meta;
+ links: PaginationLinks
+  meta: PaginationMeta
 }
+// assignment
+export interface CreateAssignmentRequest {
+  title: string;
+  description?: string;
+  module_id?: number;     
+  topic_id?: number | null;  
+  due_date: string; 
+  points: number;
+}
+
+export interface Assignment {
+  id: string;
+  title: string;
+  description: string;
+  due_date: string;
+  points: number;
+  topic: string | null; 
+  module: string;
+  classroom: string;
+  created_by: string;
+  updated_by: string;
+  created_date: string; 
+}
+
+export interface CreateAssignmentResponse {
+  message: string;
+  data: Assignment[];
+}
+
+export interface SubmittedAssignment {
+  id: string;
+  submission_text: string;
+  submitted_at: string;
+  score: string;
+  file_path: string;
+  public_id: string;
+  grade_status: string;
+  submission_status: string;
+  late_submission: boolean;
+  student: Student;
+  assignment: Assignment;
+}
+
+export type GradeStatus = "graded" | "cancelled" | "rejected" | "pending" | "";
+
+export interface AssignmentGrade {
+  score: number;
+  grade_status: GradeStatus;
+  feedback?:string
+}
+
+
+
+
 
   
   

@@ -1,10 +1,12 @@
 // import type { ClassroomResponse } from "@/lib/types";
 import { handleError } from "@/components/ui/exception/catchErrors";
+import { toast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api-client";
-import { ClassroomResponse, ClassroomScheduleResponse, IclassRoomMaterials,
+import { AssignmentGrade, ClassroomResponse, ClassroomScheduleResponse, CreateAssignmentRequest, CreateAssignmentResponse, IclassRoomMaterials,
    IclassRoomModules, IRetriveClassroomResponse, IsingleClassroomDetails, 
 Itopic, MaterialsResponse, TopicResponse } from "@/lib/types/classroom";
 import { AddStudentResponse } from "@/lib/types/get-student";
+import { IPaginatedQueryArgs, IPaginatedReturns } from "@/lib/types/query";
 
 // Get all classes
 export async function getAllClassRoom(): Promise<IRetriveClassroomResponse> {
@@ -77,14 +79,30 @@ export async function createClasscroomModules(
     })
     .catch(handleError);
 }
-
-// get a classmodulus
-export async function getClasscroomModules(
+// add assignement api
+export async function createClasscroomAssignment(
+  data: CreateAssignmentRequest,
   classroomId: string
-): Promise<ClassroomResponse> {
+): Promise<CreateAssignmentRequest> {
   return apiClient
-    .get<ClassroomResponse>(`classrooms/${classroomId}/modules`)
+    .post<CreateAssignmentRequest>(`classrooms/${classroomId}/assignments`, data)
     .then((response) => {
+      return response;
+    })
+    .catch(handleError);
+}
+// get all module
+export async function getClasscroomModules(classroomId: string,  page = 1, pageSize = 10): Promise<ClassroomResponse>{
+  return apiClient.get<ClassroomResponse>(`classrooms/${classroomId}/modules`, 
+    {
+    params: {
+      page,
+      per_page: pageSize,
+    },
+  }
+  )
+    .then((response) => {
+       console.log("API Response:", response);
       return response;
     })
     .catch(handleError);
@@ -138,8 +156,8 @@ export async function createClasscroomModulesTopic(
   );
 }
 export async function getClasscroomModulesTopic(
+  classroomId: string,
   moduleId: string,
-  classroomId: string
 ): Promise<TopicResponse> {
   return apiClient
     .get<TopicResponse>(`classrooms/${classroomId}/modules/${moduleId}/topics`)
@@ -175,3 +193,58 @@ export async function addStudentToClass(
     user_ids: [userid],
   });
 }
+
+export async function gradingstudentsubmittedassignment(
+  assignmentId: string | undefined,
+  data: AssignmentGrade,
+): Promise<AssignmentGrade> {
+  return apiClient.post<AssignmentGrade>(`assignments/${assignmentId}/grade`, data );
+}
+
+export const getAllClassroomMaterials = async ({
+  classroomId,
+}: {
+  classroomId: number;
+}): Promise<MaterialsResponse> => {
+  try {
+    const response = await apiClient.get<MaterialsResponse>(
+      `classrooms/${classroomId}/resources?query=materials`
+    );
+    return response;
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: `An error occurred while fetching module materials. ${
+        error instanceof Error ? error.message : ""
+      }`,
+      variant: "destructive",
+    });
+    console.error("Error fetching module materials:", error);
+    throw error;
+  }
+};
+// get classroomassignment
+export const getAllClassroomAssignments = async ({
+  classroomId,
+  query = "all",
+}: {
+  classroomId: number;
+  query?: "all" | "submissions";
+}): Promise<CreateAssignmentResponse> => {
+  try {
+    const response = await apiClient.get<CreateAssignmentResponse>(
+      `classrooms/${classroomId}/assignments?query=${query}`
+    );
+    return response;
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: `An error occurred while fetching classroom assignments. ${
+        error instanceof Error ? error.message : ""
+      }`,
+      variant: "destructive",
+    });
+    console.error("Error fetching classroom assignments:", error);
+    throw error;
+  }
+};
