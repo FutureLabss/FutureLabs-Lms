@@ -29,7 +29,7 @@ export const AdminMenus: Menu[] = [
     id: "3",
     icon: MdOutlineAssignment,
     path: `${AdminRoutes.PAYMENT}`,
-    disabled: false,
+    disabled: true,
   },
   {
     title: "Classrooms",
