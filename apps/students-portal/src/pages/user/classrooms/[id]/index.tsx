@@ -1108,9 +1108,7 @@ export default function ClassroomDetailPage() {
                         </div>
                         <div className="flex items-center">
                           <Calendar className="mr-1 h-4 w-4 text-muted-foreground" />
-                          <span>
-                            Created: {formatDate(module.created_at)}
-                          </span>
+                           <span>Created: {formatDate(module.created_at)}</span> 
                         </div>
                         <div className="flex items-center">
                           <Users className="mr-1 h-4 w-4 text-muted-foreground" />
@@ -1124,8 +1122,8 @@ export default function ClassroomDetailPage() {
                             className="ml-2"
                             isBorder={true}
                             onClick={() => {
-                              // setIsModalOpen(true);
-                              // handleSetModuleId(module.id);
+                              setIsModalOpen(true);
+                              handleSetModuleId(module.id);
                             }}
                           >
                             View Materials
@@ -1134,49 +1132,55 @@ export default function ClassroomDetailPage() {
                       </div>
                     </div>
                   </div>
-                ))} */}
+                ))}  */}
+
                 {allClassroomMaterials?.data.map(
                   (material: MaterialResponse) => (
                     <div
                       key={material.id}
-                      className="flex flex-col sm:flex-row  items-start sm:items-center justify-start sm:justify-between p-3 border rounded-lg"
+                      className="flex flex-col gap-4 sm:justify-between p-3 border rounded-lg"
                     >
                       {/* Left: Icon + Topic */}
-                      <div className="flex items-center">
-                        <div className="h-10 w-10 rounded bg-slate-100 flex items-center justify-center mr-3">
-                          <FileText className="h-5 w-5 text-slate-600" />
+                      <div className="flex">
+                        <div className="flex items-center">
+                          <div className="h-10 w-10 rounded bg-slate-100 flex items-center justify-center md:mr-3">
+                            <FileText className="h-5 w-5 text-slate-600" />
+                          </div>
+                          <div>
+                            <p className="text-sm sm:text-base font-medium">
+                              Topic: {material.topic}
+                            </p>
+                            <p className="text-xs text-muted-foreground">
+                              {/* Optional metadata */}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <p className="text-sm sm:text-base font-medium">
-                            Topic: {material.topic}
-                          </p>
-                          <p className="text-xs text-muted-foreground">
-                            {/* Optional metadata */}
-                          </p>
+                        <div className="ml-auto flex items-center">
+                          <Badge
+                            variant="default"
+                            className="text-[10px] ml-auto px-2"
+                          >
+                            type: {material.type}
+                          </Badge>
                         </div>
                       </div>
 
                       {/* Right: Badges + Download */}
-                      <div className="flex flex-wrap sm:flex-row gap-2 sm:gap-3 items-start sm:items-center sm:max-w-[60%]">
-                        <Badge
-                          variant="secondary"
-                          className="text-[10px] sm:text-sm"
-                        >
+                      <div className="flex w-full flex-wrap justify-between md:flex-row gap-2 sm:gap-3 items-center sm:items-center">
+                        {/* <div className="w-full space-x-2 gap-y-2 flex flex-col md:flex-row"> */}
+                        <Badge variant="default" className="text-[10px] ">
                           module: {material.module}
                         </Badge>
                         <Badge
-                          variant="secondary"
-                          className="text-[10px] sm:text-sm"
+                          variant="default"
+                          className="text-[10px] md:mx-auto "
                         >
-                          type: {material.type}
+                          Title: {material.title}
                         </Badge>
-                        <Badge
-                          variant="secondary"
-                          className="text-[10px] sm:text-sm"
-                        >
-                          {material.title}
-                        </Badge>
-                        <MaterialDownload material={material} />
+                        {/* </div> */}
+                        <div className="flex items-center ml-auto">
+                          <MaterialDownload material={material} />
+                        </div>
                       </div>
                     </div>
                   )
