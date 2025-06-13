@@ -77,7 +77,6 @@ export function AssignmentSubmissionDialog({
     }>
   >([]);
 
-  // Format date to be more readable
   const formatDate = (date: string) => {
     return new Date(date).toLocaleDateString("en-US", {
       year: "numeric",
