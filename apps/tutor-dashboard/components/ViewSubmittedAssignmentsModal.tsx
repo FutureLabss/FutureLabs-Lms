@@ -7,7 +7,6 @@ import GradingModal from "./gradingm-modal";
 import { Button } from "./ui/button";
 import { usegradingstudentsubmittedassignment } from "@/hooks/mutate/classroom";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "./ui/dialog";
-
 type ViewSubmittedAssignmentsModalProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -36,7 +35,7 @@ const { mutate: gradeSubmission, isLoading: isMutating } = usegradingstudentsubm
   onSuccess: () => {
     console.log("Grade submitted successfully");
     setGradingModalOpen(false);
-    refetchSubmissions(); // This will refresh the submissions data
+    refetchSubmissions();
   },
   onError: (error) => {
     console.error("Error submitting grade:", error);
