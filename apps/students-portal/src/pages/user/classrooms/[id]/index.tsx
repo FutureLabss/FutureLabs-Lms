@@ -50,10 +50,10 @@ import {
 } from "@/shared/hooks/query/classroom/moduleTopicQuery";
 import { ClassModulesApiResponse } from "@/core/types/interface/classroom.ts/getClassroomModule";
 import {
-  MaterialResponse,
+  // MaterialResponse,
   TopicsListResponse,
 } from "@/core/types/interface/classroom.ts/moduleTopics";
-import { MaterialDownload } from "@/shared/components/material-download";
+// import { MaterialDownload } from "@/shared/components/material-download";
 import {
   Student,
   Tutor,
@@ -1087,7 +1087,7 @@ export default function ClassroomDetailPage() {
             )}
             <CardContent className="p-0">
               <div className="space-y-2">
-                {/* {allClassroomMaterials?.data?.map((module) => (
+                {allClassroomMaterials?.data?.map((module) => (
                   <div
                     key={module.id}
                     className="border rounded-lg overflow-hidden"
@@ -1099,48 +1099,45 @@ export default function ClassroomDetailPage() {
                           {module.module} materials
                         </Badge>
                       </div>
-                      <div className="flex items-center justify-between text-sm">
+                      <div className="flex flex-col md:flex-row gap-4 md:items-center md:justify-between text-sm">
                         <div className="flex flex-col">
-                          <p>Topics: {module.title}</p>
+                          <p>Topics: {module.topic}</p>
                           <p className="text-sm text-muted-foreground mb-3">
-                            description: {module.description}
+                            Title: {module.title}
                           </p>
                         </div>
-                        <div className="flex items-center">
+                        {/* <div className="flex items-center">
                           <Calendar className="mr-1 h-4 w-4 text-muted-foreground" />
-                           <span>Created: {formatDate(module.created_at)}</span> 
-                        </div>
+                          <span>Created: {formatDate(module.created_at)}</span>
+                        </div> */}
                         <div className="flex items-center">
                           <Users className="mr-1 h-4 w-4 text-muted-foreground" />
                           <span>Created by: {module.created_by}</span>
                         </div>
-                        <Badge variant="outline">
-                          duration: {module.duration} mins
+                        <Badge variant="default" className="w-fit">
+                          Type: {module.type}
                         </Badge>
-                        <div>
-                          <Button
-                            className="ml-2"
-                            isBorder={true}
-                            onClick={() => {
-                              setIsModalOpen(true);
-                              handleSetModuleId(module.id);
-                            }}
+                        <div className="ml-auto md:ml-0">
+                          <Link
+                            href={`${module.url}`}
+                            target="_blank"
+                            className="text-primary hover:bg-primary hover:text-white border-primary border-2 rounded-md p-2"
                           >
                             View Materials
-                          </Button>
+                          </Link>
                         </div>
                       </div>
                     </div>
                   </div>
-                ))}  */}
+                ))}
 
-                {allClassroomMaterials?.data.map(
+                {/* {allClassroomMaterials?.data.map(
                   (material: MaterialResponse) => (
                     <div
                       key={material.id}
                       className="flex flex-col gap-4 sm:justify-between p-3 border rounded-lg"
                     >
-                      {/* Left: Icon + Topic */}
+                    
                       <div className="flex">
                         <div className="flex items-center">
                           <div className="h-10 w-10 rounded bg-slate-100 flex items-center justify-center md:mr-3">
@@ -1151,7 +1148,7 @@ export default function ClassroomDetailPage() {
                               Topic: {material.topic}
                             </p>
                             <p className="text-xs text-muted-foreground">
-                              {/* Optional metadata */}
+                              
                             </p>
                           </div>
                         </div>
@@ -1165,9 +1162,9 @@ export default function ClassroomDetailPage() {
                         </div>
                       </div>
 
-                      {/* Right: Badges + Download */}
+                     
                       <div className="flex w-full flex-wrap justify-between md:flex-row gap-2 sm:gap-3 items-center sm:items-center">
-                        {/* <div className="w-full space-x-2 gap-y-2 flex flex-col md:flex-row"> */}
+                      
                         <Badge variant="default" className="text-[10px] ">
                           module: {material.module}
                         </Badge>
@@ -1177,14 +1174,14 @@ export default function ClassroomDetailPage() {
                         >
                           Title: {material.title}
                         </Badge>
-                        {/* </div> */}
+                 
                         <div className="flex items-center ml-auto">
                           <MaterialDownload material={material} />
                         </div>
                       </div>
                     </div>
                   )
-                )}
+                )} */}
               </div>
             </CardContent>
           </Card>
