@@ -186,7 +186,7 @@ export default function ClassesPage() {
           </TabsContent>
         ))}
       </Tabs>
-      {/* )} */};{/* Create Class Modal */}
+      {/* )} */}{/* Create Class Modal */}
       <CreateClassModal
         open={isCreateModalOpen}
         onOpenChange={setIsCreateModalOpen}

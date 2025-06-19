@@ -104,7 +104,7 @@
     const [selectedTopic, setSelectedTopic] = useState<any | null>(null)
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const { mutate: deleteSingleClassroom } = useDeleteClassroom({
+    const { mutate: deleteSingleClassroom, isLoading } = useDeleteClassroom({
     onSuccess: () => {
       toast({
         title: "Classroom deleted",
@@ -152,26 +152,43 @@
     //   } = useGetAllClasscroomModules(classId, page, pageSize);
     //   console.log(getmodules)
 
-    const { mutate: deleteClassroomModule } = useDeleteClassroomModule({
-    onSuccess: () => {
+    const { mutateAsync: deleteClassroomModule, isLoading: isDeletingModule } = useDeleteClassroomModule({
+  onSuccess: () => {
     toast({
       title: "Module deleted",
       description: "The module has been successfully deleted.",
       variant: "destructive",
     });
-    setIsDeleteModuleDialogOpen(false); 
-    // refetchModules();
-    },
-    onError: () => {
+  },
+  onError: () => {
     toast({
       title: "Error",
       description: "An error occurred while deleting the module.",
       variant: "destructive",
     });
-    },
-    classroomId: classId,
-    moduleId: moduleId 
-    });
+  },
+  classroomId: classId,
+  moduleId: moduleId
+});
+
+    // const { mutate: deleteClassroomModule, isLoading:loaded } = useDeleteClassroomModule({
+    // onSuccess: () => {
+    // toast({
+    //   title: "Module deleted",
+    //   description: "The module has been successfully deleted.",
+    //   variant: "destructive",
+    // });
+    // },
+    // onError: () => {
+    // toast({
+    //   title: "Error",
+    //   description: "An error occurred while deleting the module.",
+    //   variant: "destructive",
+    // });
+    // },
+    // classroomId: classId,
+    // moduleId: moduleId 
+    // });
     useEffect(() => {
     if (classData) {
     const defaultData = createDefaultClassData(classData)
@@ -337,34 +354,53 @@
 
     // Add a handler function for deleting a module
     const handleDeleteModule = async () => {
-    if (!selectedModuleId || !localClassData) return;
-    setIsDeleting(true);
-    try {
-    await deleteClassroomModule({ classroomId: classId, moduleId: selectedModuleId });
-    const updatedModules = localClassData.modules.filter((module) => module.id !== selectedModuleId);
-    const moduleToDelete = localClassData.modules.find((module) => module.id === selectedModuleId);
-    const updatedClassData = {
+  if (!selectedModuleId || !localClassData) return;
+  
+  try {
+    await deleteClassroomModule({ 
+      classroomId: classId, 
+      moduleId: selectedModuleId 
+    });
+    
+    const updatedModules = localClassData.modules.filter(
+      (module) => module.id !== selectedModuleId
+    );
+    
+    setLocalClassData({
       ...localClassData,
       modules: updatedModules,
-    };
-    setLocalClassData(updatedClassData);
-    setIsDeleteModuleDialogOpen(false);
+    });
+    
     setSelectedModuleId(null);
     setSelectedModule(null);
-    toast({
-      title: "Module deleted",
-      description: `${moduleToDelete?.title} has been deleted from ${localClassData.name}.`,
-    });
-    } catch (error) {
-    toast({
-      title: "Error",
-      description: "An error occurred while deleting the module.",
-      variant: "destructive",
-    });
-    } finally {
-    setIsDeleting(false);
-    }
-    };
+  } catch (error) {
+    // Error is handled by the mutation's onError
+  }
+  finally{
+  setIsDeleteModuleDialogOpen(false)
+  }
+};
+    // const handleDeleteModule = async () => {
+    // if (!selectedModuleId || !localClassData) return;
+    // setIsDeleting(true);
+    // try {
+    // await deleteClassroomModule({ classroomId: classId, moduleId: selectedModuleId });
+    // const updatedModules = localClassData.modules.filter((module) => module.id !== selectedModuleId);
+    // const moduleToDelete = localClassData.modules.find((module) => module.id === selectedModuleId);
+    // const updatedClassData = {
+    //   ...localClassData,
+    //   modules: updatedModules,
+    // };
+    // setLocalClassData(updatedClassData);
+    // setIsDeleteModuleDialogOpen(false);
+    // setSelectedModuleId(null);
+    // setSelectedModule(null);
+    // } catch (error) {
+    // } 
+    // // finally {
+    // // setIsDeleting(false);
+    // // }
+    // };
 
     // Add a handler function for adding a topic to a module
     const handleAddTopic = (topic: Itopic) => {
@@ -837,13 +873,14 @@
       open={isDeleteDialogOpen}
       onOpenChange={setIsDeleteDialogOpen}
       onDelete={() => deleteSingleClassroom(classId)}
+      isLoading={isLoading}
     />
     {/* Delete Module Dialog */}
     <DeleteClassRoomModuleModal
       open={isDeleteModuleDialogOpen}
       onOpenChange={setIsDeleteModuleDialogOpen}
       onDelete={handleDeleteModule}
-      isSubmitting={isDeleting}
+      isLoading={isDeletingModule}
     />
     {/* Add Student Modal */}
     <AddStudentModal

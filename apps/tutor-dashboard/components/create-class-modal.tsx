@@ -20,7 +20,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { useCreateClassroom } from "@/hooks/mutate/classroom"
-import { ClassroomScheduleResponse } from "@/lib/types/classroom"
+import type { ClassroomScheduleResponse } from "@/lib/types/classroom"
+import { toast } from "@/components/ui/use-toast"
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -41,12 +42,54 @@ const formSchema = z.object({
 type CreateClassModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
-  // onClassCreated: (newClass: any) => void
 }
 
 export function CreateClassModal({ open, onOpenChange }: CreateClassModalProps) {
   const [activeTab, setActiveTab] = useState("details")
-  const { mutate: createclassroomdata } = useCreateClassroom({ onSuccess(data) { }, onError(error) { } })
+  const [submitError, setSubmitError] = useState<string | null>(null)
+
+  const { mutate: createclassroomdata, isLoading } = useCreateClassroom({
+    onSuccess(data) {
+      setSubmitError(null)
+      onOpenChange(false)
+      form.reset()
+      setActiveTab("details")
+      toast({
+        title: "Class created successfully",
+        description: "Your class has been added.",
+      })
+    },
+    onError(error: any) {
+      let errorMessage = "An unexpected error occurred."
+
+      // Handle the nested error structure
+      if (error?.response?.data?.errors) {
+        const errors = error.response.data.errors
+        const firstErrorKey = Object.keys(errors)[0]
+
+        if (firstErrorKey && Array.isArray(errors[firstErrorKey]) && errors[firstErrorKey].length > 0) {
+          errorMessage = errors[firstErrorKey][0]
+        }
+      }
+      // Handle direct message
+      else if (error?.response?.data?.message) {
+        errorMessage = error.response.data.message
+      }
+      // Handle error message
+      else if (error.message) {
+        errorMessage = error.message
+      }
+
+      toast({
+        variant: "destructive",
+        title: "Failed to create class",
+        description: errorMessage,
+      })
+
+      setSubmitError(errorMessage)
+    },
+  })
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -73,23 +116,18 @@ export function CreateClassModal({ open, onOpenChange }: CreateClassModalProps) 
         end_date: values.end_date,
       },
       schedule: {
-        days_of_week: values.days_of_week
-          .split(",")
-          .map((day) => {
-            const trimmed = day.trim().toLowerCase();
-            return trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
-          }),
+        days_of_week: values.days_of_week.split(",").map((day) => {
+          const trimmed = day.trim().toLowerCase()
+          return trimmed.charAt(0).toUpperCase() + trimmed.slice(1)
+        }),
         start_time: values.start_time,
         end_time: values.end_time,
         start_date: values.start_date,
         end_date: values.end_date,
         status: values.status,
       },
-    };
-    createclassroomdata(newClass);
-    onOpenChange(false);
-    form.reset();
-    setActiveTab("details");
+    }
+    createclassroomdata(newClass)
   }
 
   return (
@@ -157,7 +195,7 @@ export function CreateClassModal({ open, onOpenChange }: CreateClassModalProps) 
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            <SelectItem value=" Web development">Web Development</SelectItem>
+                            <SelectItem value="Web development">Web Development</SelectItem>
                             <SelectItem value="Marketing">Marketing</SelectItem>
                             <SelectItem value="Data Analytics">Data Analytics</SelectItem>
                           </SelectContent>
@@ -284,6 +322,8 @@ export function CreateClassModal({ open, onOpenChange }: CreateClassModalProps) 
                 />
               </TabsContent>
 
+              {/* {submitError && <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">{submitError}</div>} */}
+
               <DialogFooter className="mt-6">
                 <div className="flex justify-between w-full">
                   <div>
@@ -308,7 +348,7 @@ export function CreateClassModal({ open, onOpenChange }: CreateClassModalProps) 
                       <Button
                         type="button"
                         onClick={(e) => {
-                          e.preventDefault() // Prevent form submission
+                          e.preventDefault()
                           if (activeTab === "details") setActiveTab("schedule")
                           if (activeTab === "schedule") setActiveTab("settings")
                         }}
@@ -316,7 +356,9 @@ export function CreateClassModal({ open, onOpenChange }: CreateClassModalProps) 
                         Next
                       </Button>
                     ) : (
-                      <Button type="submit">Create Class</Button>
+                      <Button type="submit" disabled={isLoading}>
+                        {isLoading ? "Creating..." : "Create Class"}
+                      </Button>
                     )}
                   </div>
                 </div>
