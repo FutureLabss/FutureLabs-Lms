@@ -201,17 +201,16 @@ export function AssignmentSubmissionDialog({
         file_path: firstResult ? firstResult.secure_url : null,
         public_id: firstResult ? firstResult.public_id : null,
       };
-
       // Log the submission data that would be sent to the server
       console.log("Assignment submission data:", submission);
 
       // Simulate API call to submit the assignment with Cloudinary URLs
       postAssignment(submission);
       // setTimeout(() => {
-      toast("Assignment submitted", {
-        description:
-          "Your assignment has been submitted successfully with all files uploaded to Cloudinary.",
-      });
+      // toast("Assignment submitted", {
+      //   description:
+      //     "Your assignment has been submitted successfully with all files uploaded to Cloudinary.",
+      // });
       setIsSubmitting(false);
       setFiles([]);
       setComment("");
