@@ -21,7 +21,7 @@ import { apiClient } from "@/lib/api-client";
 
 export function useGetAllClassroom() {
     const getClassroom: IQueryArgs<IRetriveClassroomResponse> = {
-      key: ["classroom"],
+      key: ["ClassRoom"],
       callback: () => getAllClassRoom(),
     };
     return useGetResourcesQuery(getClassroom);
@@ -108,7 +108,7 @@ export function useGetAllClassroomAssignments<T extends "submissions" | "all">(
   data: T extends "submissions" ? SubmittedAssignment[] : Assignment[];
 }> {
   return useQuery({
-    queryKey: ["assignments", classId, type],
+    queryKey: ["ClassroomAssignmnet", classId, type],
     enabled: enabled && !!classId, // Added classId check
     queryFn: async () => {
       const res = await getAllClassroomAssignments({

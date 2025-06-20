@@ -13,28 +13,19 @@ import { Button } from "@/components/ui/button"
 interface DeleteClassroomModuleProps {
   open: boolean
   onOpenChange: (open: boolean) => void
-  onDelete: () => void
-  isSubmitting?: boolean 
+  onDelete: () => Promise<void> // Make this async
+  isLoading?: boolean 
 }
 
 export default function DeleteClassRoomModuleModal({
   open,
   onOpenChange,
   onDelete,
-  isSubmitting = false, 
+  isLoading
 }: DeleteClassroomModuleProps) {
-  const handleDelete = () => {
-    onDelete()
-  }
 
   return (
-    <Dialog
-      open={open}
-      onOpenChange={(newOpen) => {
-        if (isSubmitting) return 
-        onOpenChange(newOpen)
-      }}
-    >
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete Module</DialogTitle>
@@ -44,11 +35,11 @@ export default function DeleteClassRoomModuleModal({
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isSubmitting}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
             Cancel
           </Button>
-          <Button variant="destructive" onClick={handleDelete} disabled={isSubmitting}>
-            {isSubmitting ? (
+          <Button variant="destructive" onClick={onDelete} disabled={isLoading}>
+            {isLoading ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 Deleting...
