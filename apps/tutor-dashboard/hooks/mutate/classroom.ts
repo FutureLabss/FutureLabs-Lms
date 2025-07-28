@@ -47,7 +47,7 @@ export function useDeleteClassroom({
   classroomId,
 }: IMutationHook & { classroomId: string }) {
   const mutation: IMutationArgs<string, string> = {
-    key: ["classroom"],
+    key: ["ClassRoom", "DeleteClassRoom"],
     callback: () => deleteClasscroom(classroomId),
     onSuccess: onSuccess,
     onError: onError,
@@ -76,7 +76,7 @@ export function useDeleteClassroomModule({
   options,
 }: IMutationHook & { classroomId: string, moduleId: string }) {
   const mutation: IMutationArgs<{ classroomId: string; moduleId: string }, string> = {
-    key: ["classroom", "deleteModule"],
+    key: ["ClassroomModules", "DeleteModule"],
     callback: ({ classroomId, moduleId }) => deleteClasscroomModule(classroomId, moduleId),
     onSuccess,
     onError,

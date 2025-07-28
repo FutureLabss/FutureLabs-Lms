@@ -16,14 +16,15 @@ interface DeleteClassroomProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onDelete: () => void;
+  isLoading:boolean
 }
 
 export default function DeleteClassRoomModal({
   open,
   onOpenChange,
   onDelete,
+  isLoading,
 }: DeleteClassroomProps) {
-    const [isSubmitting, setIsSubmitting] = useState(false);
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
@@ -37,14 +38,17 @@ export default function DeleteClassRoomModal({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button variant="destructive" onClick={onDelete}>
-            {isSubmitting ? (
-            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          <Button variant="destructive" onClick={onDelete} disabled={isLoading}>
+            {isLoading ? (
+            <>
+            Deleting...</>
             ):
             (
+              <>
                 <Trash className="mr-2 h-4 w-4" />
-            )}
             Delete
+              </>
+            )}
           </Button>
         </DialogFooter>
       </DialogContent>
