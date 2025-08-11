@@ -945,17 +945,20 @@ export default function ClassroomDetailPage() {
                           <Badge
                             className="w-fit"
                             variant={
-                              assignment?.submission?.grade_status ===
-                                "pending" || "N/A"
+                              assignment?.submission?.grade_status === "graded"
                                 ? "default"
+                                : assignment?.submission?.grade_status ===
+                                  "pending"
+                                ? "secondary"
                                 : "outline"
                             }
                           >
                             Status:{" "}
-                            {assignment.submission.grade_status === "pending" ||
-                            "N/A"
+                            {assignment.submission.grade_status === "graded"
+                              ? "Graded"
+                              : assignment.submission.grade_status === "pending"
                               ? "Pending"
-                              : "Graded"}
+                              : "N/A"}
                           </Badge>
                         </div>
                         <p className="text-sm text-muted-foreground mb-3">
