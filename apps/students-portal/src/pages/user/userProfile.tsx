@@ -9,13 +9,15 @@ import { useGetMeprofile } from "@/shared/hooks/query/users";
 import { useState, useRef } from "react";
 import type { EditUserProfileData } from "@/core/types/dto/singleuser";
 import EmptyState from "@/shared/components/common/emptyState/empty";
+import Loader from "@/shared/components/common/loader";
 
 export default function UserProfilePage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { data: user, loading } = useGetMeprofile();
+  const { data: user, loading: isLoading } = useGetMeprofile();
   const userId = user?.data?.id;
   console.log(user);
+  const isEmpty = isLoading && !user?.data;
 
   const { mutate: editUser } = useEditUserProfile(userId as string, {
     onSuccess(data) {
@@ -112,10 +114,13 @@ export default function UserProfilePage() {
     "Full name": user?.data?.fullname,
     "Email address": user?.data?.email,
     "Phone number": user?.data?.phone,
-    "Chosen skill": "Product Design",
+    "Chosen skill": user?.data?.skill,
     "Contact Address": user?.data?.address,
     // "image_url":user?.data.profile.image_url
   };
+  if (isLoading) {
+    <EmptyState />;
+  }
 
   return (
     <div className=" sm:py-9 lg:py-6">
@@ -124,7 +129,7 @@ export default function UserProfilePage() {
       </div>
       <div className="bg-white w-full h-full flex justify-center py-5 mt-10">
         <div className="w-full">
-          {loading ? (
+          {isEmpty ? (
             <EmptyState />
           ) : (
             <>
