@@ -9,6 +9,7 @@ import { useGetMeprofile } from "@/shared/hooks/query/users";
 import { useState, useRef } from "react";
 import type { EditUserProfileData } from "@/core/types/dto/singleuser";
 import EmptyState from "@/shared/components/common/emptyState/empty";
+import Loader from "@/shared/components/common/loader";
 
 export default function UserProfilePage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
@@ -16,7 +17,7 @@ export default function UserProfilePage() {
   const { data: user, loading: isLoading } = useGetMeprofile();
   const userId = user?.data?.id;
   console.log(user);
-  const isEmpty = !isLoading && !user?.data;
+  const isEmpty = isLoading && !user?.data;
 
   const { mutate: editUser } = useEditUserProfile(userId as string, {
     onSuccess(data) {
@@ -71,9 +72,6 @@ export default function UserProfilePage() {
   //   }
   // };
 
-  if (isLoading) {
-  }
-
   const handleImageUpload = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -120,6 +118,9 @@ export default function UserProfilePage() {
     "Contact Address": user?.data?.address,
     // "image_url":user?.data.profile.image_url
   };
+  if (isLoading) {
+    <EmptyState />;
+  }
 
   return (
     <div className=" sm:py-9 lg:py-6">
