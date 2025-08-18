@@ -2,6 +2,13 @@ import Image from "next/image";
 import Avatar from "../../../assets/Avatar.png";
 import { IoIosArrowForward } from "react-icons/io";
 import Link from "next/link";
+import { Bell, Loader } from "lucide-react";
+import {
+  useGetAllNotifications,
+  useGetNotificationsCount,
+} from "@/shared/hooks/query/classroom/ClassroomNotificationQuries";
+import Modal from "../common/modal/modal";
+import { useState } from "react";
 
 interface Props {
   display: boolean;
@@ -13,7 +20,15 @@ interface Props {
 }
 
 export default function PreAppBar(props: Props) {
+  const [showModal, setShowModal] = useState(false);
+  const { data: notificationCount, loading: isLoading } =
+    useGetNotificationsCount();
+
+  const { data: allNotifications, loading: allNotificationsLoading } =
+    useGetAllNotifications();
+
   const { title, description } = props;
+
   return (
     <div className="flex justify-between items-center md:flex-none">
       <div className="py-2 px-5 lg:hidden" onClick={props.onToggle}>
@@ -42,17 +57,25 @@ export default function PreAppBar(props: Props) {
           {/* <h3 className="text-[27px] font-bold pt-2">Welcome manny 👋🏻</h3> */}
         </div>
         <div
-          className="flex flex-col md:flex-row items-center gap-2 cursor-pointer
+          className="flex flex-col md:flex-row items-center gap-6 cursor-pointer
           2xl:max-w-[800px] md:max-w-[400px] ml-auto"
         >
-          <div>
-            <Image
-              src={Avatar}
-              alt="profile"
-              className="h-10 w-10 2xl:w-12 2xl:h-12 aspect-auto"
-            />
+          <div className="relative" onClick={() => setShowModal(true)}>
+            {isLoading && !notificationCount ? null : (
+              <span className=" w-4 h-4 p-2 rounded-full bg-red-600 text-white absolute top-[-10px] right-[-8px] flex items-center justify-center text-[8px]">
+                {notificationCount?.count}
+              </span>
+            )}
+            <Bell size={25} />
           </div>
-          <Link href={"/user/userProfile"}>
+          <Link href={"/user/userProfile"} className="flex gap-2">
+            <div>
+              <Image
+                src={Avatar}
+                alt="profile"
+                className="h-10 w-10 2xl:w-12 2xl:h-12 aspect-auto"
+              />
+            </div>
             <div
               //  onClick={toggleModal}
               className="text-xs flex flex-row  items-center"
@@ -67,6 +90,45 @@ export default function PreAppBar(props: Props) {
           </Link>
         </div>
       </div>
+
+      <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+        <div className="flex flex-col gap-4">
+          <div className="flex flex-row items-center gap-4">
+            <span
+              className={`cursor-pointer text-center text-[#85878D] font-medium text-2xl`}
+            >
+              Notifications
+            </span>
+          </div>
+          {allNotificationsLoading ? (
+            <Loader className="animate-spin" />
+          ) : (
+            allNotifications?.data?.map((notification) => (
+              <div
+                key={notification.id}
+                className="flex flex-row items-center gap-4"
+              >
+                <Link
+                  href={`/user/notification/${notification.id}`}
+                  className={`cursor-pointer text-center text-[#85878D] font-medium text-sm flex justify-between w-full items-center`}
+                >
+                  {notification.title}
+
+                  {notification.read ? (
+                    <span className="text-[#85878D] font-medium text-sm flex">
+                      <IoIosArrowForward size={15} />
+                    </span>
+                  ) : (
+                    <span className="text-[#85878D] font-medium text-sm flex">
+                      <IoIosArrowForward size={15} />
+                    </span>
+                  )}
+                </Link>
+              </div>
+            ))
+          )}
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -9,7 +9,6 @@ import { useGetMeprofile } from "@/shared/hooks/query/users";
 import { useState, useRef } from "react";
 import type { EditUserProfileData } from "@/core/types/dto/singleuser";
 import EmptyState from "@/shared/components/common/emptyState/empty";
-import Loader from "@/shared/components/common/loader";
 
 export default function UserProfilePage() {
   const [profileImage, setProfileImage] = useState<string | null>(null);
