@@ -1,30 +1,27 @@
+import NotificationCard from "@/shared/components/dashboard/NotificationsCard";
 import { useGetSingleNotification } from "@/shared/hooks/query/classroom/ClassroomNotificationQuries";
 import UserLayout, { layoutInterface } from "@/shared/layouts/userLayout";
 import { useParams } from "next/navigation";
 import React from "react";
 
 function Notification() {
-  const { id } = useParams();
+  const params = useParams();
+
+  const id = params?.id as string | undefined;
 
   const { data: notification, loading: isLoading } = useGetSingleNotification(
     id as string
   );
 
   console.log(notification, "notification");
-  // const isId = !id || id === "undefined" ? false : true;
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  return (
-    <div>
-      <h1>{notification?.data?.title}</h1>
-      <p>{notification?.data?.type}</p>
-      <p>{notification?.data?.message}</p>
-      {/* <p>{formatDay(notification?)}</p> */}
-    </div>
-  );
+  const notif = notification?.data;
+
+  return <NotificationCard notif={notif} />;
 }
 
 export default Notification;

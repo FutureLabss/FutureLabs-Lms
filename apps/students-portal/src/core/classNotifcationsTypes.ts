@@ -19,3 +19,24 @@ export interface GetNotificationsResponse {
   message: string;
   data: Notification[];
 }
+
+
+
+export interface NotificationDTO {
+  message: string;
+  data: NotificationData;
+}
+
+export interface NotificationData {
+  id: string;
+  type: string;
+  notifiable_type: string;
+  notifiable_id: number;
+  data: {
+    message: string;
+    tag: string;
+  };
+  read_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
