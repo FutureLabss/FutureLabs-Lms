@@ -20,7 +20,7 @@ export async function getNotifications() {
 
 export async function markNotificationAsRead(notificationId: string) {
   try {
-    const res = await axios.put(`/notifications/${notificationId}`);
+    const res = await axios.get(`/notifications/${notificationId}`);
     return res.data;
   } catch (error) {
     return error;

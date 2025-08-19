@@ -49,7 +49,7 @@ export const AdminMenus: Menu[] = [
     title: "Notifications",
     id: "6",
     icon: IoIosNotificationsOutline,
-    disabled: true,
+    disabled: false,
     path: `${AdminRoutes.NOTIFICATION}`,
   },
 ];
