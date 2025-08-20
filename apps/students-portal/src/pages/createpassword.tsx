@@ -10,6 +10,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ParsedUrlQuery } from "querystring";
+import { Dialog, DialogContent, DialogTitle } from "@radix-ui/react-dialog";
+import { DialogFooter, DialogHeader } from "@/shared/components/ui/dialog";
+import Button from "@/shared/components/common/Button";
 // import { useRouter } from "next/router";
 
 const schema = z
@@ -42,6 +45,7 @@ export default function CreatePasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string[]>([]);
   const { CreatePassword } = useAuthContext();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { query } = useRouter();
   const { mail }: ParsedUrlQuery = router.query;
   const [email, setEmail] = useState(mail);
@@ -97,6 +101,16 @@ export default function CreatePasswordPage() {
     },
     mode: "onChange",
   });
+
+  const handlePayLater = () => {
+    setIsModalOpen(false);
+    router.replace("/user");
+  };
+
+  const handlePayNow = () => {
+    setIsModalOpen(false);
+    router.push("/payment"); // <-- adjust this route as needed
+  };
   return (
     <div className="bg-white grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 h-full lg:min-h-[850px]">
       <div className="bg-background text-white  hidden lg:flex items-center justify-center h-screen">
@@ -200,6 +214,20 @@ export default function CreatePasswordPage() {
           </div>
         </form>
       </div>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Password Created Successfully</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground">
+            Do you want to pay now or continue later?
+          </p>
+          <DialogFooter className="flex justify-end gap-2 pt-4">
+            <Button onClick={handlePayLater}>Pay later</Button>
+            <Button onClick={handlePayNow}>Pay now</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
