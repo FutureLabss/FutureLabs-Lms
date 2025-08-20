@@ -79,7 +79,7 @@ export default function CreatePasswordPage() {
         remember_me: data.remember_me,
       };
       await CreatePassword(payload);
-      router.replace("/user");
+      setIsModalOpen(true);
     } catch (e) {
       const loginError = e as Error;
       setError(loginError.message?.split("\n") ?? [loginError.message]);
