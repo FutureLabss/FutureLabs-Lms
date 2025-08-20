@@ -7,9 +7,16 @@ interface ButtonProps {
   children: React.ReactNode;
   type?: "button" | "submit" | "reset";
   disabled?: boolean;
-  radius?: "small" | "medium" | "large" | "full" | "extraSmall" | "rounded16" | "rounded24"; // Add extraSmall
+  radius?:
+    | "small"
+    | "medium"
+    | "large"
+    | "full"
+    | "extraSmall"
+    | "rounded16"
+    | "rounded24"; // Add extraSmall
   loading?: boolean;
-  color?: "orange" | "black" | "primary"
+  color?: "orange" | "black" | "primary";
   isBorder?: boolean; // New prop for color
   // New prop to show the loading spinner
 }
@@ -25,7 +32,6 @@ export default function Button({
   disabled = false,
   loading = false,
 }: ButtonProps) {
-
   const radiusStyles = {
     extraSmall: "rounded-[10px]",
     rounded16: "rounded-[16px]",
@@ -44,7 +50,6 @@ export default function Button({
       : "hover:bg-secondary bg-transparent text-primary hover:text-white hover:border-transparent",
   };
 
-
   return (
     <button
       type={type}
@@ -54,7 +59,7 @@ export default function Button({
         radiusStyles[radius],
         colorStyles[color],
         "px-4 py-2 rounded-md focus:outline-none focus:ring-2 transition duration-200",
-        "text-primary  disabled:bg-gray-400 disabled:cursor-not-allowed",
+        "text-primary disabled:border-0  disabled:bg-gray-400 disabled:cursor-not-allowed  disabled:text-gray-600 disabled:hover:bg-gray-400",
         className // Allow custom className to override or add styles
       )}
     >
@@ -86,6 +91,4 @@ export default function Button({
       )}
     </button>
   );
-};
-
-
+}
