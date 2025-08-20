@@ -735,14 +735,14 @@
                 <CardContent className="p-0">
                   <div className="divide-y">
                     {localClassData?.students.map((student) => (
-                      <div key={student.id} className="flex items-center justify-between p-4">
+                      <div key={student.id} className="flex flex-wrap items-center justify-between p-4">
                         <div className="flex items-center gap-3">
                           <Avatar>
                             <AvatarImage src={student.avatar || "/placeholder.svg"} alt={student.name} />
                             <AvatarFallback>{student?.name ? student.name.charAt(0) : "?"}</AvatarFallback>
                           </Avatar>
                           <div>
-                            <p className="font-medium">{student.name}</p>
+                            <p className="font-medium">{student.fullname}</p>
                             <p className="text-sm text-muted-foreground">{student.email}</p>
                           </div>
                         </div>
@@ -913,11 +913,12 @@
     {/* Student Progress Modal */}
     {selectedStudent && (
       <StudentProgressModal
-        open={isProgressModalOpen}
-        onOpenChange={setIsProgressModalOpen}
-        student={selectedStudent}
-        classData={localClassData}
-      />
+            open={isProgressModalOpen}
+            onOpenChange={setIsProgressModalOpen}
+            student={selectedStudent}
+            classData={localClassData}
+             classroomId={classId} 
+             studentId={selectedStudent.id}      />
     )}
     {/* Add Material Modal */}
     {/* <AddMaterialModal

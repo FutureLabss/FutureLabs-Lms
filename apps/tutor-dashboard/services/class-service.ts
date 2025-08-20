@@ -4,7 +4,7 @@ import { toast } from "@/components/ui/use-toast";
 import { apiClient } from "@/lib/api-client";
 import { AssignmentGrade, ClassroomResponse, ClassroomScheduleResponse, CreateAssignmentRequest, CreateAssignmentResponse, IclassRoomMaterials,
    IclassRoomModules, IRetriveClassroomResponse, IsingleClassroomDetails, 
-Itopic, MaterialsResponse, TopicResponse } from "@/lib/types/classroom";
+Itopic, MaterialsResponse, StudentProgressResponse, TopicResponse } from "@/lib/types/classroom";
 import { AddStudentResponse } from "@/lib/types/get-student";
 import { IPaginatedQueryArgs, IPaginatedReturns } from "@/lib/types/query";
 
@@ -248,3 +248,16 @@ export const getAllClassroomAssignments = async ({
     throw error;
   }
 };
+
+// student progress
+export async function getStudentProgress(
+  classroomId: string,
+  studentId: string,
+): Promise<StudentProgressResponse> {
+  return apiClient
+    .get<StudentProgressResponse>(`classrooms/${classroomId}/students/${studentId}/progress`)
+    .then((response) => {
+      return response;
+    })
+    .catch(handleError);
+}
