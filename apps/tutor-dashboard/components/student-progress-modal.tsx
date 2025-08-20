@@ -8,121 +8,67 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Progress } from "@/components/ui/progress"
 import { CheckCircle2, Clock, XCircle } from "lucide-react"
+import { useGetSingleStudentProgress } from "@/hooks/query/classroom"
 
 type StudentProgressModalProps = {
   open: boolean
   onOpenChange: (open: boolean) => void
   student: any
   classData: any
+  classroomId:string
+  studentId:string
 }
 
-export function StudentProgressModal({ open, onOpenChange, student, classData }: StudentProgressModalProps) {
+export function StudentProgressModal({ open, onOpenChange, student, classData, classroomId, studentId }: StudentProgressModalProps) {
   const [activeTab, setActiveTab] = useState("overview")
-
-  // Mock data for student progress
-  const progressData = {
-    overview: {
-      attendance: 85, // percentage
-      assignmentsCompleted: 8,
-      totalAssignments: 10,
-      averageGrade: 87, // percentage
-      lastActive: "2023-09-15T14:30:00Z",
-    },
-    assignments: [
-      {
-        id: "1",
-        title: "Calculus Quiz 1",
-        dueDate: "2023-09-15",
-        status: "completed",
-        grade: 92,
-        submittedOn: "2023-09-14T10:15:00Z",
-        feedback: "Excellent work on derivatives!",
-      },
-      {
-        id: "2",
-        title: "Algebra Homework",
-        dueDate: "2023-09-20",
-        status: "completed",
-        grade: 85,
-        submittedOn: "2023-09-19T16:45:00Z",
-        feedback: "Good effort, but watch out for sign errors.",
-      },
-      {
-        id: "3",
-        title: "Geometry Project",
-        dueDate: "2023-10-01",
-        status: "in-progress",
-        grade: null,
-        submittedOn: null,
-        feedback: null,
-      },
-      {
-        id: "4",
-        title: "Trigonometry Quiz",
-        dueDate: "2023-09-10",
-        status: "late",
-        grade: 75,
-        submittedOn: "2023-09-12T09:30:00Z",
-        feedback: "Late submission, but decent understanding of concepts.",
-      },
-    ],
-    attendance: [
-      { date: "2023-09-01", status: "present" },
-      { date: "2023-09-03", status: "present" },
-      { date: "2023-09-05", status: "absent" },
-      { date: "2023-09-08", status: "present" },
-      { date: "2023-09-10", status: "present" },
-      { date: "2023-09-12", status: "late" },
-      { date: "2023-09-15", status: "present" },
-    ],
-    materials: [
-      {
-        id: "1",
-        title: "Calculus Fundamentals",
-        type: "pdf",
-        accessed: true,
-        lastAccessed: "2023-09-10T11:20:00Z",
-        timeSpent: 45, // minutes
-      },
-      {
-        id: "2",
-        title: "Algebra Practice Problems",
-        type: "pdf",
-        accessed: true,
-        lastAccessed: "2023-09-14T15:10:00Z",
-        timeSpent: 30,
-      },
-      {
-        id: "3",
-        title: "Geometry Formulas",
-        type: "document",
-        accessed: false,
-        lastAccessed: null,
-        timeSpent: 0,
-      },
-    ],
-  }
+  const {data: progressData}=useGetSingleStudentProgress(classroomId, studentId)
+      console.log(progressData, "singleprogress");
+    console.log(classroomId, "id");
+    console.log(studentId, "id");
 
   // Calculate completion percentage for assignments
   const assignmentCompletionPercentage =
-    (progressData.assignments.filter((a) => a.status === "completed").length / progressData.assignments.length) * 100
+  progressData?.data.totalAssignments && progressData?.data.submittedAssignments
+    ? (progressData.data.submittedAssignments / progressData.data.totalAssignments) * 100
+    : 0;
+// format date
+const parseCustomDate = (dateString?: string): Date | null => {
+  if (!dateString) return null;
+  const parts = dateString.split(" ");
+  if (parts.length < 4) return null;
 
-  // Format date
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    })
-  }
+  const [day, month, year, time, meridian] = [
+    parts[0],
+    parts[1],
+    parts[2],
+    parts[3],
+    parts[4],
+  ];
 
-  // Format time
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString("en-US", {
-      hour: "2-digit",
-      minute: "2-digit",
-    })
-  }
+  const formatted = `${day} ${month} ${year} ${time} ${meridian}`;
+  return new Date(formatted);
+};
+
+const formatDate = (dateString?: string) => {
+  const date = parseCustomDate(dateString);
+  if (!date || isNaN(date.getTime())) return "N/A";
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  });
+};
+
+const formatTime = (dateString?: string) => {
+  const date = parseCustomDate(dateString);
+  if (!date || isNaN(date.getTime())) return "N/A";
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+};
+
 
   // Format date and time
   const formatDateTime = (dateString: string) => {
@@ -171,12 +117,12 @@ export function StudentProgressModal({ open, onOpenChange, student, classData }:
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-col items-center justify-center">
-                    <div className="text-4xl font-bold">{progressData.overview.attendance}%</div>
-                    <Progress value={progressData.overview.attendance} className="w-full mt-2" />
-                    <p className="text-sm text-muted-foreground mt-2">
+                    <div className="text-4xl font-bold">{progressData?.data.attendedClasses}%</div>
+                    <Progress value={progressData?.data.attendedClasses} className="w-full mt-2" />
+                    {/* <p className="text-sm text-muted-foreground mt-2">
                       {progressData.attendance.filter((a) => a.status === "present").length} of{" "}
                       {progressData.attendance.length} sessions attended
-                    </p>
+                    </p> */}
                   </div>
                 </CardContent>
               </Card>
@@ -187,20 +133,18 @@ export function StudentProgressModal({ open, onOpenChange, student, classData }:
                   <CardDescription>Assignment completion rate</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-col items-center justify-center">
-                    <div className="text-4xl font-bold">
-                      {progressData.overview.assignmentsCompleted}/{progressData.overview.totalAssignments}
-                    </div>
-                    <Progress value={assignmentCompletionPercentage} className="w-full mt-2" />
-                    <p className="text-sm text-muted-foreground mt-2">
-                      {progressData.overview.assignmentsCompleted} of {progressData.overview.totalAssignments}{" "}
-                      assignments completed
-                    </p>
-                  </div>
-                </CardContent>
+  <div className="flex flex-col items-center justify-center">
+    <div className="text-4xl font-bold">
+      {progressData?.data.submittedAssignments}/{progressData?.data.totalAssignments}
+    </div>
+    <Progress value={assignmentCompletionPercentage} className="w-full mt-2" />
+    <p className="text-sm text-muted-foreground mt-2">
+      {progressData?.data.submittedAssignments} of {progressData?.data.totalAssignments} assignments completed
+    </p>
+  </div>
+</CardContent>
               </Card>
             </div>
-
             <Card>
               <CardHeader className="pb-2">
                 <CardTitle>Performance</CardTitle>
@@ -209,13 +153,13 @@ export function StudentProgressModal({ open, onOpenChange, student, classData }:
               <CardContent>
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="flex flex-col items-center justify-center p-4 border rounded-lg">
-                    <div className="text-4xl font-bold">{progressData.overview.averageGrade}%</div>
+                    <div className="text-4xl font-bold">{progressData?.data.overallProgress}%</div>
                     <p className="text-sm text-muted-foreground mt-2">Average Grade</p>
                   </div>
                   <div className="flex flex-col items-center justify-center p-4 border rounded-lg">
                     <div className="text-sm font-medium">Last Active</div>
-                    <div className="text-lg font-semibold mt-1">{formatDate(progressData.overview.lastActive)}</div>
-                    <p className="text-sm text-muted-foreground mt-1">{formatTime(progressData.overview.lastActive)}</p>
+                    <div className="text-lg font-semibold mt-1">{formatDate(progressData?.data?.lastActive)}</div>
+                    <p className="text-sm text-muted-foreground mt-1">{formatTime(progressData?.data?.lastActive)}</p>
                   </div>
                 </div>
               </CardContent>
@@ -223,7 +167,7 @@ export function StudentProgressModal({ open, onOpenChange, student, classData }:
           </TabsContent>
 
           <TabsContent value="assignments" className="space-y-4 mt-4">
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <CardTitle>Assignment Progress</CardTitle>
                 <CardDescription>
@@ -278,11 +222,11 @@ export function StudentProgressModal({ open, onOpenChange, student, classData }:
                   ))}
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </TabsContent>
 
           <TabsContent value="attendance" className="space-y-4 mt-4">
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <CardTitle>Attendance Record</CardTitle>
                 <CardDescription>
@@ -324,11 +268,11 @@ export function StudentProgressModal({ open, onOpenChange, student, classData }:
                   ))}
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </TabsContent>
 
           <TabsContent value="materials" className="space-y-4 mt-4">
-            <Card>
+            {/* <Card>
               <CardHeader>
                 <CardTitle>Learning Materials</CardTitle>
                 <CardDescription>
@@ -375,7 +319,7 @@ export function StudentProgressModal({ open, onOpenChange, student, classData }:
                   ))}
                 </div>
               </CardContent>
-            </Card>
+            </Card> */}
           </TabsContent>
         </Tabs>
       </DialogContent>
