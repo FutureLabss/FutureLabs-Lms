@@ -1,17 +1,34 @@
+import { queryClient } from "@/core/services/auth";
 import NotificationCard from "@/shared/components/dashboard/NotificationsCard";
-import { useGetSingleNotification } from "@/shared/hooks/query/classroom/ClassroomNotificationQuries";
+import { useMarkNotificationAsRead } from "@/shared/hooks/mutate/notificationMutate";
+
 import UserLayout, { layoutInterface } from "@/shared/layouts/userLayout";
 import { useParams } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 
 function Notification() {
   const params = useParams();
 
   const id = params?.id as string | undefined;
 
-  const { data: notification, loading: isLoading } = useGetSingleNotification(
-    id as string
-  );
+  const {
+    mutate,
+    data: notification,
+    isLoading,
+  } = useMarkNotificationAsRead({
+    onSuccess: () => {
+      queryClient.invalidateQueries(["classroomNotifications"], {
+        exact: true,
+      });
+    },
+    onError: () => {},
+  });
+
+  useEffect(() => {
+    if (id) {
+      mutate(id);
+    }
+  }, [id, mutate]);
 
   console.log(notification, "notification");
 
@@ -19,9 +36,7 @@ function Notification() {
     return <div>Loading...</div>;
   }
 
-  const notif = notification?.data;
-
-  return <NotificationCard notif={notif} />;
+  return <NotificationCard notif={notification?.data} />;
 }
 
 export default Notification;

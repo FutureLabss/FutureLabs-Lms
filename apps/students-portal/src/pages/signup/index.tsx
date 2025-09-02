@@ -25,6 +25,7 @@ export default function SignUpPage() {
     gender: "male",
     experience: "beginner",
     skill: "web development",
+    privacy_policy: false,
   });
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>

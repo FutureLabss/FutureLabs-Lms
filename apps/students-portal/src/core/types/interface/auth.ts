@@ -42,6 +42,7 @@ export interface resendemail {
     experience?: "beginner" | "intermediate" | "expert";
     heard_about_us?: string;
     skill?: "web development" | "ui/ux" | "data analitics" | "digital marketing";
+    privacy_policy?: boolean;
   }
   
   

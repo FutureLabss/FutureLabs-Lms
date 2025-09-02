@@ -4,7 +4,7 @@ import { IoIosArrowForward } from "react-icons/io";
 import Link from "next/link";
 import {
   useGetAllNotifications,
-  useGetNotificationsCount,
+  useGetAllNotificationsCount,
 } from "@/shared/hooks/query/classroom/ClassroomNotificationQuries";
 
 import NotificationsDropdown from "../dashboard/components/NotificationDropDown";
@@ -19,7 +19,7 @@ interface Props {
 }
 
 export default function PreAppBar(props: Props) {
-  const { data: notificationCount } = useGetNotificationsCount();
+  const { data: notificationCount } = useGetAllNotificationsCount();
 
   const { data: allNotifications, loading: allNotificationsLoading } =
     useGetAllNotifications();

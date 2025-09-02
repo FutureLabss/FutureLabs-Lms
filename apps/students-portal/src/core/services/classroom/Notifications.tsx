@@ -1,17 +1,17 @@
 import axios from "axios";
 
-export async function getNotificationsCount() {
+export async function getAllNotificationsCount() {
   try {
-    const res = await axios.get(`/notifications/unread`);
+    const res = await axios.get(`notifications/unread`);
     return res.data;
   } catch (error) {
     return error;
   }
 }
 
-export async function getNotifications() {
+export async function getAllNotifications() {
   try {
-    const res = await axios.get(`/notifications`);
+    const res = await axios.get(`notifications`);
     return res.data;
   } catch (error) {
     return error;
@@ -20,7 +20,7 @@ export async function getNotifications() {
 
 export async function markNotificationAsRead(notificationId: string) {
   try {
-    const res = await axios.get(`/notifications/${notificationId}`);
+    const res = await axios.get(`notifications/${notificationId}`);
     return res.data;
   } catch (error) {
     return error;

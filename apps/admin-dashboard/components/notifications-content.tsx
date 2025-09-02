@@ -1,58 +1,64 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Bell, Check, Search, Trash2 } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { useNotifications } from "./notifications-provider"
-import { NotificationItem } from "./notification-item"
-import { UserProfileDropdown } from "./user-profile-dropdown"
+import { useState } from "react";
+import { Bell, Check, Search, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNotifications } from "./notifications-provider";
+import { NotificationItem } from "./notification-item";
+import { UserProfileDropdown } from "./user-profile-dropdown";
 
 export function NotificationsContent() {
-  const { notifications, markAsRead, clearAll } = useNotifications()
-  const [activeTab, setActiveTab] = useState("all")
-  const [searchQuery, setSearchQuery] = useState("")
+  const { notifications, markAsRead, clearAll } = useNotifications();
+  const [activeTab, setActiveTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const unreadNotifications = notifications.filter((n) => !n.read)
-  const readNotifications = notifications.filter((n) => n.read)
+  const unreadNotifications = notifications.filter((n) => !n.read);
+  const readNotifications = notifications.filter((n) => n.read);
 
   const filteredNotifications = notifications.filter(
     (notification) =>
       notification.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      notification.description.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+      notification.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const filteredUnreadNotifications = unreadNotifications.filter(
     (notification) =>
       notification.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      notification.description.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+      notification.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const filteredReadNotifications = readNotifications.filter(
     (notification) =>
       notification.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      notification.description.toLowerCase().includes(searchQuery.toLowerCase()),
-  )
+      notification.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
-  const getNotificationsToDisplay = () => {
+  const getAllNotificationsToDisplay = () => {
     switch (activeTab) {
       case "unread":
-        return filteredUnreadNotifications
+        return filteredUnreadNotifications;
       case "read":
-        return filteredReadNotifications
+        return filteredReadNotifications;
       default:
-        return filteredNotifications
+        return filteredNotifications;
     }
-  }
+  };
 
   const handleMarkAllAsRead = () => {
     unreadNotifications.forEach((notification) => {
-      markAsRead(notification.id)
-    })
-  }
+      markAsRead(notification.id);
+    });
+  };
 
   return (
     <div className="flex flex-1 flex-col">
@@ -77,8 +83,12 @@ export function NotificationsContent() {
         <div className="container mx-auto p-6">
           <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
             <div>
-              <h1 className="text-2xl font-bold tracking-tight">Notifications</h1>
-              <p className="text-muted-foreground">Manage your notifications and alerts</p>
+              <h1 className="text-2xl font-bold tracking-tight">
+                Notifications
+              </h1>
+              <p className="text-muted-foreground">
+                Manage your notifications and alerts
+              </p>
             </div>
             <div className="flex gap-2">
               {unreadNotifications.length > 0 && (
@@ -97,7 +107,11 @@ export function NotificationsContent() {
           </div>
 
           <div className="mt-6">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <Tabs
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="w-full"
+            >
               <TabsList className="grid w-full grid-cols-3">
                 <TabsTrigger value="all">
                   All
@@ -123,12 +137,14 @@ export function NotificationsContent() {
                 <Card>
                   <CardHeader>
                     <CardTitle>All Notifications</CardTitle>
-                    <CardDescription>View all your notifications</CardDescription>
+                    <CardDescription>
+                      View all your notifications
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-1">
-                      {getNotificationsToDisplay().length > 0 ? (
-                        getNotificationsToDisplay().map((notification) => (
+                      {getAllNotificationsToDisplay().length > 0 ? (
+                        getAllNotificationsToDisplay().map((notification) => (
                           <NotificationItem
                             key={notification.id}
                             notification={notification}
@@ -138,9 +154,13 @@ export function NotificationsContent() {
                       ) : (
                         <div className="flex flex-col items-center justify-center py-12">
                           <Bell className="h-12 w-12 text-muted-foreground/50" />
-                          <h3 className="mt-4 text-lg font-medium">No notifications found</h3>
+                          <h3 className="mt-4 text-lg font-medium">
+                            No notifications found
+                          </h3>
                           <p className="text-sm text-muted-foreground">
-                            {searchQuery ? "Try a different search term" : "You're all caught up!"}
+                            {searchQuery
+                              ? "Try a different search term"
+                              : "You're all caught up!"}
                           </p>
                         </div>
                       )}
@@ -153,12 +173,14 @@ export function NotificationsContent() {
                 <Card>
                   <CardHeader>
                     <CardTitle>Unread Notifications</CardTitle>
-                    <CardDescription>View your unread notifications</CardDescription>
+                    <CardDescription>
+                      View your unread notifications
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-1">
-                      {getNotificationsToDisplay().length > 0 ? (
-                        getNotificationsToDisplay().map((notification) => (
+                      {getAllNotificationsToDisplay().length > 0 ? (
+                        getAllNotificationsToDisplay().map((notification) => (
                           <NotificationItem
                             key={notification.id}
                             notification={notification}
@@ -168,9 +190,13 @@ export function NotificationsContent() {
                       ) : (
                         <div className="flex flex-col items-center justify-center py-12">
                           <Bell className="h-12 w-12 text-muted-foreground/50" />
-                          <h3 className="mt-4 text-lg font-medium">No unread notifications</h3>
+                          <h3 className="mt-4 text-lg font-medium">
+                            No unread notifications
+                          </h3>
                           <p className="text-sm text-muted-foreground">
-                            {searchQuery ? "Try a different search term" : "You're all caught up!"}
+                            {searchQuery
+                              ? "Try a different search term"
+                              : "You're all caught up!"}
                           </p>
                         </div>
                       )}
@@ -183,12 +209,14 @@ export function NotificationsContent() {
                 <Card>
                   <CardHeader>
                     <CardTitle>Read Notifications</CardTitle>
-                    <CardDescription>View your previously read notifications</CardDescription>
+                    <CardDescription>
+                      View your previously read notifications
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-1">
-                      {getNotificationsToDisplay().length > 0 ? (
-                        getNotificationsToDisplay().map((notification) => (
+                      {getAllNotificationsToDisplay().length > 0 ? (
+                        getAllNotificationsToDisplay().map((notification) => (
                           <NotificationItem
                             key={notification.id}
                             notification={notification}
@@ -198,9 +226,13 @@ export function NotificationsContent() {
                       ) : (
                         <div className="flex flex-col items-center justify-center py-12">
                           <Bell className="h-12 w-12 text-muted-foreground/50" />
-                          <h3 className="mt-4 text-lg font-medium">No read notifications</h3>
+                          <h3 className="mt-4 text-lg font-medium">
+                            No read notifications
+                          </h3>
                           <p className="text-sm text-muted-foreground">
-                            {searchQuery ? "Try a different search term" : "You haven't read any notifications yet"}
+                            {searchQuery
+                              ? "Try a different search term"
+                              : "You haven't read any notifications yet"}
                           </p>
                         </div>
                       )}
@@ -213,5 +245,5 @@ export function NotificationsContent() {
         </div>
       </main>
     </div>
-  )
+  );
 }

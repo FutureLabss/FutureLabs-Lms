@@ -22,6 +22,9 @@ export default function NotificationsDropdown({
   allNotifications,
   allNotificationsLoading,
 }: NotificationCount) {
+  const unReadNotifications = allNotifications?.filter(
+    (notification) => !notification.read
+  );
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -43,14 +46,18 @@ export default function NotificationsDropdown({
           <div className="flex justify-center p-4">
             <Loader className="animate-spin" />
           </div>
-        ) : allNotifications?.length && notificationCount ? (
-          allNotifications.map((notification) => (
+        ) : allNotifications && notificationCount ? (
+          unReadNotifications?.map((notification) => (
             <DropdownMenuItem key={notification.id} asChild>
               <Link
                 href={`/user/notification/${notification.id}`}
-                className="flex justify-between items-center w-full"
+                className="flex justify-between items-center w-full cursor-pointer"
               >
-                <span className="text-sm text-[#85878D] font-medium">
+                <span
+                  className={`text-sm ${
+                    notification.read ? "text-black" : "text-[#85878D"
+                  } font-medium`}
+                >
                   {notification.title}
                 </span>
                 <span className="text-[#85878D] font-medium text-sm flex">
