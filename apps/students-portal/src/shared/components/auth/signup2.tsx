@@ -196,6 +196,33 @@ export default function SignupCmponentSecondForm(props: Iprops) {
           id=""
           className="w-full rounded-md py-4 px-3 mb-4 bg-[#f1f0f0] outline-gray-400 border focus:outline-none focus:"
         ></textarea>
+        <div className="flex flex-col mb-2">
+          <div className="flex items-center gap-2">
+            <input
+              id="agree"
+              name="agree"
+              type="checkbox"
+              required
+              className="h-4 w-4 rounded checked:bg-blue-600 checked:border-transparent"
+              aria-describedby="agree-hint"
+            />
+            
+            <label className="text-sm text-gray-800">
+              I agree to the{" "}
+              <Link
+                href="/privacy-policy"
+                className="underline decoration-blue-600 underline-offset-4 hover:text-blue-700"
+                target="_blank"
+              >
+                Privacy Policy
+              </Link>
+              .
+            </label>
+          </div>
+          <p id="agree-hint " className="text-xs text-gray-500 my-1">
+            You must agree before submitting.
+          </p>
+        </div>
 
         <div className="pb-3">
           {/* <Link href={"/signup/accountcreated"}> */}

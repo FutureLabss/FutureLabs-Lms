@@ -3,21 +3,11 @@
 import { cn } from "@/core/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Badge } from "../ui/badge";
+import { NotificationDataDto } from "@/core/classNotifcationsTypes";
+import { formatDateTime } from "../../../../utils/helpers";
 
-interface NotificationProps {
-  notif: {
-    id: string;
-    notifiable_id: string;
-    created_at: string;
-    updated_at: string;
-    read_at?: string | null;
-    data: {
-      tag: string;
-      message: string;
-      type: string;
-      priority: string;
-    };
-  };
+export interface NotificationProps {
+  notif: NotificationDataDto | undefined;
 }
 
 export default function NotificationCard({ notif }: NotificationProps) {
@@ -54,9 +44,9 @@ export default function NotificationCard({ notif }: NotificationProps) {
         </div>
 
         <div className="text-xs text-gray-500 space-y-1 mt-2">
-          <p>Created: {notif?.created_at}</p>
-          <p>Updated: {notif?.updated_at}</p>
-          {isRead && <p>Read: {notif?.read_at}</p>}
+          <p></p>
+          <p>Created: {formatDateTime(notif?.created_at as string)}</p>
+          {isRead && <p>Read: {formatDateTime(notif?.read_at as string)}</p>}
         </div>
       </CardContent>
     </Card>

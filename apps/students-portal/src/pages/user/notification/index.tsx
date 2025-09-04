@@ -12,6 +12,7 @@ import {
 } from "@/shared/components/ui/card";
 import { Badge } from "@/shared/components/ui/badge";
 import { Skeleton } from "@/shared/components/ui/skeleton";
+import EmptyState from "@/shared/components/common/emptyState/empty";
 
 export default function NotificationLayout() {
   const { data: allNotifications, loading: allNotificationsLoading } =
@@ -38,7 +39,7 @@ export default function NotificationLayout() {
 
         {/* Grid Layout */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {allNotifications?.data.map((notif) => {
+          {allNotifications?.data?.map((notif) => {
             const isRead = notif.read;
 
             // Priority badge style mapping
@@ -78,6 +79,12 @@ export default function NotificationLayout() {
               </Link>
             );
           })}
+          {!allNotifications?.data?.length && (
+            <div className="col-span-3 border-1">
+              <p className="text-center text-gray-500">No notifications</p>
+              <EmptyState />
+            </div>
+          )}
         </div>
       </div>
     </div>

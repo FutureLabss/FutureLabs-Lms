@@ -1,35 +1,26 @@
 import {
-  GetNotificationsCountResponse,
-  GetNotificationsResponse,
+  getAllNotificationsCountResponse,
+  getAllNotificationsResponse,
 } from "@/core/classNotifcationsTypes";
 import {
-  getNotifications,
-  getNotificationsCount,
-  markNotificationAsRead,
+  getAllNotifications,
+  getAllNotificationsCount,
 } from "@/core/services/classroom/Notifications";
-import { IAPIFilter, IQueryArgs } from "@/core/types/interface/query";
+import { IQueryArgs } from "@/core/types/interface/query";
 import { useGetResourcesQuery } from "@/shared/hooks/helper/query";
 
-export function useGetNotificationsCount() {
-  const AllNotifactionCounts: IQueryArgs<GetNotificationsCountResponse> = {
-    key: ["classroomNotificationsCount"],
-    callback: () => getNotificationsCount(),
+export function useGetAllNotificationsCount() {
+  const AllNotifactionCounts: IQueryArgs<getAllNotificationsCountResponse> = {
+    key: ["classroomNotificationsCounts"],
+    callback: () => getAllNotificationsCount(),
   };
   return useGetResourcesQuery(AllNotifactionCounts);
 }
 
 export function useGetAllNotifications() {
-  const AllNotifactions: IQueryArgs<GetNotificationsResponse> = {
+  const AllNotifactions: IQueryArgs<getAllNotificationsResponse> = {
     key: ["classroomNotifications"],
-    callback: () => getNotifications(),
+    callback: () => getAllNotifications(),
   };
   return useGetResourcesQuery(AllNotifactions);
-}
-
-export function useGetSingleNotification(id: string) {
-  const singleNotification: IQueryArgs<Notification> = {
-    key: ["singleNotification", id as unknown as IAPIFilter],
-    callback: () => markNotificationAsRead(id as string),
-  };
-  return useGetResourcesQuery(singleNotification);
 }
