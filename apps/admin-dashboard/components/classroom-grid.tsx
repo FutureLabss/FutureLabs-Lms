@@ -1,28 +1,28 @@
-"use client"
+"use client";
 
-import { useRouter } from "next/navigation"
-import { Calendar, Clock, FileText, Users } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { useClassrooms } from "./classroom-provider"
-import { ClassroomGridSkeleton } from "./classroom-grid-skeleton"
+import { useRouter } from "next/navigation";
+import { Calendar, Clock, FileText, Users } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { useClassrooms } from "./classroom-provider";
+import { ClassroomGridSkeleton } from "./classroom-grid-skeleton";
 
 export function ClassroomGrid() {
-  const { filteredClassrooms, isLoading } = useClassrooms()
-  const router = useRouter()
+  const { filteredClassrooms, isLoading } = useClassrooms();
+  const router = useRouter();
 
   const handleManage = (id: string) => {
     // Simply navigate to the classroom detail page
-    router.push(`/classrooms/${id}`)
-  }
+    router.push(`/classrooms/${id}`);
+  };
 
   const handleViewFeed = (id: string) => {
     // In a real app, this would navigate to the class feed
-    console.log("View feed for classroom:", id)
-  }
+    console.log("View feed for classroom:", id);
+  };
 
   if (isLoading) {
-    return <ClassroomGridSkeleton />
+    return <ClassroomGridSkeleton />;
   }
 
   if (filteredClassrooms.length === 0) {
@@ -30,10 +30,12 @@ export function ClassroomGrid() {
       <div className="flex flex-col items-center justify-center py-12">
         <div className="text-center">
           <h3 className="text-lg font-medium">No classrooms found</h3>
-          <p className="text-muted-foreground mt-1">Try adjusting your search or filters</p>
+          <p className="text-muted-foreground mt-1">
+            Try adjusting your search or filters
+          </p>
         </div>
       </div>
-    )
+    );
   }
 
   return (
@@ -44,7 +46,9 @@ export function ClassroomGrid() {
             <div className="space-y-4">
               <div>
                 <h3 className="font-semibold text-lg">{classroom.title}</h3>
-                <p className="text-sm text-muted-foreground">{classroom.program}</p>
+                <p className="text-sm text-muted-foreground">
+                  {classroom.program}
+                </p>
               </div>
 
               <div className="flex items-center gap-2 text-sm">
@@ -89,20 +93,31 @@ export function ClassroomGrid() {
             </div>
           </CardContent>
           <CardFooter className="flex flex-col gap-2 p-6 pt-0">
-            <Button className="w-full" onClick={() => handleManage(classroom.id)}>
+            <Button
+              className="w-full"
+              onClick={() => handleManage(classroom.id)}
+            >
               Manage Classroom
             </Button>
-            <Button variant="outline" className="w-full" onClick={() => handleViewFeed(classroom.id)}>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => handleViewFeed(classroom.id)}
+            >
               View Class Feed
             </Button>
           </CardFooter>
         </Card>
       ))}
     </div>
-  )
+  );
 }
 
-function formatDate(dateString: string) {
-  const date = new Date(dateString)
-  return date.toLocaleDateString("en-US", { year: "numeric", month: "2-digit", day: "2-digit" })
+export function formatDate(dateString: string) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
 }

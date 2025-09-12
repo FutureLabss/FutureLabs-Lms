@@ -238,6 +238,23 @@ export interface AssignmentGrade {
 }
 
 
+export interface StudentProgressResponse {
+  message: string;
+  data: StudentProgressData;
+}
+
+export interface StudentProgressData {
+  submittedAssignments: number;
+  totalAssignments: number;
+  viewedMaterials: number;
+  totalMaterials: number;
+  attendedClasses: number;
+  totalClasses: number;
+  overallProgress: number;
+  lastActive: string;
+}
+
+
 
 
 

@@ -10,6 +10,9 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { ParsedUrlQuery } from "querystring";
+import Button from "@/shared/components/common/Button";
+import Modal from "@/shared/components/common/modal/modal";
+import { CreditCardIcon } from "lucide-react";
 // import { useRouter } from "next/router";
 
 const schema = z
@@ -42,6 +45,7 @@ export default function CreatePasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string[]>([]);
   const { CreatePassword } = useAuthContext();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const { query } = useRouter();
   const { mail }: ParsedUrlQuery = router.query;
   const [email, setEmail] = useState(mail);
@@ -75,7 +79,7 @@ export default function CreatePasswordPage() {
         remember_me: data.remember_me,
       };
       await CreatePassword(payload);
-      router.replace("/user");
+      setIsModalOpen(true);
     } catch (e) {
       const loginError = e as Error;
       setError(loginError.message?.split("\n") ?? [loginError.message]);
@@ -97,6 +101,20 @@ export default function CreatePasswordPage() {
     },
     mode: "onChange",
   });
+
+  const handlePayLater = () => {
+    setIsModalOpen(false);
+    router.replace("/user");
+  };
+
+  const handlePayNow = () => {
+    setIsModalOpen(false);
+    router.push("/payment"); // <-- adjust this route as needed
+  };
+
+  const handleModalClose = () => {
+    setIsModalOpen(false);
+  };
   return (
     <div className="bg-white grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 h-full lg:min-h-[850px]">
       <div className="bg-background text-white  hidden lg:flex items-center justify-center h-screen">
@@ -200,6 +218,28 @@ export default function CreatePasswordPage() {
           </div>
         </form>
       </div>
+      <Modal isOpen={isModalOpen} onClose={handleModalClose}>
+        <div className="sm:max-w-md mx-auto flex text-center flex-col gap-4 ">
+          <CreditCardIcon size={50} className="text-secondary mx-auto" />
+          <div>
+            {" "}
+            <h3 className="text-xl font-semibold">
+              Password Created Successfully
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              Do you want to pay now or continue later?
+            </p>
+          </div>
+          <div className="flex justify-center gap-4 pt-4">
+            <Button isBorder={true} disabled={true} onClick={handlePayNow}>
+              Pay now
+            </Button>
+            <Button isBorder={true} onClick={handlePayLater}>
+              Pay later
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }

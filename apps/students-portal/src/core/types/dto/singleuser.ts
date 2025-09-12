@@ -53,6 +53,7 @@ export interface MeUserData {
   email: string;
   phone: string;
   address: string;
+  skill: string;
   profile: IMeProfile;
 }
 
