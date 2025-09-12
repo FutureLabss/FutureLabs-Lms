@@ -19,7 +19,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(user?.fullname);
+  // console.log(user?.fullname);
 
   useEffect(() => {
     // Check if user is already logged in
