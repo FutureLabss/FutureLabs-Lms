@@ -8,6 +8,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 // import { logout } from "@/services/logout";
+import { SessionProvider } from "next-auth/react";
 
 import {
   BookOpen,
@@ -43,6 +44,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/hooks/use-auth";
+import AppNotification from "./AppNotification";
 
 const navigationItems = [
   { name: "Dashboard", href: "/", icon: Home },
@@ -113,6 +115,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         </Link>
         <div className="ml-auto flex items-center gap-2">
           <ModeToggle />
+          <SessionProvider>
+            <AppNotification />
+          </SessionProvider>
           {user && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
